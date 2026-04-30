@@ -1,136 +1,205 @@
 <template>
-  <div class="p-6 max-w-6xl mx-auto space-y-6">
-    <!-- Header -->
-    <div class="flex flex-col md:flex-row items-start md:items-center justify-between mb-8 gap-4">
-      <div>
-        <h1 class="text-3xl font-bold text-slate-800 dark:text-white flex items-center gap-3">
-          <div class="p-2 bg-emerald-500/10 rounded-2xl text-emerald-500">
-            <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-clipboard-check"><rect width="8" height="4" x="8" y="2" rx="1" ry="1"/><path d="M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2"/><path d="m9 14 2 2 4-4"/></svg>
+  <div class="min-h-screen bg-slate-50 dark:bg-slate-950 text-slate-900 dark:text-slate-100 font-sans transition-colors duration-300">
+    <!-- Top Bar / Navigation -->
+    <nav class="bg-white dark:bg-slate-900 border-b border-slate-200 dark:border-slate-800 px-6 py-4 mb-8">
+      <div class="max-w-6xl mx-auto flex justify-between items-center">
+        <div class="flex items-center gap-3">
+          <div class="w-10 h-10 bg-[#013d7b] rounded-lg flex items-center justify-center text-white">
+            <i class="pi pi-shield text-xl"></i>
           </div>
-          Validación Lista MP
-        </h1>
-        <p class="text-slate-500 dark:text-slate-400 mt-1">Módulo de verificación estricta de cumplimiento.</p>
+          <div>
+            <h1 class="text-xl font-bold tracking-tight">Sistema de Validación</h1>
+            <p class="text-[10px] uppercase font-black text-slate-400 tracking-widest">Lista Negra MP</p>
+          </div>
+        </div>
+        <div class="flex items-center gap-4">
+          <span class="text-xs font-medium text-slate-500">Módulo de Cumplimiento v2.0</span>
+        </div>
       </div>
+    </nav>
+
+    <div class="max-w-6xl mx-auto px-6 pb-12">
       
-      <button @click="resetFlow" class="px-4 py-2 bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-300 rounded-xl hover:bg-slate-200 dark:hover:bg-slate-700 transition-all font-medium flex items-center gap-2">
-        <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-rotate-ccw"><path d="M3 12a9 9 0 1 0 9-9 9.75 9.75 0 0 0-6.74 2.74L3 8"/><path d="M3 3v5h5"/></svg>
-        Nueva Consulta
-      </button>
-    </div>
-
-    <!-- Step 1: Search -->
-    <div v-if="currentStep === 1" class="grid grid-cols-1 gap-6 animate-in slide-in-from-bottom-4 duration-500">
-      <div class="bg-white/80 dark:bg-slate-900/80 backdrop-blur-xl border border-white/20 dark:border-slate-800/50 rounded-3xl p-8 shadow-xl shadow-slate-200/50 dark:shadow-none">
-        <div class="max-w-2xl mx-auto space-y-6">
-          <div class="text-center">
-            <h2 class="text-xl font-semibold text-slate-800 dark:text-white">Paso 1: Búsqueda por Nombre</h2>
-            <p class="text-slate-500 dark:text-slate-400">Ingrese el nombre completo de la persona a consultar.</p>
-          </div>
-
-          <div class="relative group">
-            <div class="absolute inset-y-0 left-4 flex items-center text-slate-400 group-focus-within:text-emerald-500 transition-colors">
-              <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-user-search"><circle cx="10" cy="7" r="4"/><path d="M10.3 15H7a4 4 0 0 0-4 4v2"/><circle cx="17" cy="17" r="3"/><path d="m21 21-1.9-1.9"/></svg>
+      <!-- Corporate Stepper -->
+      <div class="mb-10 max-w-4xl mx-auto">
+        <div class="flex items-center justify-between">
+          <div v-for="(step, idx) in ['Búsqueda', 'Resultados', 'Verificación']" :key="idx" class="flex flex-col items-center flex-1">
+            <div class="flex items-center w-full">
+              <div class="flex-1 h-[2px]" :class="idx === 0 ? 'bg-transparent' : (currentStep > idx ? 'bg-[#013d7b]' : 'bg-slate-200 dark:bg-slate-800')"></div>
+              <div 
+                :class="[
+                  'w-10 h-10 rounded-full border-2 flex items-center justify-center text-sm font-bold transition-all duration-300',
+                  currentStep === idx + 1 ? 'border-[#013d7b] bg-[#013d7b] text-white' : 
+                  currentStep > idx + 1 ? 'border-[#013d7b] bg-white dark:bg-slate-900 text-[#013d7b]' : 
+                  'border-slate-200 dark:border-slate-800 bg-slate-100 dark:bg-slate-800 text-slate-400'
+                ]"
+              >
+                <i v-if="currentStep > idx + 1" class="pi pi-check text-xs"></i>
+                <span v-else>{{ idx + 1 }}</span>
+              </div>
+              <div class="flex-1 h-[2px]" :class="idx === 2 ? 'bg-transparent' : (currentStep > idx + 1 ? 'bg-[#013d7b]' : 'bg-slate-200 dark:bg-slate-800')"></div>
             </div>
-            <input 
-              v-model="searchName"
-              type="text" 
-              placeholder="Ej: Juan Perez Garcia..."
-              @keyup.enter="handleSearch"
-              class="w-full pl-12 pr-4 py-4 bg-slate-50 dark:bg-slate-800/50 border border-slate-200 dark:border-slate-700 rounded-2xl text-lg text-slate-800 dark:text-white focus:ring-4 focus:ring-emerald-500/10 focus:border-emerald-500 outline-none transition-all"
-            />
+            <span :class="['mt-3 text-[10px] font-black uppercase tracking-wider', currentStep === idx + 1 ? 'text-[#013d7b] dark:text-blue-400' : 'text-slate-400']">{{ step }}</span>
           </div>
-
-          <button 
-            @click="handleSearch"
-            :disabled="searchName.length < 6 || isSearching"
-            class="w-full py-4 bg-emerald-600 text-white rounded-2xl font-bold text-lg hover:bg-emerald-700 disabled:opacity-50 disabled:cursor-not-allowed shadow-lg shadow-emerald-600/20 transition-all flex items-center justify-center gap-3"
-          >
-            <svg v-if="isSearching" class="animate-spin h-5 w-5" viewBox="0 0 24 24"><circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle><path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path></svg>
-            {{ isSearching ? 'Buscando Coincidencias...' : 'Iniciar Búsqueda' }}
-          </button>
         </div>
       </div>
-    </div>
 
-    <!-- Step 2: Results & Validation -->
-    <div v-if="currentStep === 2" class="space-y-6 animate-in slide-in-from-right-4 duration-500">
-      <!-- Results Table -->
-      <div class="bg-white/80 dark:bg-slate-900/80 backdrop-blur-xl border border-white/20 dark:border-slate-800/50 rounded-3xl overflow-hidden shadow-xl shadow-slate-200/50 dark:shadow-none">
-        <div class="p-6 border-b border-white/20 dark:border-slate-800/50 flex items-center justify-between">
-          <h2 class="text-lg font-semibold text-slate-800 dark:text-white">Coincidencias Parciales Encontradas</h2>
-          <span class="px-3 py-1 bg-amber-100 dark:bg-amber-900/30 text-amber-600 dark:text-amber-400 text-xs font-bold rounded-full">
-            {{ results.length }} Registro(s)
-          </span>
-        </div>
+      <!-- Content Area -->
+      <div class="relative max-w-5xl mx-auto">
         
-        <div class="overflow-x-auto">
-          <table class="w-full text-left border-collapse">
-            <thead>
-              <tr class="bg-slate-50 dark:bg-slate-800/50 text-slate-500 dark:text-slate-400 text-[10px] uppercase tracking-wider font-bold">
-                <th class="px-6 py-4">ID</th>
-                <th class="px-6 py-4">Nombre</th>
-                <th class="px-6 py-4">CUI/DPI</th>
-                <th class="px-6 py-4">Pasaporte</th>
-                <th class="px-6 py-4">NIT</th>
-              </tr>
-            </thead>
-            <tbody class="divide-y divide-slate-100 dark:divide-slate-800">
-              <tr v-for="res in results" :key="res.iddatos" class="hover:bg-slate-50 dark:hover:bg-slate-800/50 transition-colors text-sm text-slate-700 dark:text-slate-300">
-                <td class="px-6 py-4 font-mono text-xs">{{ res.iddatos }}</td>
-                <td class="px-6 py-4 font-semibold text-slate-800 dark:text-white">{{ res.nombre }}</td>
-                <td class="px-6 py-4">{{ res.cui || '-' }}</td>
-                <td class="px-6 py-4">{{ res.pasaporte || '-' }}</td>
-                <td class="px-6 py-4">{{ res.nit || '-' }}</td>
-              </tr>
-              <tr v-if="results.length === 0">
-                <td colspan="5" class="px-6 py-12 text-center text-slate-500">No se encontraron coincidencias parciales por nombre.</td>
-              </tr>
-            </tbody>
-          </table>
-        </div>
-      </div>
+        <!-- STEP 1: BUSQUEDA -->
+        <transition name="fade-slide">
+          <div v-if="currentStep === 1" class="bg-white dark:bg-slate-900 rounded-xl shadow-sm border border-slate-200 dark:border-slate-800 p-10">
+            <div class="max-w-xl mx-auto text-center">
+              <h2 class="text-2xl font-bold text-slate-800 dark:text-white mb-3">Filtro 1. Consulta por Nombre</h2>
+              <p class="text-slate-500 dark:text-slate-400 text-sm mb-8 leading-relaxed">
+                Ingrese el nombre completo del asociado tal como aparece en su documento de identidad para iniciar la búsqueda en el repositorio central.
+              </p>
 
-      <!-- Validation Form -->
-      <div class="bg-emerald-500/5 border border-emerald-500/20 rounded-3xl p-8 space-y-6">
-        <div class="text-center max-w-xl mx-auto space-y-2">
-          <h2 class="text-xl font-bold text-slate-800 dark:text-white">Paso 2: Validación Estricta</h2>
-          <p class="text-sm text-slate-500">Ingrese el documento de identidad para descartar o confirmar riesgos.</p>
-        </div>
-
-        <div class="max-w-4xl mx-auto grid grid-cols-1 md:grid-cols-3 gap-6">
-          <div class="md:col-span-1">
-            <label class="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-2">Tipo de Documento</label>
-            <select v-model="idType" class="w-full px-4 py-3 bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl outline-none focus:ring-2 focus:ring-emerald-500/20 transition-all text-slate-800 dark:text-white">
-              <option value="CUI">CUI / DPI</option>
-              <option value="Pasaporte">Pasaporte</option>
-              <option value="Nit">NIT</option>
-              <option value="Sin Documento">Verificación sin Documento</option>
-            </select>
+              <div class="space-y-4">
+                <div class="relative group">
+                  <div class="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none text-slate-400">
+                    <i class="pi pi-user"></i>
+                  </div>
+                  <input 
+                    v-model="searchName"
+                    type="text" 
+                    placeholder="Nombre completo del asociado..."
+                    class="w-full bg-slate-50 dark:bg-slate-950 border border-slate-200 dark:border-slate-800 rounded-lg pl-12 pr-4 py-4 focus:ring-2 focus:ring-[#013d7b] focus:border-[#013d7b] outline-none transition-all text-slate-800 dark:text-white font-medium"
+                    @keyup.enter="handleInitialSearch"
+                  />
+                </div>
+                <button 
+                  @click="handleInitialSearch"
+                  :disabled="isSearching || !searchName"
+                  class="w-full py-4 bg-[#013d7b] hover:bg-[#002d5a] text-white rounded-lg font-bold transition-all flex items-center justify-center gap-2 disabled:opacity-50"
+                >
+                  <i v-if="isSearching" class="pi pi-spin pi-spinner"></i>
+                  <span>Siguiente: Analizar Resultados</span>
+                  <i v-if="!isSearching" class="pi pi-chevron-right text-xs"></i>
+                </button>
+              </div>
+            </div>
           </div>
+        </transition>
 
-          <div class="md:col-span-2">
-            <label class="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-2">Número de Identificación</label>
-            <input 
-              v-model="idNumber"
-              :disabled="idType === 'Sin Documento'"
-              type="text" 
-              class="w-full px-4 py-3 bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl outline-none focus:ring-2 focus:ring-emerald-500/20 transition-all text-slate-800 dark:text-white disabled:bg-slate-100 dark:disabled:bg-slate-900/50"
-              placeholder="Ingrese el número de documento..."
-            />
+        <!-- STEP 2: RESULTADOS -->
+        <transition name="fade-slide">
+          <div v-if="currentStep === 2" class="bg-white dark:bg-slate-900 rounded-xl shadow-sm border border-slate-200 dark:border-slate-800">
+            <div class="p-6 border-b border-slate-100 dark:border-slate-800 flex justify-between items-center">
+              <div>
+                <h2 class="text-lg font-bold">Hallazgos por Nombre</h2>
+                <p class="text-xs text-slate-500">Resultados encontrados para: <span class="font-bold text-slate-700 dark:text-slate-300">{{ searchName }}</span></p>
+              </div>
+              <div class="flex gap-2">
+                <button @click="currentStep = 1" class="px-4 py-2 border border-slate-200 dark:border-slate-700 rounded-lg text-xs font-bold hover:bg-slate-50 dark:hover:bg-slate-800 transition-all">
+                  Regresar
+                </button>
+                <button @click="currentStep = 3" class="px-6 py-2 bg-[#013d7b] text-white rounded-lg text-xs font-bold hover:bg-[#002d5a] transition-all">
+                  Confirmar y Continuar
+                </button>
+              </div>
+            </div>
+
+            <div class="min-h-[350px]">
+              <div v-if="results.length > 0" class="overflow-x-auto">
+                <table class="w-full text-sm">
+                  <thead class="bg-slate-50 dark:bg-slate-800/50">
+                    <tr>
+                      <th class="px-6 py-3 text-left font-black text-slate-400 text-[10px] uppercase tracking-wider">Nombre Completo</th>
+                      <th class="px-6 py-3 text-left font-black text-slate-400 text-[10px] uppercase tracking-wider">Identificación</th>
+                      <th class="px-6 py-3 text-left font-black text-slate-400 text-[10px] uppercase tracking-wider">Estado</th>
+                    </tr>
+                  </thead>
+                  <tbody class="divide-y divide-slate-100 dark:divide-slate-800">
+                    <tr v-for="(item, index) in results" :key="index" class="hover:bg-slate-50 dark:hover:bg-slate-800/30">
+                      <td class="px-6 py-4 font-semibold text-slate-700 dark:text-slate-300">{{ item.nombre }}</td>
+                      <td class="px-6 py-4">
+                        <div class="flex gap-2 font-mono text-[11px]">
+                          <span v-if="item.cui" class="text-blue-600 bg-blue-50 dark:bg-blue-900/20 px-1.5 py-0.5 rounded border border-blue-100 dark:border-blue-800">DPI: {{ item.cui }}</span>
+                          <span v-if="item.nit" class="text-emerald-600 bg-emerald-50 dark:bg-emerald-900/20 px-1.5 py-0.5 rounded border border-emerald-100 dark:border-emerald-800">NIT: {{ item.nit }}</span>
+                        </div>
+                      </td>
+                      <td class="px-6 py-4 text-xs">
+                        <span class="text-amber-600 font-bold bg-amber-50 dark:bg-amber-900/20 px-2 py-1 rounded">Requiere Análisis</span>
+                      </td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+              <div v-else class="flex flex-col items-center justify-center py-20 text-center">
+                <div class="w-16 h-16 bg-emerald-50 dark:bg-emerald-900/20 rounded-full flex items-center justify-center mb-4 border border-emerald-100 dark:border-emerald-800">
+                  <i class="pi pi-check text-2xl text-emerald-600"></i>
+                </div>
+                <h3 class="font-bold text-slate-800 dark:text-white">Sin Coincidencias</h3>
+                <p class="text-xs text-slate-500 max-w-xs mt-2">No se encontraron registros de este nombre en la lista negra. Puede proceder con la validación de identidad.</p>
+              </div>
+            </div>
           </div>
-        </div>
+        </transition>
 
-        <div class="flex justify-center pt-4">
-          <button 
-            @click="handleGenerateReport"
-            :disabled="isGenerating || (idType !== 'Sin Documento' && !idNumber)"
-            class="px-12 py-4 bg-emerald-600 text-white rounded-2xl font-bold text-lg hover:bg-emerald-700 disabled:opacity-50 disabled:cursor-not-allowed shadow-xl shadow-emerald-600/20 transition-all flex items-center gap-3"
-          >
-            <svg v-if="isGenerating" class="animate-spin h-5 w-5" viewBox="0 0 24 24"><circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle><path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path></svg>
-            <svg v-else xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-file-text"><path d="M14.5 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7.5L14.5 2z"/><polyline points="14 2 14 8 20 8"/></svg>
-            {{ isGenerating ? 'Procesando Validación...' : 'Generar Reporte PDF' }}
-          </button>
-        </div>
+        <!-- STEP 3: VERIFICACIÓN -->
+        <transition name="fade-slide">
+          <div v-if="currentStep === 3" class="max-w-3xl mx-auto bg-white dark:bg-slate-900 rounded-xl shadow-sm border border-slate-200 dark:border-slate-800 p-10">
+            <div class="text-center mb-8">
+              <h2 class="text-xl font-bold mb-2">Validación Estricta de Identidad</h2>
+              <p class="text-xs text-slate-500 uppercase tracking-widest font-black">Asociado: {{ searchName }}</p>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-8 items-start">
+              <div class="md:col-span-1 space-y-2">
+                <label class="text-xs font-bold text-slate-400 uppercase tracking-wider block mb-2">Método</label>
+                <div class="flex flex-col gap-2">
+                  <button 
+                    v-for="type in ['CUI', 'Pasaporte', 'Nit']" 
+                    :key="type"
+                    @click="idType = type"
+                    :class="[
+                      'px-4 py-3 rounded-lg text-sm font-bold text-left transition-all border',
+                      idType === type 
+                        ? 'bg-[#013d7b] border-[#013d7b] text-white' 
+                        : 'bg-white dark:bg-slate-800 border-slate-200 dark:border-slate-700 text-slate-500'
+                    ]"
+                  >
+                    {{ type }}
+                  </button>
+                </div>
+              </div>
+              <div class="md:col-span-2">
+                <label class="text-xs font-bold text-slate-400 uppercase tracking-wider block mb-4">Número de Documento de Identidad</label>
+                <div class="relative mb-8">
+                  <input 
+                    v-model="idNumber"
+                    type="text" 
+                    :placeholder="'Ingrese número de ' + idType + '...'"
+                    class="w-full bg-slate-50 dark:bg-slate-950 border border-slate-200 dark:border-slate-800 rounded-lg px-6 py-5 outline-none focus:ring-2 focus:ring-[#013d7b] text-xl font-mono"
+                    @keyup.enter="handleFinalVerify"
+                  />
+                </div>
+
+                <div class="flex gap-4">
+                  <button @click="currentStep = 2" class="flex-1 py-4 border border-slate-200 dark:border-slate-700 rounded-lg font-bold text-slate-500 hover:bg-slate-50 transition-all">
+                    Atrás
+                  </button>
+                  <button 
+                    @click="handleFinalVerify"
+                    :disabled="isGenerating || !idNumber"
+                    class="flex-[2] py-4 bg-[#013d7b] hover:bg-[#002d5a] text-white rounded-lg font-bold shadow-md transition-all flex items-center justify-center gap-2 disabled:opacity-50"
+                  >
+                    <i v-if="isGenerating" class="pi pi-spin pi-spinner"></i>
+                    <i v-else class="pi pi-verified"></i>
+                    <span>Ejecutar Verificación Final</span>
+                  </button>
+                </div>
+              </div>
+            </div>
+
+            <div class="mt-10 p-4 bg-slate-50 dark:bg-slate-800/50 rounded-lg text-[10px] text-slate-400 text-center leading-relaxed italic">
+              Este proceso es auditable. Al presionar el botón de verificación, se registrará el intento en la bitácora del oficial de cumplimiento junto con su firma digital de usuario.
+            </div>
+          </div>
+        </transition>
+
       </div>
     </div>
 
@@ -165,20 +234,29 @@ const showAuthModal = ref(false);
 const authData = ref<any>(null);
 const isSubmittingAuth = ref(false);
 
-// Base de la API relativa a la instancia configurada
 const API_BASE = '/reportes/lista-mp';
 
 // Actions
 const resetFlow = () => {
   currentStep.value = 1;
+  idNumber.value = '';
   searchName.value = '';
   results.value = [];
-  idNumber.value = '';
-  idType.value = 'CUI';
 };
 
-const handleSearch = async () => {
-  if (searchName.value.length < 6) return;
+const handleInitialSearch = async () => {
+  if (!searchName.value || searchName.value.length < 6) {
+    Swal.fire({
+      icon: 'warning',
+      title: 'Validación',
+      text: 'Ingrese al menos 6 caracteres para buscar.',
+      toast: true,
+      position: 'top-end',
+      showConfirmButton: false,
+      timer: 3000
+    });
+    return;
+  }
   
   isSearching.value = true;
   try {
@@ -189,15 +267,19 @@ const handleSearch = async () => {
     currentStep.value = 2;
   } catch (error) {
     console.error(error);
-    Swal.fire('Error', 'No se pudo realizar la búsqueda.', 'error');
+    Swal.fire('Error de Conexión', 'No se pudo obtener datos del servidor', 'error');
   } finally {
     isSearching.value = false;
   }
 };
 
-const handleGenerateReport = async () => {
+const handleFinalVerify = async () => {
+  if (!idNumber.value) {
+    Swal.fire('Aviso', 'Ingrese el número de documento', 'info');
+    return;
+  }
+
   isGenerating.value = true;
-  
   try {
     const formData = new FormData();
     formData.append('nombre_buscado', searchName.value);
@@ -210,39 +292,35 @@ const handleGenerateReport = async () => {
       headers: { 'Accept': 'application/json, application/pdf' }
     });
 
-    const contentType = response.headers['content-type'];
-
-    if (typeof contentType === 'string' && contentType.includes('application/json')) {
-      const text = await response.data.text();
-      const result = JSON.parse(text);
-      
-      if (result.status === 'autorizacion_requerida') {
-        authData.value = result;
-        showAuthModal.value = true;
-      }
+    if (response.headers['content-type'] && (response.headers['content-type'] as string).includes('application/json')) {
+      const reader = new FileReader();
+      reader.onload = () => {
+        const data = JSON.parse(reader.result as string);
+        if (data.status === 'autorizacion_requerida') {
+          authData.value = data;
+          showAuthModal.value = true;
+        }
+      };
+      reader.readAsText(response.data);
     } else {
-      const blob = new Blob([response.data], { type: 'application/pdf' });
-      const url = window.URL.createObjectURL(blob);
+      const url = window.URL.createObjectURL(new Blob([response.data]));
       const link = document.createElement('a');
       link.href = url;
-      link.setAttribute('download', `reporte_lista_mp_${Date.now()}.pdf`);
+      link.setAttribute('download', `Reporte_ListaMP_${idNumber.value}.pdf`);
       document.body.appendChild(link);
       link.click();
-      link.remove();
-      window.URL.revokeObjectURL(url);
       
       Swal.fire({
         icon: 'success',
-        title: '¡Reporte Generado!',
-        text: 'La validación se completó sin riesgos y el PDF ha sido descargado.',
-        confirmButtonColor: '#10b981'
+        title: 'Verificación Completada',
+        text: 'Sujeto validado como APTO. Reporte generado.',
+        confirmButtonColor: '#013d7b'
       });
-      
       resetFlow();
     }
-  } catch (error: any) {
+  } catch (error) {
     console.error(error);
-    Swal.fire('Error', 'Ocurrió un problema al validar el documento.', 'error');
+    Swal.fire('Fallo del Sistema', 'Ocurrió un problema técnico durante la validación', 'error');
   } finally {
     isGenerating.value = false;
   }
@@ -263,17 +341,43 @@ const handleAuthSubmit = async (observacion: string) => {
       showAuthModal.value = false;
       Swal.fire({
         icon: 'info',
-        title: 'Solicitud Enviada',
-        text: response.data.mensaje,
-        confirmButtonColor: '#1B365D'
+        title: 'Solicitud Registrada',
+        text: 'Se requiere autorización excepcional para este registro.',
+        confirmButtonColor: '#013d7b'
       });
       resetFlow();
     }
   } catch (error) {
     console.error(error);
-    Swal.fire('Error', 'No se pudo registrar la solicitud de autorización.', 'error');
+    Swal.fire('Error', 'No se pudo procesar la solicitud', 'error');
   } finally {
     isSubmittingAuth.value = false;
   }
 };
 </script>
+
+<style scoped>
+.fade-slide-enter-active {
+  transition: all 0.4s ease-out;
+}
+.fade-slide-leave-active {
+  transition: all 0.3s ease-in;
+  position: absolute;
+  width: 100%;
+}
+.fade-slide-enter-from {
+  transform: translateY(20px);
+  opacity: 0;
+}
+.fade-slide-leave-to {
+  transform: translateY(-20px);
+  opacity: 0;
+}
+
+/* Chrome, Safari, Edge, Opera */
+input::-webkit-outer-spin-button,
+input::-webkit-inner-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+</style>
