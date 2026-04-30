@@ -66,6 +66,14 @@ const routes: RouteRecordRaw[] = [
                 meta: {
                     title: 'Lista Negra Créditos'
                 }
+            },
+            {
+                path: 'reportes/lista-mp',
+                name: 'reportes-lista-mp',
+                component: () => import('@/views/reportes/ListaMP.vue'),
+                meta: {
+                    title: 'Validación Lista MP'
+                }
             }
         ]
     },
