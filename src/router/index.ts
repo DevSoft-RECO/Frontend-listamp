@@ -42,6 +42,22 @@ const routes: RouteRecordRaw[] = [
                 meta: {
                     title: 'Gestiones'
                 }
+            },
+            {
+                path: 'listas-mp',
+                name: 'listas-mp',
+                component: () => import('@/views/listas-mp/Index.vue'),
+                meta: {
+                    title: 'Lista Mp'
+                }
+            },
+            {
+                path: 'fiscalias',
+                name: 'fiscalias',
+                component: () => import('@/views/listas-mp/FiscaliasListView.vue'),
+                meta: {
+                    title: 'Administrar Fiscalías'
+                }
             }
         ]
     },

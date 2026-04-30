@@ -1,10 +1,14 @@
 <template>
-  <div class="flex h-screen bg-gray-50 dark:bg-gray-950 text-gray-800 dark:text-gray-100 font-sans overflow-hidden transition-colors duration-300">
+  <div class="flex h-screen bg-gray-50 dark:bg-[#020617] text-gray-800 dark:text-gray-100 font-sans overflow-hidden transition-colors duration-300 relative">
+    
+    <!-- Background Decorations -->
+    <div class="absolute top-[-10%] left-[-10%] w-[40%] h-[40%] bg-verde-cope/5 blur-[120px] rounded-full pointer-events-none"></div>
+    <div class="absolute bottom-[-10%] right-[-10%] w-[30%] h-[30%] bg-azul-cope/10 blur-[100px] rounded-full pointer-events-none"></div>
 
     <AdminSidebar />
 
     <div
-      class="flex flex-col flex-1 h-full transition-all duration-300 ease-[cubic-bezier(0.25,0.8,0.25,1)]"
+      class="flex flex-col flex-1 h-full transition-all duration-500 ease-[cubic-bezier(0.4,0,0.2,1)] relative"
       :class="[layoutStore.isCollapsed ? 'md:ml-20' : 'md:ml-64']"
     >
 
@@ -12,12 +16,12 @@
 
       <main class="flex-1 overflow-x-hidden overflow-y-auto p-6 relative custom-scrollbar">
         <RouterView v-slot="{ Component }">
+          <Transition name="page" mode="out-in">
             <component :is="Component" />
+          </Transition>
         </RouterView>
       </main>
     </div>
-
-
   </div>
 </template>
 
@@ -67,5 +71,21 @@ onUnmounted(() => {
 }
 :root.dark .custom-scrollbar::-webkit-scrollbar-thumb:hover {
   background-color: var(--color-gray-600);
+}
+
+/* Page Transitions */
+.page-enter-active,
+.page-leave-active {
+  transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.page-enter-from {
+  opacity: 0;
+  transform: translateX(20px);
+}
+
+.page-leave-to {
+  opacity: 0;
+  transform: translateX(-20px);
 }
 </style>
