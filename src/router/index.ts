@@ -58,6 +58,14 @@ const routes: RouteRecordRaw[] = [
                 meta: {
                     title: 'Administrar Fiscalías'
                 }
+            },
+            {
+                path: 'lista-creditos',
+                name: 'lista-creditos',
+                component: () => import('@/views/lista-creditos/ListaCreditoView.vue'),
+                meta: {
+                    title: 'Lista Negra Créditos'
+                }
             }
         ]
     },
