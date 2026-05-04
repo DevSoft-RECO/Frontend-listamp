@@ -74,6 +74,14 @@ const routes: RouteRecordRaw[] = [
                 meta: {
                     title: 'Validación Lista MP'
                 }
+            },
+            {
+                path: 'reportes/lista-consolidada',
+                name: 'reportes-lista-consolidada',
+                component: () => import('@/views/reportes/ListaCreditos.vue'),
+                meta: {
+                    title: 'Validación MP y Créditos'
+                }
             }
         ]
     },
