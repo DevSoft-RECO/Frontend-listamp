@@ -11,7 +11,6 @@
       <!-- 🟦 Encabezado Dinámico -->
       <div class="relative p-6 sm:p-8 border-b dark:border-gray-700 bg-gradient-to-r from-[#013d7b] to-[#015f9b] dark:from-[#1a202c] dark:to-[#2d3748] text-white">
         <div class="flex flex-col md:flex-row justify-between items-start md:items-center space-y-3 md:space-y-0">
-          <!-- Título -->
           <div class="flex-1">
             <h1 class="text-2xl sm:text-3xl lg:text-4xl font-extrabold tracking-tight">
               Solicitud #{{ solicitud.id }}
@@ -21,7 +20,6 @@
             </p>
           </div>
 
-          <!-- Estado General y Botón Regresar -->
           <div class="flex flex-col sm:flex-row items-start sm:items-center space-y-2 sm:space-y-0 sm:space-x-3 w-full sm:w-auto">
             <span class="px-3 py-1.5 sm:px-4 sm:py-2 text-xs sm:text-sm font-bold rounded-full uppercase tracking-wider shadow-lg"
               :class="getStatusHeaderClass">
@@ -42,9 +40,7 @@
       <div class="p-4 sm:p-6 lg:p-8">
         <div class="grid lg:grid-cols-3 gap-6 lg:gap-8">
           
-          <!-- Columna 1 & 2: Información General, Flujo y Acciones -->
           <div class="lg:col-span-2 space-y-6">
-            
             <!-- 1. Información General -->
             <div class="bg-gray-50 dark:bg-gray-800/50 rounded-lg p-4 sm:p-6 border border-gray-100 dark:border-gray-700">
               <h2 class="text-lg sm:text-xl font-bold mb-4 text-[#013d7b] dark:text-[#5aba03] flex items-center gap-3">
@@ -87,7 +83,6 @@
                 Fases de Aprobación y Comentarios
               </h2>
               <div class="grid md:grid-cols-2 gap-4">
-                <!-- Tarjeta de Estado Cumplimiento -->
                 <div class="p-4 rounded-lg border-l-4 shadow-sm" :class="getFlowCardClass(solicitud.estado_cumplimiento)">
                   <div class="flex items-center justify-between mb-3">
                     <h3 class="font-bold text-sm text-gray-900 dark:text-gray-100">Área de Cumplimiento</h3>
@@ -107,7 +102,6 @@
                   </div>
                 </div>
 
-                <!-- Tarjeta de Estado Jefe de Agencia -->
                 <div class="p-4 rounded-lg border-l-4 shadow-sm" :class="getFlowCardClass(solicitud.estado_jefatura)">
                   <div class="flex items-center justify-between mb-3">
                     <h3 class="font-bold text-sm text-gray-900 dark:text-gray-100">Jefe de Agencia</h3>
@@ -129,7 +123,7 @@
               </div>
             </div>
 
-            <!-- 3. Acciones de Aprobación/Rechazo (Solo si tiene permisos) -->
+            <!-- 3. Acciones -->
             <div v-if="canDecide" class="bg-white dark:bg-gray-800 rounded-lg p-4 sm:p-6 border-2 border-[#013d7b]/20 dark:border-[#5aba03]/20 shadow-lg">
               <h2 class="text-lg sm:text-xl font-bold mb-4 text-[#013d7b] dark:text-[#5aba03] flex items-center gap-3">
                 <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 opacity-75" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -137,7 +131,6 @@
                 </svg>
                 Gestión de la Solicitud
               </h2>
-              
               <div class="mb-4">
                 <label class="block text-xs font-black text-gray-400 uppercase mb-2 tracking-widest">Actuar como:</label>
                 <div class="flex gap-2">
@@ -149,90 +142,104 @@
                     class="px-4 py-2 rounded-lg text-xs font-black uppercase transition-all"> Jefe Agencia </button>
                 </div>
               </div>
-
               <div class="space-y-4">
                 <textarea v-model="decisionComment" rows="3" placeholder="Escribe tu comentario de auditoría aquí..."
                   class="w-full rounded-xl border-gray-200 dark:border-gray-700 dark:bg-gray-900 dark:text-white text-sm focus:ring-[#013d7b] dark:focus:ring-[#5aba03] transition-all"></textarea>
-                
                 <div class="flex flex-wrap gap-3">
                   <button v-if="canAuthorize" @click="submitDecision('autorizado')" :disabled="isSubmitting"
                     class="flex items-center px-6 py-2.5 bg-[#5aba03] hover:bg-[#4aa002] text-white rounded-lg text-sm font-bold shadow-md transition-all disabled:opacity-50 uppercase tracking-wide">
-                    <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
-                    </svg>
                     Autorizar
                   </button>
                   <button @click="submitDecision('rechazado')" :disabled="isSubmitting"
                     class="flex items-center px-6 py-2.5 bg-red-600 hover:bg-red-700 text-white rounded-lg text-sm font-bold shadow-md transition-all disabled:opacity-50 uppercase tracking-wide">
-                    <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
-                    </svg>
                     Rechazar
                   </button>
                 </div>
               </div>
             </div>
 
-            <!-- 4. Alertas de Estado Final -->
+            <!-- 4. Alertas -->
             <div class="space-y-4">
               <div v-if="solicitud.autorizacion_completa" class="p-4 bg-green-100 dark:bg-green-900/20 text-green-800 dark:text-green-400 rounded-lg border border-green-300 dark:border-green-700 flex items-center justify-between shadow-sm">
                 <p class="font-bold flex items-center text-sm">
                   <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 mr-3" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
                   </svg>
-                  Solicitud autorizada. Descargue el documento final.
+                  Solicitud autorizada. Descargue el documento oficial.
                 </p>
-                <button @click="downloadPDF" class="px-4 py-2 bg-[#013d7b] hover:bg-[#012a52] text-white rounded-md text-xs font-bold shadow-md transition whitespace-nowrap uppercase">
+                <button @click="triggerDownload" class="px-4 py-2 bg-[#013d7b] hover:bg-[#012a52] text-white rounded-md text-xs font-bold shadow-md transition uppercase tracking-wider">
                   Descargar PDF
                 </button>
               </div>
               <div v-else-if="solicitud.estado_cumplimiento === 'rechazado' || solicitud.estado_jefatura === 'rechazado'" 
                 class="p-4 bg-red-100 dark:bg-red-900/20 text-red-800 dark:text-red-400 rounded-lg border border-red-300 dark:border-red-700 shadow-sm flex items-center gap-3">
-                <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" />
-                </svg>
-                <p class="font-bold text-sm">Solicitud rechazada por una de las áreas.</p>
+                <p class="font-bold text-sm text-red-600">Solicitud rechazada por una de las áreas.</p>
               </div>
             </div>
           </div>
 
-          <!-- Columna 3: Visor PDF -->
+          <!-- Columna 3: Previsualización Protegida -->
           <div class="lg:col-span-1">
             <div class="bg-gray-50 dark:bg-gray-800/50 rounded-lg p-4 sm:p-6 sticky top-4 border border-gray-100 dark:border-gray-700 shadow-xl">
               <h2 class="text-lg sm:text-xl font-bold mb-4 text-[#013d7b] dark:text-[#5aba03] flex items-center gap-3">
                 <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 opacity-75" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                   <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15.172 7l-6.586 6.586a2 2 0 102.828 2.828l6.414-6.586a4 4 0 00-5.656-5.656l-6.415 6.585a6 6 0 108.486 8.486L20.5 13" />
                 </svg>
-                Documento adjunto
+                Modo Lectura
               </h2>
               
-              <div class="border border-gray-300 dark:border-gray-700 rounded-lg shadow-inner bg-gray-200 dark:bg-gray-900 overflow-hidden min-h-[400px] flex items-center justify-center relative group">
-                <iframe v-if="pdfBlobUrl" :src="pdfBlobUrl" class="w-full h-[450px]" frameborder="0"></iframe>
+              <div class="border border-gray-300 dark:border-gray-700 rounded-lg bg-gray-200 dark:bg-gray-900 overflow-hidden min-h-[300px] flex flex-col items-center justify-center relative group">
+                <div v-if="pdfBlobUrl" class="relative w-full h-[400px] bg-white flex justify-center overflow-auto p-2" @contextmenu.prevent>
+                  <canvas ref="previewCanvas" class="shadow-lg max-w-full pointer-events-none"></canvas>
+                  <div class="absolute inset-0 bg-transparent z-10"></div> <!-- Overlay para evitar clicks -->
+                </div>
                 <div v-else class="flex flex-col items-center justify-center p-8 text-gray-400">
-                  <svg xmlns="http://www.w3.org/2000/svg" class="h-16 w-16 mb-2 opacity-20" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 21h10a2 2 0 002-2V9.414a1 1 0 00-.293-.707l-5.414-5.414A1 1 0 0012.586 3H7a2 2 0 00-2 2v14a2 2 0 002 2z" />
-                  </svg>
-                  <p class="text-xs font-bold uppercase tracking-widest">Vista previa no disponible</p>
+                  <p class="text-xs font-bold uppercase tracking-widest">Cargando previsualización...</p>
                 </div>
               </div>
 
-              <button @click="downloadPDF" class="mt-4 w-full flex items-center justify-center px-4 py-3 bg-[#013d7b] hover:bg-[#012a52] text-white rounded-lg text-sm font-bold shadow-md transition-all uppercase tracking-wider">
-                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a2 2 0 002 2h12a2 2 0 002-2v-1m-4-4l-4 4m0 0l-4-4m4 4V4" />
-                </svg>
-                Ver Pantalla Completa
+              <button @click="openProtectedViewer" class="mt-4 w-full flex items-center justify-center px-4 py-3 bg-[#013d7b] hover:bg-[#012a52] text-white rounded-lg text-sm font-bold shadow-md transition-all uppercase tracking-wider">
+                Ver Pantalla Completa (Solo Lectura)
               </button>
             </div>
           </div>
-
         </div>
+      </div>
+    </div>
+
+    <!-- 🚀 Modal de Visor PDF Protegido -->
+    <div v-if="showModalViewer" class="fixed inset-0 bg-black/95 z-[100] flex flex-col p-4" @contextmenu.prevent>
+      <div class="flex justify-between items-center pb-4 border-b border-gray-800">
+        <h2 class="text-lg font-bold text-white flex items-center gap-2">
+          <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-red-500" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z" />
+          </svg>
+          Visor Protegido (Solo Lectura)
+        </h2>
+        <button @click="showModalViewer = false" class="text-white hover:text-red-500 transition-colors">
+          <svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
+          </svg>
+        </button>
+      </div>
+
+      <div class="flex-1 overflow-auto flex justify-center py-8 select-none" id="modal-container">
+        <div class="space-y-4 relative">
+          <canvas v-for="page in totalPages" :key="page" :ref="el => canvasRefs[page] = el" class="bg-white shadow-2xl rounded-sm"></canvas>
+          <div class="absolute inset-0 bg-transparent z-10"></div>
+        </div>
+      </div>
+
+      <div class="py-4 border-t border-gray-800 flex justify-center gap-4 text-gray-400 text-xs font-bold uppercase tracking-widest">
+        <span>Páginas: {{ totalPages }}</span>
+        <span class="text-red-500">Descarga e impresión inhabilitadas</span>
       </div>
     </div>
   </div>
 </template>
 
 <script setup>
-import { ref, computed, onMounted, onUnmounted } from 'vue';
+import { ref, computed, onMounted, onUnmounted, nextTick } from 'vue';
 import { useRoute, useRouter } from 'vue-router';
 import api from '@/api/axios';
 import Swal from 'sweetalert2';
@@ -249,12 +256,19 @@ const selectedRole = ref('');
 const decisionComment = ref('');
 const pdfBlobUrl = ref(null);
 
-// Lógica de estados generales (Header)
+// Modal Viewer
+const showModalViewer = ref(false);
+const previewCanvas = ref(null);
+const canvasRefs = ref({});
+const totalPages = ref(0);
+let pdfDoc = null;
+
+// Lógica de estados
 const getGeneralStatusText = computed(() => {
   if (!solicitud.value) return '...';
-  if (solicitud.value.autorizacion_completa) return 'Autorizada';
-  if (solicitud.value.estado_cumplimiento === 'rechazado' || solicitud.value.estado_jefatura === 'rechazado') return 'Rechazada';
-  return 'Pendiente';
+  return solicitud.value.autorizacion_completa ? 'Autorizada' : (
+    (solicitud.value.estado_cumplimiento === 'rechazado' || solicitud.value.estado_jefatura === 'rechazado') ? 'Rechazada' : 'Pendiente'
+  );
 });
 
 const getStatusHeaderClass = computed(() => {
@@ -264,7 +278,6 @@ const getStatusHeaderClass = computed(() => {
   return 'bg-yellow-500 text-gray-900';
 });
 
-// Lógica de permisos reactiva
 const userCanCumplimiento = computed(() => {
   const roles = authStore.user?.roles_list || [];
   return (roles.includes('Super Admin') || roles.includes('Cumplimiento')) && 
@@ -279,129 +292,146 @@ const userCanJefatura = computed(() => {
 
 const canDecide = computed(() => userCanCumplimiento.value || userCanJefatura.value);
 
-// Lógica para ocultar botón de autorizar si ya hay un rechazo en flujo "Ambos"
 const canAuthorize = computed(() => {
   if (!solicitud.value) return false;
   if (solicitud.value.destinatario !== 'ambos') return true;
-  
-  if (selectedRole.value === 'cumplimiento') {
-    return solicitud.value.estado_jefatura !== 'rechazado';
-  } else if (selectedRole.value === 'jefatura') {
-    return solicitud.value.estado_cumplimiento !== 'rechazado';
-  }
+  if (selectedRole.value === 'cumplimiento') return solicitud.value.estado_jefatura !== 'rechazado';
+  if (selectedRole.value === 'jefatura') return solicitud.value.estado_cumplimiento !== 'rechazado';
   return true;
 });
 
-const fetchSolicitud = async () => {
-  try {
-    const response = await api.get(`/solicitudes/${route.params.id}`);
-    solicitud.value = response.data;
-    
-    // Cargar previsualización del PDF
-    loadPdfPreview();
+// Cargar PDF.js dinámicamente si no existe
+const loadPdfJs = () => {
+  return new Promise((resolve) => {
+    if (window.pdfjsLib) return resolve(window.pdfjsLib);
+    const script = document.createElement('script');
+    script.src = 'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js';
+    script.onload = () => {
+      window.pdfjsLib.GlobalWorkerOptions.workerSrc = 'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js';
+      resolve(window.pdfjsLib);
+    };
+    document.head.appendChild(script);
+  });
+};
 
-    // Auto-seleccionar rol disponible
-    if (userCanCumplimiento.value) selectedRole.value = 'cumplimiento';
-    else if (userCanJefatura.value) selectedRole.value = 'jefatura';
-  } catch (error) {
-    Swal.fire('Error', 'No se pudo cargar la solicitud', 'error');
-    router.push('/admin/solicitudes');
-  } finally {
-    loading.value = false;
-  }
+const renderPage = async (pdf, pageNum, canvas, scale = 1) => {
+  const page = await pdf.getPage(pageNum);
+  const viewport = page.getViewport({ scale });
+  const context = canvas.getContext('2d');
+  canvas.height = viewport.height;
+  canvas.width = viewport.width;
+  await page.render({ canvasContext: context, viewport }).promise;
 };
 
 const loadPdfPreview = async () => {
   if (!solicitud.value?.pdf_path) return;
   try {
     const response = await api.get(`/solicitudes/${solicitud.value.id}/descargar-pdf`, { responseType: 'blob' });
-    pdfBlobUrl.value = window.URL.createObjectURL(new Blob([response.data], { type: 'application/pdf' }));
+    const blob = new Blob([response.data], { type: 'application/pdf' });
+    pdfBlobUrl.value = window.URL.createObjectURL(blob);
+    
+    const pdfjs = await loadPdfJs();
+    const loadingTask = pdfjs.getDocument(pdfBlobUrl.value);
+    pdfDoc = await loadingTask.promise;
+    totalPages.value = pdfDoc.numPages;
+
+    // Renderizar primera página en el preview
+    if (previewCanvas.value) {
+      await renderPage(pdfDoc, 1, previewCanvas.value, 0.6);
+    }
   } catch (error) {
-    console.error("Error al cargar previa del PDF", error);
+    console.error("Error al cargar PDF", error);
+  }
+};
+
+const openProtectedViewer = async () => {
+  showModalViewer.value = true;
+  await nextTick();
+  for (let i = 1; i <= totalPages.value; i++) {
+    const canvas = canvasRefs.value[i];
+    if (canvas) await renderPage(pdfDoc, i, canvas, 1.5);
+  }
+};
+
+const fetchSolicitud = async () => {
+  try {
+    const response = await api.get(`/solicitudes/${route.params.id}`);
+    solicitud.value = response.data;
+    loadPdfPreview();
+    if (userCanCumplimiento.value) selectedRole.value = 'cumplimiento';
+    else if (userCanJefatura.value) selectedRole.value = 'jefatura';
+  } catch (error) {
+    router.push('/admin/solicitudes');
+  } finally {
+    loading.value = false;
   }
 };
 
 const submitDecision = async (estado) => {
   if (!decisionComment.value || decisionComment.value.length < 10) {
-    Swal.fire('Atención', 'Debes ingresar un comentario detallado (min. 10 caracteres).', 'warning');
+    Swal.fire('Atención', 'Comentario min. 10 caracteres.', 'warning');
     return;
   }
-
   const result = await Swal.fire({
-    title: `¿Estás seguro de ${estado === 'autorizado' ? 'AUTORIZAR' : 'RECHAZAR'}?`,
-    text: "Esta acción quedará registrada en la bitácora de auditoría del sistema.",
+    title: `¿Confirmar ${estado === 'autorizado' ? 'autorización' : 'rechazo'}?`,
     icon: 'question',
-    showCancelButton: true,
-    confirmButtonColor: estado === 'autorizado' ? '#16a34a' : '#dc2626',
-    confirmButtonText: `Sí, ${estado === 'autorizado' ? 'Autorizar' : 'Rechazar'}`,
-    cancelButtonText: 'Cancelar'
+    showCancelButton: true
   });
-
   if (!result.isConfirmed) return;
-
   isSubmitting.value = true;
   try {
     await api.post(`/solicitudes/${solicitud.value.id}/actualizar-estado`, {
-      estado,
-      comentario: decisionComment.value,
-      perfil: selectedRole.value
+      estado, comentario: decisionComment.value, perfil: selectedRole.value
     });
-
-    Swal.fire('¡Éxito!', 'La solicitud ha sido procesada correctamente.', 'success');
+    Swal.fire('Éxito', 'Procesado.', 'success');
     router.push('/admin/solicitudes');
   } catch (error) {
-    Swal.fire('Error', 'No se pudo procesar la solicitud.', 'error');
+    Swal.fire('Error', 'No procesado.', 'error');
   } finally {
     isSubmitting.value = false;
   }
 };
 
-const downloadPDF = async () => {
-  if (pdfBlobUrl.value) {
-    window.open(pdfBlobUrl.value, '_blank');
-  } else {
-    try {
-      const response = await api.get(`/solicitudes/${solicitud.value.id}/descargar-pdf`, { responseType: 'blob' });
-      const url = window.URL.createObjectURL(new Blob([response.data]));
-      window.open(url, '_blank');
-    } catch (error) {
-      Swal.fire('Error', 'No se pudo abrir el archivo', 'error');
-    }
-  }
+const triggerDownload = async () => {
+  if (!solicitud.value.autorizacion_completa) return;
+  const link = document.createElement('a');
+  link.href = pdfBlobUrl.value;
+  link.download = `Autorizacion_${solicitud.value.id}.pdf`;
+  link.click();
 };
 
 const formatDate = (dateString) => {
   if (!dateString) return '---';
-  return new Date(dateString).toLocaleString('es-GT', {
-    day: '2-digit', month: '2-digit', year: 'numeric',
-    hour: '2-digit', minute: '2-digit'
-  });
+  return new Date(dateString).toLocaleString('es-GT', { day: '2-digit', month: '2-digit', year: 'numeric', hour: '2-digit', minute: '2-digit' });
 };
 
-const getFlowCardClass = (status) => {
-  if (status === 'autorizado') return 'border-green-500 bg-green-50 dark:bg-green-900/10';
-  if (status === 'rechazado') return 'border-red-500 bg-red-50 dark:bg-red-900/10';
-  return 'border-yellow-500 bg-yellow-50 dark:bg-yellow-900/10';
+const getFlowCardClass = (s) => s === 'autorizado' ? 'border-green-500 bg-green-50 dark:bg-green-900/10' : (s === 'rechazado' ? 'border-red-500 bg-red-50 dark:bg-red-900/10' : 'border-yellow-500 bg-yellow-50 dark:bg-yellow-900/10');
+const getStatusBadgeClass = (s) => s === 'autorizado' ? 'bg-green-200 text-green-800 dark:bg-green-700 dark:text-green-100' : (s === 'rechazado' ? 'bg-red-200 text-red-800 dark:bg-red-700 dark:text-red-100' : 'bg-yellow-200 text-yellow-800 dark:bg-yellow-700 dark:text-yellow-100');
+
+// Prevenir capturas y atajos comunes
+const handleKeydown = (e) => {
+  if (showModalViewer.value) {
+    if ((e.ctrlKey || e.metaKey) && (e.key === 'p' || e.key === 's' || e.key === 'u' || e.key === 'c')) {
+      e.preventDefault();
+      Swal.fire({ text: 'Acción no permitida en modo lectura.', icon: 'warning', toast: true, position: 'top-end', showConfirmButton: false, timer: 2000 });
+    }
+  }
 };
 
-const getStatusBadgeClass = (status) => {
-  if (status === 'autorizado') return 'bg-green-200 text-green-800 dark:bg-green-700 dark:text-green-100';
-  if (status === 'rechazado') return 'bg-red-200 text-red-800 dark:bg-red-700 dark:text-red-100';
-  return 'bg-yellow-200 text-yellow-800 dark:bg-yellow-700 dark:text-yellow-100';
-};
-
-onMounted(fetchSolicitud);
+onMounted(() => {
+  fetchSolicitud();
+  window.addEventListener('keydown', handleKeydown);
+});
 
 onUnmounted(() => {
-  if (pdfBlobUrl.value) {
-    window.URL.revokeObjectURL(pdfBlobUrl.value);
-  }
+  if (pdfBlobUrl.value) window.URL.revokeObjectURL(pdfBlobUrl.value);
+  window.removeEventListener('keydown', handleKeydown);
 });
 </script>
 
 <style scoped>
-/* Estilos corporativos específicos */
-.shadow-inner {
-  box-shadow: inset 0 2px 4px 0 rgba(0, 0, 0, 0.06);
+.select-none {
+  user-select: none;
+  -webkit-user-select: none;
 }
 </style>
