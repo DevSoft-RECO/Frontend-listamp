@@ -181,6 +181,7 @@
                   <button @click="currentStep = 2" class="flex-1 py-4 border border-slate-200 dark:border-slate-700 rounded-lg font-bold text-slate-500 hover:bg-slate-50 transition-all">
                     Atrás
                   </button>
+                  
                   <button 
                     @click="handleFinalVerify"
                     :disabled="isGenerating || !idNumber"
@@ -188,7 +189,7 @@
                   >
                     <i v-if="isGenerating" class="pi pi-spin pi-spinner"></i>
                     <i v-else class="pi pi-verified"></i>
-                    <span>Ejecutar Verificación Final</span>
+                    <span>Verificar y Descargar</span>
                   </button>
                 </div>
               </div>
@@ -273,13 +274,56 @@ const handleInitialSearch = async () => {
   }
 };
 
+const loadPdfJs = (): Promise<any> => {
+  return new Promise((resolve) => {
+    if (window.pdfjsLib) return resolve(window.pdfjsLib);
+    const script = document.createElement('script');
+    script.src = '/libs/pdfjs/pdf.min.js';
+    script.onload = () => {
+      window.pdfjsLib.GlobalWorkerOptions.workerSrc = '/libs/pdfjs/pdf.worker.min.js';
+      resolve(window.pdfjsLib);
+    };
+    document.head.appendChild(script);
+  });
+};
+
 const handleFinalVerify = async () => {
   if (!idNumber.value) {
     Swal.fire('Aviso', 'Ingrese el número de documento', 'info');
     return;
   }
 
+  // SI NO HAY COINCIDENCIAS, PREGUNTAMOS EL FORMATO
+  let format = 'pdf';
+  if (results.value.length === 0) {
+    const { value: selectedFormat } = await Swal.fire({
+      title: 'Seleccione Formato de Descarga',
+      text: '¿En qué formato desea obtener el reporte limpio?',
+      icon: 'question',
+      showCancelButton: true,
+      showDenyButton: true,
+      confirmButtonText: '<i class="pi pi-file-pdf"></i> PDF',
+      denyButtonText: '<i class="pi pi-image"></i> Imagen (JPG)',
+      cancelButtonText: 'Cancelar',
+      confirmButtonColor: '#013d7b',
+      denyButtonColor: '#059669',
+    });
+
+    if (selectedFormat === undefined) return; // Cancelado
+    format = selectedFormat ? 'pdf' : 'image';
+  }
+
   isGenerating.value = true;
+  
+  if (format === 'image') {
+    Swal.fire({
+      title: 'Procesando...',
+      text: 'Generando reporte en formato imagen.',
+      allowOutsideClick: false,
+      didOpen: () => { Swal.showLoading(); }
+    });
+  }
+
   try {
     const formData = new FormData();
     formData.append('nombre_buscado', searchName.value);
@@ -299,16 +343,38 @@ const handleFinalVerify = async () => {
         if (data.status === 'autorizacion_requerida') {
           authData.value = data;
           showAuthModal.value = true;
+          Swal.close();
         }
       };
       reader.readAsText(response.data);
     } else {
-      const url = window.URL.createObjectURL(new Blob([response.data]));
-      const link = document.createElement('a');
-      link.href = url;
-      link.setAttribute('download', `Reporte_ListaMP_${idNumber.value}.pdf`);
-      document.body.appendChild(link);
-      link.click();
+      const blob = new Blob([response.data], { type: 'application/pdf' });
+      
+      if (format === 'image') {
+        const pdfjs = await loadPdfJs();
+        const arrayBuffer = await blob.arrayBuffer();
+        const pdf = await pdfjs.getDocument({ data: arrayBuffer }).promise;
+        const page = await pdf.getPage(1);
+        const viewport = page.getViewport({ scale: 2.0 });
+        const canvas = document.createElement('canvas');
+        const context = canvas.getContext('2d');
+        canvas.height = viewport.height;
+        canvas.width = viewport.width;
+        await page.render({ canvasContext: context, viewport }).promise;
+        
+        const link = document.createElement('a');
+        link.href = canvas.toDataURL('image/jpeg', 0.9);
+        link.download = `Reporte_ListaMP_${idNumber.value}.jpg`;
+        link.click();
+        Swal.close();
+      } else {
+        const url = window.URL.createObjectURL(blob);
+        const link = document.createElement('a');
+        link.href = url;
+        link.setAttribute('download', `Reporte_ListaMP_${idNumber.value}.pdf`);
+        document.body.appendChild(link);
+        link.click();
+      }
       
       Swal.fire({
         icon: 'success',

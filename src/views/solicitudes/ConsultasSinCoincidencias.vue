@@ -272,9 +272,9 @@ const loadPdfJs = () => {
   return new Promise((resolve) => {
     if (window.pdfjsLib) return resolve(window.pdfjsLib);
     const script = document.createElement('script');
-    script.src = 'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js';
+    script.src = '/libs/pdfjs/pdf.min.js';
     script.onload = () => {
-      window.pdfjsLib.GlobalWorkerOptions.workerSrc = 'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js';
+      window.pdfjsLib.GlobalWorkerOptions.workerSrc = '/libs/pdfjs/pdf.worker.min.js';
       resolve(window.pdfjsLib);
     };
     document.head.appendChild(script);
