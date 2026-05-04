@@ -98,6 +98,14 @@ const routes: RouteRecordRaw[] = [
                 meta: {
                     title: 'Detalle de Solicitud'
                 }
+            },
+            {
+                path: 'consultas-sin-resultado',
+                name: 'consultas-sin-resultado',
+                component: () => import('@/views/solicitudes/ConsultasSinCoincidencias.vue'),
+                meta: {
+                    title: 'Historial de Consultas Limpias'
+                }
             }
         ]
     },
