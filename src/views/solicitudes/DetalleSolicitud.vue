@@ -155,7 +155,7 @@
                   class="w-full rounded-xl border-gray-200 dark:border-gray-700 dark:bg-gray-900 dark:text-white text-sm focus:ring-[#013d7b] dark:focus:ring-[#5aba03] transition-all"></textarea>
                 
                 <div class="flex flex-wrap gap-3">
-                  <button @click="submitDecision('autorizado')" :disabled="isSubmitting"
+                  <button v-if="canAuthorize" @click="submitDecision('autorizado')" :disabled="isSubmitting"
                     class="flex items-center px-6 py-2.5 bg-[#5aba03] hover:bg-[#4aa002] text-white rounded-lg text-sm font-bold shadow-md transition-all disabled:opacity-50 uppercase tracking-wide">
                     <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                       <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
@@ -278,6 +278,19 @@ const userCanJefatura = computed(() => {
 });
 
 const canDecide = computed(() => userCanCumplimiento.value || userCanJefatura.value);
+
+// Lógica para ocultar botón de autorizar si ya hay un rechazo en flujo "Ambos"
+const canAuthorize = computed(() => {
+  if (!solicitud.value) return false;
+  if (solicitud.value.destinatario !== 'ambos') return true;
+  
+  if (selectedRole.value === 'cumplimiento') {
+    return solicitud.value.estado_jefatura !== 'rechazado';
+  } else if (selectedRole.value === 'jefatura') {
+    return solicitud.value.estado_cumplimiento !== 'rechazado';
+  }
+  return true;
+});
 
 const fetchSolicitud = async () => {
   try {
