@@ -82,6 +82,22 @@ const routes: RouteRecordRaw[] = [
                 meta: {
                     title: 'Validación MP y Créditos'
                 }
+            },
+            {
+                path: 'solicitudes',
+                name: 'solicitudes',
+                component: () => import('@/views/solicitudes/BandejaSolicitudes.vue'),
+                meta: {
+                    title: 'Bandeja de Autorizaciones'
+                }
+            },
+            {
+                path: 'solicitudes/:id',
+                name: 'detalle-solicitud',
+                component: () => import('@/views/solicitudes/DetalleSolicitud.vue'),
+                meta: {
+                    title: 'Detalle de Solicitud'
+                }
             }
         ]
     },
