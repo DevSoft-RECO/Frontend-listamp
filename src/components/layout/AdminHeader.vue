@@ -1,78 +1,83 @@
 <template>
   <header
-    class="sticky top-0 z-50 w-full bg-azul-cope dark:bg-slate-950 border-b border-white/10 dark:border-white/5 shadow-lg transition-all duration-300"
+    class="sticky top-0 z-50 w-full bg-[#013d7b] dark:bg-[#05070a] border-b border-white/10 dark:border-gray-800 transition-all duration-500 font-mono shadow-2xl"
   >
-    <div class="w-full px-6 h-16 flex items-center justify-between">
+    <!-- Scanner Line Animation -->
+    <div class="absolute bottom-0 left-0 w-full h-[1px] bg-gradient-to-r from-transparent via-cyan-400 to-transparent opacity-30 dark:opacity-50 animate-[scan_3s_linear_infinite]"></div>
+
+    <div class="w-full px-6 h-16 flex items-center justify-between relative overflow-hidden">
       
-      <!-- Left: Mobile Menu Toggle (Ahora al extremo izquierdo en móviles) -->
-      <div class="flex items-center xl:hidden w-12">
+      <!-- Decoración de Terminal de Seguridad -->
+      <div class="absolute left-0 top-0 h-full w-1 bg-verde-cope"></div>
+      <!-- Background Glow -->
+      <div class="absolute -top-24 -left-24 w-48 h-48 bg-cyan-500/10 blur-[60px] rounded-full pointer-events-none"></div>
+
+      <!-- Left: Mobile Menu Toggle -->
+      <div class="flex items-center xl:hidden">
         <button 
           @click="isMobileMenuOpen = !isMobileMenuOpen"
-          class="flex items-center justify-center p-2.5 rounded-xl bg-white/10 text-white hover:bg-white/20 transition-all active:scale-90"
+          class="flex items-center justify-center p-2 rounded-xl bg-white/10 dark:bg-gray-900 text-white dark:text-gray-400 border border-white/10 dark:border-gray-800 hover:bg-white/20 dark:hover:bg-gray-800 transition-all active:scale-90"
         >
-          <svg v-if="!isMobileMenuOpen" class="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16" />
-          </svg>
-          <svg v-else class="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
-          </svg>
+          <Menu v-if="!isMobileMenuOpen" class="w-6 h-6" />
+          <X v-else class="w-6 h-6" />
         </button>
       </div>
 
       <!-- Center (Mobile) / Left (Desktop): Logo & Branding -->
-      <div class="flex items-center gap-3 absolute left-1/2 -translate-x-1/2 xl:relative xl:left-0 xl:translate-x-0 shrink-0 transition-all duration-300">
-        <img src="@/assets/logoyk1.svg" alt="YK" class="h-9 xl:h-10 w-auto" />
-        <div class="h-8 w-[1px] bg-white/20 hidden lg:block"></div>
-        <div class="hidden lg:flex flex-col">
-          <span class="text-sm font-black text-white uppercase tracking-tighter leading-none">Búro Interno</span>
-          <span class="text-[10px] font-bold text-verde-cope uppercase tracking-widest">Mp y Créditos</span>
+      <div class="flex items-center gap-4 absolute left-1/2 -translate-x-1/2 xl:relative xl:left-0 xl:translate-x-0 shrink-0 transition-all duration-300">
+        <div class="relative group cursor-pointer" @click="$router.push('/admin/dashboard')">
+          <div class="absolute -inset-1 bg-cyan-400 rounded-lg blur opacity-10 group-hover:opacity-30 transition duration-1000 group-hover:duration-200"></div>
+          <img src="@/assets/logoyk1.svg" alt="YK" class="relative h-8 xl:h-9 w-auto brightness-0 invert" />
+        </div>
+        
+        <div class="hidden lg:flex flex-col border-l border-white/20 dark:border-gray-800 pl-4">
+          <div class="flex items-center gap-2">
+            <ShieldCheck class="w-3 h-3 text-cyan-400" />
+            <span class="text-[11px] font-black text-white uppercase tracking-tighter leading-none">Búro de Seguridad Interna</span>
+          </div>
+          <span class="text-[9px] font-bold text-emerald-400 dark:text-verde-cope uppercase tracking-[0.2em] mt-1">Protocolo de Listas V.3</span>
         </div>
       </div>
 
-      <!-- Center: Empty (Navigation moved to Dock) -->
-      <div class="flex-1"></div>
-
-      <!-- Right: Actions & User (Compacto en móviles) -->
-      <div class="flex items-center gap-1 sm:gap-2 shrink-0">
+      <!-- Right: Actions & User -->
+      <div class="flex items-center gap-3 shrink-0">
         
         <!-- Theme Toggle -->
         <button
           @click="layoutStore.toggleTheme"
-          class="p-2 rounded-xl text-gris-cope hover:bg-white/10 transition-all focus:outline-none"
-          title="Cambiar Tema"
+          class="p-2.5 rounded-xl text-white/70 dark:text-gray-400 bg-white/10 dark:bg-gray-900 border border-white/10 dark:border-gray-800 hover:bg-white/20 dark:hover:bg-gray-800 transition-all focus:outline-none"
         >
-          <svg v-if="layoutStore.isDark" class="w-5 h-5 sm:w-6 sm:h-6 text-yellow-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364 6.364l-.707-.707M6.343 6.343l-.707-.707m12.728 0l-.707.707M6.343 17.657l-.707.707M16 12a4 4 0 11-8 0 4 4 0 018 0z" />
-          </svg>
-          <svg v-else class="w-5 h-5 sm:w-6 sm:h-6 text-gris-cope" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z" />
-          </svg>
+          <Sun v-if="layoutStore.isDark" class="w-5 h-5 text-amber-400" />
+          <Moon v-else class="w-5 h-5" />
         </button>
 
-        <!-- User Info -->
-        <div class="flex items-center gap-2">
+        <!-- User Info Badge -->
+        <div class="group relative flex items-center gap-3 pl-3 py-1 pr-1 bg-white/5 dark:bg-gray-900 border border-white/10 dark:border-gray-800 rounded-2xl transition-all hover:border-cyan-400/50">
           <div class="hidden sm:flex flex-col items-end">
-            <span class="text-sm font-black text-white leading-none">{{ userName }}</span>
-            <span class="text-[10px] font-bold text-verde-cope uppercase tracking-widest mt-1">{{ userAgencia }}</span>
+            <span class="text-[11px] font-black text-white leading-none uppercase tracking-tight">{{ userName }}</span>
+            <div class="flex items-center gap-1 mt-1">
+              <div class="w-1 h-1 rounded-full bg-emerald-400"></div>
+              <span class="text-[8px] font-bold text-white/50 dark:text-gray-500 uppercase tracking-widest">{{ userAgencia }}</span>
+            </div>
           </div>
           
-          <div class="h-9 w-9 sm:h-10 sm:w-10 rounded-xl overflow-hidden border-2 border-white/20 shadow-sm shrink-0">
+          <div class="h-9 w-9 rounded-xl overflow-hidden border-2 border-white/20 dark:border-gray-800 shadow-sm shrink-0 relative">
             <img v-if="userPhoto" :src="userPhoto" class="h-full w-full object-cover" alt="Avatar">
-            <div v-else class="h-full w-full bg-white/10 text-white flex items-center justify-center font-black text-sm">
+            <div v-else class="h-full w-full bg-cyan-500 text-white flex items-center justify-center font-black text-xs uppercase">
                 {{ userInitials }}
             </div>
+            <!-- Overlay Scanner -->
+            <div class="absolute inset-0 bg-cyan-400/10 opacity-0 group-hover:opacity-100 transition-opacity"></div>
           </div>
         </div>
 
-        <!-- Botón Salir Directo (Modernizado y Compacto) -->
+        <!-- Logout / Return (Terminal Style) -->
         <button
           @click="handleReturnToMother"
-          class="group relative flex items-center justify-center h-9 w-9 sm:h-11 sm:w-11 rounded-xl bg-red-500/10 hover:bg-red-500 text-red-500 hover:text-white border border-red-500/20 transition-all duration-300 shadow-lg hover:shadow-red-500/40 ml-1"
-          title="Regresar al Portal"
+          class="group flex items-center justify-center h-10 w-10 rounded-xl bg-rose-500/10 hover:bg-rose-500 text-rose-400 hover:text-white border border-rose-500/20 transition-all duration-300 shadow-lg hover:shadow-rose-500/40"
+          title="Finalizar Sesión_Segura"
         >
-          <svg class="w-4 h-4 sm:w-5 sm:h-5 transition-transform duration-300 group-hover:rotate-90" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1" />
-          </svg>
+          <LogOut class="w-5 h-5 group-hover:translate-x-0.5 transition-transform" />
         </button>
       </div>
     </div>
@@ -86,23 +91,23 @@
       leave-from-class="opacity-100 translate-y-0"
       leave-to-class="opacity-0 -translate-y-4"
     >
-      <div v-if="isMobileMenuOpen" class="xl:hidden bg-azul-cope dark:bg-slate-950 border-b border-white/10 dark:border-white/5 max-h-[calc(100vh-80px)] overflow-y-auto shadow-2xl">
+      <div v-if="isMobileMenuOpen" class="xl:hidden bg-[#013d7b] dark:bg-[#05070a] border-b border-white/10 dark:border-gray-800 max-h-[calc(100vh-80px)] overflow-y-auto shadow-2xl">
         <div class="p-4 space-y-2">
           <template v-for="item in menuItems" :key="item.id">
             <RouterLink
               v-if="!item.children"
               :to="item.route"
               @click="isMobileMenuOpen = false"
-              class="flex items-center gap-3 p-4 rounded-xl font-bold"
-              :class="isActive(item.route) ? 'bg-verde-cope text-white' : 'text-gris-cope hover:bg-white/10'"
+              class="flex items-center gap-3 p-4 rounded-xl font-black text-xs uppercase tracking-widest"
+              :class="isActive(item.route) ? 'bg-cyan-500 text-white' : 'text-white/60 hover:bg-white/10'"
             >
-              <svg v-html="item.iconSvg" class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"></svg>
+              <div v-html="item.iconSvg" class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"></div>
               {{ item.label }}
             </RouterLink>
 
             <div v-else class="space-y-1">
-              <div class="px-4 py-2 text-[10px] font-black text-white/50 uppercase tracking-widest flex items-center gap-2">
-                <svg v-html="item.iconSvg" class="w-3 h-3" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"></svg>
+              <div class="px-4 py-2 text-[10px] font-black text-white/40 uppercase tracking-[0.2em] flex items-center gap-2 mt-2">
+                <div v-html="item.iconSvg" class="w-3 h-3" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"></div>
                 {{ item.label }}
               </div>
               <RouterLink
@@ -110,9 +115,10 @@
                 :key="child.route"
                 :to="child.route"
                 @click="isMobileMenuOpen = false"
-                class="flex items-center gap-3 p-4 ml-4 rounded-xl font-bold"
-                :class="isActive(child.route) ? 'bg-white/20 text-white' : 'text-white/60 hover:text-white hover:bg-white/5'"
+                class="flex items-center gap-3 p-4 ml-4 rounded-xl font-bold text-xs"
+                :class="isActive(child.route) ? 'bg-white/10 text-cyan-400' : 'text-white/50 hover:text-white hover:bg-white/5'"
               >
+                <div class="w-1.5 h-1.5 rounded-full" :class="isActive(child.route) ? 'bg-emerald-400 animate-pulse' : 'bg-white/20'"></div>
                 {{ child.label }}
               </RouterLink>
             </div>
@@ -129,6 +135,15 @@ import { useRoute } from "vue-router"
 import { useLayoutStore } from "@/stores/layout"
 import { useAuthStore } from "@/stores/auth"
 import { getAvatarUrl } from "@/utils/imageUtils"
+import { 
+  ShieldCheck, 
+  Lock, 
+  Menu, 
+  X, 
+  Moon, 
+  Sun, 
+  LogOut 
+} from 'lucide-vue-next'
 
 const layoutStore = useLayoutStore()
 const authStore = useAuthStore()
@@ -136,7 +151,7 @@ const route = useRoute()
 
 const isMobileMenuOpen = ref(false)
 
-// Navigation Items (Fused from Sidebar)
+// Navegación
 const menuItems = [
   {
     id: 'home',
@@ -185,7 +200,6 @@ const userPhoto = computed(() => getAvatarUrl(authStore.user?.avatar) || null)
 const userInitials = computed(() => (userName.value || "U").substring(0, 2).toUpperCase())
 
 const isActive = (path: string) => route.path === path
-const isGroupActive = (item: any) => item.children?.some((child: any) => route.path === child.route)
 
 const handleReturnToMother = () => {
     authStore.logoutLocal() 
@@ -200,6 +214,13 @@ onMounted(async () => {
 </script>
 
 <style scoped>
+@reference "../../assets/main.css";
+
+@keyframes scan {
+  0% { transform: translateX(-100%); }
+  100% { transform: translateX(100%); }
+}
+
 .router-link-active {
   transition: all 0.3s ease;
 }
