@@ -27,7 +27,7 @@
       <div class="flex items-center gap-4 absolute left-1/2 -translate-x-1/2 xl:relative xl:left-0 xl:translate-x-0 shrink-0 transition-all duration-300">
         <div class="relative group cursor-pointer" @click="$router.push('/admin/dashboard')">
           <div class="absolute -inset-1 bg-cyan-400 rounded-lg blur opacity-10 group-hover:opacity-30 transition duration-1000 group-hover:duration-200"></div>
-          <img src="@/assets/logoyk1.svg" alt="YK" class="relative h-8 xl:h-9 w-auto brightness-0 invert" />
+          <img src="@/assets/logoyk1.svg" alt="YK" class="relative h-8 xl:h-9 w-auto" />
         </div>
         
         <div class="hidden lg:flex flex-col border-l border-white/20 dark:border-gray-800 pl-4">
