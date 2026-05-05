@@ -1,5 +1,5 @@
 <template>
-  <div class="min-h-screen bg-slate-50 dark:bg-slate-950 text-slate-900 dark:text-slate-100 font-sans transition-colors duration-300">
+  <div>
     <!-- Top Bar / Navigation -->
     <nav class="bg-white dark:bg-slate-900 border-b border-slate-200 dark:border-slate-800 px-6 py-4 mb-8">
       <div class="max-w-6xl mx-auto flex justify-between items-center">

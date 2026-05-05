@@ -8,7 +8,7 @@
     <AdminHeader />
 
     <main class="flex-1 overflow-x-hidden overflow-y-auto p-6 pb-24 relative custom-scrollbar">
-      <div class="max-w-7xl mx-auto">
+      <div class="w-full">
         <RouterView v-slot="{ Component }">
           <Transition name="page" mode="out-in">
             <component :is="Component" />

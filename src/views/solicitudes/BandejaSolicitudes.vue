@@ -1,171 +1,169 @@
 <template>
-  <div class="p-4 sm:p-6 lg:p-8 bg-gray-50 dark:bg-gray-900 min-h-screen">
-    <div class="max-w-7xl mx-auto">
-      <!-- Encabezado -->
-      <div class="mb-8 flex flex-col md:flex-row md:items-center md:justify-between gap-4">
-        <div>
-          <h1 class="text-3xl font-extrabold text-gray-900 dark:text-white flex items-center gap-3">
-            <span class="p-2 bg-amber-100 dark:bg-amber-900/30 rounded-xl">
-              <svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8 text-amber-600 dark:text-amber-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
-              </svg>
-            </span>
-            Bandeja de Autorizaciones
-          </h1>
-          <p class="mt-2 text-gray-600 dark:text-gray-400">Gestión y auditoría de solicitudes de validación de riesgo.</p>
-        </div>
+  <div>
+    <!-- Encabezado -->
+    <div class="mb-8 flex flex-col md:flex-row md:items-center md:justify-between gap-4">
+      <div>
+        <h1 class="text-3xl font-extrabold text-gray-900 dark:text-white flex items-center gap-3">
+          <span class="p-2 bg-amber-100 dark:bg-amber-900/30 rounded-xl">
+            <svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8 text-amber-600 dark:text-amber-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
+            </svg>
+          </span>
+          Bandeja de Autorizaciones
+        </h1>
+        <p class="mt-2 text-gray-600 dark:text-gray-400">Gestión y auditoría de solicitudes de validación de riesgo.</p>
       </div>
+    </div>
 
-      <!-- Tabs de Navegación -->
-      <div class="mb-6 border-b border-gray-200 dark:border-gray-700">
-        <nav class="-mb-px flex space-x-8" aria-label="Tabs">
-          <button 
-            v-for="tab in tabs" 
-            :key="tab.id"
-            @click="currentTab = tab.id"
-            :class="[
-              currentTab === tab.id
-                ? 'border-amber-500 text-amber-600 dark:text-amber-400'
-                : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300 dark:text-gray-400 dark:hover:text-gray-300',
-              'whitespace-nowrap py-4 px-1 border-b-2 font-bold text-sm transition-colors duration-200 flex items-center gap-2'
-            ]"
+    <!-- Tabs de Navegación -->
+    <div class="mb-6 border-b border-gray-200 dark:border-gray-700">
+      <nav class="-mb-px flex space-x-8" aria-label="Tabs">
+        <button 
+          v-for="tab in tabs" 
+          :key="tab.id"
+          @click="currentTab = tab.id"
+          :class="[
+            currentTab === tab.id
+              ? 'border-amber-500 text-amber-600 dark:text-amber-400'
+              : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300 dark:text-gray-400 dark:hover:text-gray-300',
+            'whitespace-nowrap py-4 px-1 border-b-2 font-bold text-sm transition-colors duration-200 flex items-center gap-2'
+          ]"
+        >
+          <svg v-if="tab.id === 'pendientes'" xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" /></svg>
+          <svg v-else-if="tab.id === 'autorizadas'" xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" /></svg>
+          <svg v-else-if="tab.id === 'rechazadas'" xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 14l2-2m0 0l2-2m-2 2l-2-2m2 2l2 2m7-2a9 9 0 11-18 0 9 9 0 0118 0z" /></svg>
+          {{ tab.name }}
+          <span 
+            v-if="tab.count > 0"
+            class="ml-2 bg-gray-100 dark:bg-gray-800 text-gray-600 dark:text-gray-400 py-0.5 px-2.5 rounded-full text-xs font-medium"
           >
-            <svg v-if="tab.id === 'pendientes'" xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" /></svg>
-            <svg v-else-if="tab.id === 'autorizadas'" xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" /></svg>
-            <svg v-else-if="tab.id === 'rechazadas'" xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 14l2-2m0 0l2-2m-2 2l-2-2m2 2l2 2m7-2a9 9 0 11-18 0 9 9 0 0118 0z" /></svg>
-            {{ tab.name }}
-            <span 
-              v-if="tab.count > 0"
-              class="ml-2 bg-gray-100 dark:bg-gray-800 text-gray-600 dark:text-gray-400 py-0.5 px-2.5 rounded-full text-xs font-medium"
-            >
-              {{ tab.count }}
-            </span>
+            {{ tab.count }}
+          </span>
+        </button>
+      </nav>
+    </div>
+
+    <!-- Filtros -->
+    <div class="bg-white dark:bg-gray-800 rounded-2xl shadow-sm border border-gray-200 dark:border-gray-700 p-4 mb-6">
+      <div class="grid grid-cols-1 md:grid-cols-4 gap-4 items-end">
+        <div>
+          <label class="block text-xs font-bold text-gray-500 dark:text-gray-400 uppercase tracking-wider mb-2">Destinatario</label>
+          <select v-model="filters.destinatario" class="w-full rounded-xl border-gray-200 dark:border-gray-700 dark:bg-gray-900 dark:text-white text-sm focus:ring-amber-500 focus:border-amber-500 transition-all">
+            <option value="todos">Todos los destinatarios</option>
+            <option value="cumplimiento">Cumplimiento</option>
+            <option value="jefatura">Jefe de Agencia</option>
+            <option value="ambos">Ambos</option>
+          </select>
+        </div>
+        <div>
+          <label class="block text-xs font-bold text-gray-500 dark:text-gray-400 uppercase tracking-wider mb-2">Fecha Inicio</label>
+          <input type="date" v-model="filters.fecha_inicio" class="w-full rounded-xl border-gray-200 dark:border-gray-700 dark:bg-gray-900 dark:text-white text-sm focus:ring-amber-500 focus:border-amber-500 transition-all" />
+        </div>
+        <div>
+          <label class="block text-xs font-bold text-gray-500 dark:text-gray-400 uppercase tracking-wider mb-2">Fecha Fin</label>
+          <input type="date" v-model="filters.fecha_fin" class="w-full rounded-xl border-gray-200 dark:border-gray-700 dark:bg-gray-900 dark:text-white text-sm focus:ring-amber-500 focus:border-amber-500 transition-all" />
+        </div>
+        <div class="flex gap-2">
+          <button @click="fetchData" class="flex-1 bg-amber-600 hover:bg-amber-700 text-white px-4 py-2.5 rounded-xl text-sm font-bold shadow-sm transition-all flex items-center justify-center gap-2">
+            <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+            </svg>
+            Filtrar
           </button>
-        </nav>
-      </div>
-
-      <!-- Filtros -->
-      <div class="bg-white dark:bg-gray-800 rounded-2xl shadow-sm border border-gray-200 dark:border-gray-700 p-4 mb-6">
-        <div class="grid grid-cols-1 md:grid-cols-4 gap-4 items-end">
-          <div>
-            <label class="block text-xs font-bold text-gray-500 dark:text-gray-400 uppercase tracking-wider mb-2">Destinatario</label>
-            <select v-model="filters.destinatario" class="w-full rounded-xl border-gray-200 dark:border-gray-700 dark:bg-gray-900 dark:text-white text-sm focus:ring-amber-500 focus:border-amber-500 transition-all">
-              <option value="todos">Todos los destinatarios</option>
-              <option value="cumplimiento">Cumplimiento</option>
-              <option value="jefatura">Jefe de Agencia</option>
-              <option value="ambos">Ambos</option>
-            </select>
-          </div>
-          <div>
-            <label class="block text-xs font-bold text-gray-500 dark:text-gray-400 uppercase tracking-wider mb-2">Fecha Inicio</label>
-            <input type="date" v-model="filters.fecha_inicio" class="w-full rounded-xl border-gray-200 dark:border-gray-700 dark:bg-gray-900 dark:text-white text-sm focus:ring-amber-500 focus:border-amber-500 transition-all" />
-          </div>
-          <div>
-            <label class="block text-xs font-bold text-gray-500 dark:text-gray-400 uppercase tracking-wider mb-2">Fecha Fin</label>
-            <input type="date" v-model="filters.fecha_fin" class="w-full rounded-xl border-gray-200 dark:border-gray-700 dark:bg-gray-900 dark:text-white text-sm focus:ring-amber-500 focus:border-amber-500 transition-all" />
-          </div>
-          <div class="flex gap-2">
-            <button @click="fetchData" class="flex-1 bg-amber-600 hover:bg-amber-700 text-white px-4 py-2.5 rounded-xl text-sm font-bold shadow-sm transition-all flex items-center justify-center gap-2">
-              <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
-              </svg>
-              Filtrar
-            </button>
-            <button @click="resetFilters" class="p-2.5 text-gray-500 hover:bg-gray-100 dark:hover:bg-gray-700 rounded-xl transition-all">
-              <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15" />
-              </svg>
-            </button>
-          </div>
+          <button @click="resetFilters" class="p-2.5 text-gray-500 hover:bg-gray-100 dark:hover:bg-gray-700 rounded-xl transition-all">
+            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15" />
+            </svg>
+          </button>
         </div>
       </div>
+    </div>
 
-      <!-- Tabla de Resultados -->
-      <div class="bg-white dark:bg-gray-800 rounded-2xl shadow-xl border border-gray-200 dark:border-gray-700 overflow-hidden">
-        <div v-if="loading" class="p-12 flex flex-col items-center justify-center text-gray-500">
-          <div class="animate-spin rounded-full h-12 w-12 border-b-2 border-amber-600 mb-4"></div>
-          <p class="font-medium">Cargando solicitudes...</p>
-        </div>
+    <!-- Tabla de Resultados -->
+    <div class="bg-white dark:bg-gray-800 rounded-2xl shadow-xl border border-gray-200 dark:border-gray-700 overflow-hidden">
+      <div v-if="loading" class="p-12 flex flex-col items-center justify-center text-gray-500">
+        <div class="animate-spin rounded-full h-12 w-12 border-b-2 border-amber-600 mb-4"></div>
+        <p class="font-medium">Cargando solicitudes...</p>
+      </div>
 
-        <div v-else-if="solicitudes.length === 0" class="p-12 flex flex-col items-center justify-center text-gray-500">
-          <svg xmlns="http://www.w3.org/2000/svg" class="h-16 w-16 mb-4 text-gray-300 dark:text-gray-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M20 13V6a2 2 0 00-2-2H6a2 2 0 00-2 2v7m16 0v5a2 2 0 01-2 2H6a2 2 0 01-2-2v-5m16 0h-2.586a1 1 0 00-.707.293l-2.414 2.414a1 1 0 01-.707.293h-3.172a1 1 0 01-.707-.293l-2.414-2.414A1 1 0 006.586 13H4" />
-          </svg>
-          <p class="text-xl font-bold text-gray-400">No se encontraron solicitudes</p>
-          <p class="text-sm">Intenta ajustar los filtros de búsqueda.</p>
-        </div>
+      <div v-else-if="solicitudes.length === 0" class="p-12 flex flex-col items-center justify-center text-gray-500">
+        <svg xmlns="http://www.w3.org/2000/svg" class="h-16 w-16 mb-4 text-gray-300 dark:text-gray-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M20 13V6a2 2 0 00-2-2H6a2 2 0 00-2 2v7m16 0v5a2 2 0 01-2 2H6a2 2 0 01-2-2v-5m16 0h-2.586a1 1 0 00-.707.293l-2.414 2.414a1 1 0 01-.707.293h-3.172a1 1 0 01-.707-.293l-2.414-2.414A1 1 0 006.586 13H4" />
+        </svg>
+        <p class="text-xl font-bold text-gray-400">No se encontraron solicitudes</p>
+        <p class="text-sm">Intenta ajustar los filtros de búsqueda.</p>
+      </div>
 
-        <div v-else class="overflow-x-auto">
-          <table class="w-full text-left border-collapse">
-            <thead>
-              <tr class="bg-gray-50 dark:bg-gray-900/50 text-gray-500 dark:text-gray-400">
-                <th class="px-6 py-4 text-xs font-bold uppercase tracking-wider">Solicitante / Agencia</th>
-                <th class="px-6 py-4 text-xs font-bold uppercase tracking-wider">Destinatario</th>
-                <th class="px-6 py-4 text-xs font-bold uppercase tracking-wider">Estado Cumplimiento</th>
-                <th class="px-6 py-4 text-xs font-bold uppercase tracking-wider">Estado Jefatura</th>
-                <th class="px-6 py-4 text-xs font-bold uppercase tracking-wider text-right">Acciones</th>
-              </tr>
-            </thead>
-            <tbody class="divide-y divide-gray-100 dark:divide-gray-700">
-              <tr v-for="s in solicitudes" :key="s.id" class="hover:bg-gray-50 dark:hover:bg-gray-700/30 transition-colors group">
-                <td class="px-6 py-4">
-                  <div class="flex flex-col">
-                    <span class="font-bold text-gray-900 dark:text-white">{{ s.usuario?.name || 'N/A' }}</span>
-                    <span class="text-[10px] text-amber-600 font-bold uppercase tracking-wider">{{ s.usuario?.puesto || 'Colaborador' }}</span>
-                    <span class="text-xs text-gray-500 dark:text-gray-400">{{ s.agencia?.nombre || 'Sin Agencia' }}</span>
-                    <span class="text-[10px] mt-1 text-gray-400">{{ formatDate(s.created_at) }}</span>
-                  </div>
-                </td>
-                <td class="px-6 py-4">
-                  <span class="px-2.5 py-1 rounded-lg text-xs font-bold uppercase tracking-tighter" :class="getDestinatarioClass(s.destinatario)">
-                    {{ s.destinatario }}
-                  </span>
-                </td>
-                <td class="px-6 py-4">
-                  <span class="px-2.5 py-1 rounded-full text-xs font-bold" :class="getStatusClass(s.estado_cumplimiento)">
-                    {{ s.estado_cumplimiento || 'pendiente' }}
-                  </span>
-                </td>
-                <td class="px-6 py-4">
-                  <span class="px-2.5 py-1 rounded-full text-xs font-bold" :class="getStatusClass(s.estado_jefatura)">
-                    {{ s.estado_jefatura || 'pendiente' }}
-                  </span>
-                </td>
-                <td class="px-6 py-4 text-right">
-                  <div class="flex justify-end items-center gap-2">
-                    <router-link :to="`/admin/solicitudes/${s.id}`" class="p-2 text-blue-600 hover:bg-blue-50 dark:hover:bg-blue-900/30 rounded-lg transition-all" title="Ver Detalle">
-                      <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" />
-                      </svg>
-                    </router-link>
-                    <button v-if="s.autorizacion_completa" @click="downloadPDF(s.id)" class="p-2 text-green-600 hover:bg-green-50 dark:hover:bg-green-900/30 rounded-lg transition-all" title="Descargar PDF">
-                      <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
-                      </svg>
-                    </button>
-                  </div>
-                </td>
-              </tr>
-            </tbody>
-          </table>
-        </div>
+      <div v-else class="overflow-x-auto">
+        <table class="w-full text-left border-collapse">
+          <thead>
+            <tr class="bg-gray-50 dark:bg-gray-900/50 text-gray-500 dark:text-gray-400">
+              <th class="px-6 py-4 text-xs font-bold uppercase tracking-wider">Solicitante / Agencia</th>
+              <th class="px-6 py-4 text-xs font-bold uppercase tracking-wider">Destinatario</th>
+              <th class="px-6 py-4 text-xs font-bold uppercase tracking-wider">Estado Cumplimiento</th>
+              <th class="px-6 py-4 text-xs font-bold uppercase tracking-wider">Estado Jefatura</th>
+              <th class="px-6 py-4 text-xs font-bold uppercase tracking-wider text-right">Acciones</th>
+            </tr>
+          </thead>
+          <tbody class="divide-y divide-gray-100 dark:divide-gray-700">
+            <tr v-for="s in solicitudes" :key="s.id" class="hover:bg-gray-50 dark:hover:bg-gray-700/30 transition-colors group">
+              <td class="px-6 py-4">
+                <div class="flex flex-col">
+                  <span class="font-bold text-gray-900 dark:text-white">{{ s.usuario?.name || 'N/A' }}</span>
+                  <span class="text-[10px] text-amber-600 font-bold uppercase tracking-wider">{{ s.usuario?.puesto || 'Colaborador' }}</span>
+                  <span class="text-xs text-gray-500 dark:text-gray-400">{{ s.agencia?.nombre || 'Sin Agencia' }}</span>
+                  <span class="text-[10px] mt-1 text-gray-400">{{ formatDate(s.created_at) }}</span>
+                </div>
+              </td>
+              <td class="px-6 py-4">
+                <span class="px-2.5 py-1 rounded-lg text-xs font-bold uppercase tracking-tighter" :class="getDestinatarioClass(s.destinatario)">
+                  {{ s.destinatario }}
+                </span>
+              </td>
+              <td class="px-6 py-4">
+                <span class="px-2.5 py-1 rounded-full text-xs font-bold" :class="getStatusClass(s.estado_cumplimiento)">
+                  {{ s.estado_cumplimiento || 'pendiente' }}
+                </span>
+              </td>
+              <td class="px-6 py-4">
+                <span class="px-2.5 py-1 rounded-full text-xs font-bold" :class="getStatusClass(s.estado_jefatura)">
+                  {{ s.estado_jefatura || 'pendiente' }}
+                </span>
+              </td>
+              <td class="px-6 py-4 text-right">
+                <div class="flex justify-end items-center gap-2">
+                  <router-link :to="`/admin/solicitudes/${s.id}`" class="p-2 text-blue-600 hover:bg-blue-50 dark:hover:bg-blue-900/30 rounded-lg transition-all" title="Ver Detalle">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
+                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" />
+                    </svg>
+                  </router-link>
+                  <button v-if="s.autorizacion_completa" @click="downloadPDF(s.id)" class="p-2 text-green-600 hover:bg-green-50 dark:hover:bg-green-900/30 rounded-lg transition-all" title="Descargar PDF">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+                    </svg>
+                  </button>
+                </div>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
 
-        <!-- Paginación Simple -->
-        <div v-if="totalPages > 1" class="px-6 py-4 bg-gray-50 dark:bg-gray-900/50 border-t border-gray-100 dark:border-gray-700 flex items-center justify-between">
-          <span class="text-sm text-gray-500">Página {{ pagination.current_page }} de {{ totalPages }}</span>
-          <div class="flex gap-2">
-            <button 
-              @click="changePage(pagination.current_page - 1)" 
-              :disabled="pagination.current_page === 1"
-              class="px-4 py-1.5 bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-lg text-sm font-medium disabled:opacity-50"
-            > Anterior </button>
-            <button 
-              @click="changePage(pagination.current_page + 1)" 
-              :disabled="pagination.current_page === totalPages"
-              class="px-4 py-1.5 bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-lg text-sm font-medium disabled:opacity-50"
-            > Siguiente </button>
-          </div>
+      <!-- Paginación Simple -->
+      <div v-if="totalPages > 1" class="px-6 py-4 bg-gray-50 dark:bg-gray-900/50 border-t border-gray-100 dark:border-gray-700 flex items-center justify-between">
+        <span class="text-sm text-gray-500">Página {{ pagination.current_page }} de {{ totalPages }}</span>
+        <div class="flex gap-2">
+          <button 
+            @click="changePage(pagination.current_page - 1)" 
+            :disabled="pagination.current_page === 1"
+            class="px-4 py-1.5 bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-lg text-sm font-medium disabled:opacity-50"
+          > Anterior </button>
+          <button 
+            @click="changePage(pagination.current_page + 1)" 
+            :disabled="pagination.current_page === totalPages"
+            class="px-4 py-1.5 bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-lg text-sm font-medium disabled:opacity-50"
+          > Siguiente </button>
         </div>
       </div>
     </div>

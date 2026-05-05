@@ -1,5 +1,5 @@
 <template>
-  <div class="p-6 min-h-screen bg-gray-50 dark:bg-gray-950 transition-colors duration-300">
+  <div>
     <!-- Header Section -->
     <div class="mb-6 flex flex-col md:flex-row md:items-center justify-between gap-4 border-b border-gray-200 dark:border-gray-800 pb-6">
       <div>
