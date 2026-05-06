@@ -36,6 +36,11 @@
           <button @click="fetchData" class="flex-1 bg-[#013d7b] hover:bg-[#012a52] text-white px-4 py-2.5 rounded-xl text-sm font-bold shadow-md transition-all flex items-center justify-center gap-2">
             Filtrar
           </button>
+          <button @click="exportToCSV" class="p-2.5 text-green-600 hover:bg-green-50 dark:hover:bg-green-900/30 rounded-xl transition-all border border-gray-200 dark:border-gray-700" title="Exportar CSV">
+            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+            </svg>
+          </button>
           <button @click="resetFilters" class="p-2.5 text-gray-500 hover:bg-gray-100 dark:hover:bg-gray-700 rounded-xl transition-all border border-gray-200 dark:border-gray-700">
             <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
               <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15" />
@@ -217,6 +222,23 @@ const resetFilters = () => {
 const changePage = (page) => {
   pagination.value.current_page = page;
   fetchData();
+};
+
+const exportToCSV = async () => {
+  try {
+    const response = await api.get('/consultas-sin-resultado/export-csv', {
+      params: filters.value,
+      responseType: 'blob'
+    });
+    const url = window.URL.createObjectURL(new Blob([response.data]));
+    const link = document.createElement('a');
+    link.href = url;
+    link.setAttribute('download', 'historial_consultas_limpias.csv');
+    document.body.appendChild(link);
+    link.click();
+  } catch (error) {
+    Swal.fire('Error', 'No se pudo exportar el CSV', 'error');
+  }
 };
 
 const verificarConsulta = async (id) => {
