@@ -36,12 +36,18 @@
           <button @click="fetchData" class="flex-1 bg-[#013d7b] hover:bg-[#012a52] text-white px-4 py-2.5 rounded-xl text-sm font-bold shadow-md transition-all flex items-center justify-center gap-2">
             Filtrar
           </button>
+          <button @click="openSearchModal" class="p-2.5 text-[#013d7b] hover:bg-blue-50 dark:hover:bg-blue-900/30 rounded-xl transition-all border border-gray-200 dark:border-gray-700 relative" title="Búsqueda Avanzada">
+            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+            </svg>
+            <span v-if="filters.search_value" class="absolute -top-1 -right-1 w-3 h-3 bg-red-500 rounded-full border-2 border-white dark:border-gray-800"></span>
+          </button>
           <button @click="exportToCSV" class="p-2.5 text-green-600 hover:bg-green-50 dark:hover:bg-green-900/30 rounded-xl transition-all border border-gray-200 dark:border-gray-700" title="Exportar CSV">
             <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
               <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
             </svg>
           </button>
-          <button @click="resetFilters" class="p-2.5 text-gray-500 hover:bg-gray-100 dark:hover:bg-gray-700 rounded-xl transition-all border border-gray-200 dark:border-gray-700">
+          <button @click="resetFilters" class="p-2.5 text-gray-500 hover:bg-gray-100 dark:hover:bg-gray-700 rounded-xl transition-all border border-gray-200 dark:border-gray-700" title="Reiniciar Filtros">
             <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
               <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15" />
             </svg>
@@ -65,6 +71,7 @@
         <table class="w-full text-left border-collapse">
           <thead>
             <tr class="bg-gray-50 dark:bg-gray-900/50 text-gray-500 dark:text-gray-400">
+              <th class="px-6 py-4 text-xs font-bold uppercase tracking-wider">ID</th>
               <th class="px-6 py-4 text-xs font-bold uppercase tracking-wider">Nombre Consultado</th>
               <th class="px-6 py-4 text-xs font-bold uppercase tracking-wider">Identificación</th>
               <th class="px-6 py-4 text-xs font-bold uppercase tracking-wider">Tipo Reporte</th>
@@ -75,6 +82,9 @@
           </thead>
           <tbody class="divide-y divide-gray-100 dark:divide-gray-700">
             <tr v-for="c in consultas" :key="c.id" class="hover:bg-gray-50 dark:hover:bg-gray-700/30 transition-colors group">
+              <td class="px-6 py-4">
+                <span class="text-xs font-mono font-bold text-gray-400">#{{ c.id }}</span>
+              </td>
               <td class="px-6 py-4">
                 <span class="font-bold text-gray-900 dark:text-white uppercase">{{ c.nombre_buscado }}</span>
               </td>
@@ -166,6 +176,83 @@
         </div>
       </div>
     </div>
+
+    <!-- Modal de Búsqueda Avanzada -->
+    <div v-if="showSearchModal" class="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/50 backdrop-blur-sm">
+      <div class="bg-white dark:bg-gray-800 rounded-3xl shadow-2xl border border-gray-200 dark:border-gray-700 w-full max-w-md overflow-hidden animate-in fade-in zoom-in duration-200">
+        <div class="p-6">
+          <div class="flex items-center justify-between mb-6">
+            <h3 class="text-xl font-bold text-gray-900 dark:text-white flex items-center gap-2">
+              <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 text-[#013d7b]" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+              </svg>
+              Búsqueda de Consulta
+            </h3>
+            <button @click="showSearchModal = false" class="text-gray-400 hover:text-gray-600 dark:hover:text-gray-200">
+              <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
+              </svg>
+            </button>
+          </div>
+
+          <div class="space-y-4">
+            <div>
+              <label class="block text-xs font-bold text-gray-500 dark:text-gray-400 uppercase tracking-wider mb-2">Buscar por:</label>
+              <div class="grid grid-cols-2 gap-2">
+                <button 
+                  @click="filters.search_type = 'id'"
+                  :class="[
+                    'py-2.5 rounded-xl text-sm font-bold transition-all border',
+                    filters.search_type === 'id' 
+                      ? 'bg-[#013d7b] text-white border-[#013d7b]' 
+                      : 'bg-gray-50 dark:bg-gray-900 text-gray-600 dark:text-gray-400 border-gray-200 dark:border-gray-700'
+                  ]"
+                >
+                  ID de Consulta
+                </button>
+                <button 
+                  @click="filters.search_type = 'documento'"
+                  :class="[
+                    'py-2.5 rounded-xl text-sm font-bold transition-all border',
+                    filters.search_type === 'documento' 
+                      ? 'bg-[#013d7b] text-white border-[#013d7b]' 
+                      : 'bg-gray-50 dark:bg-gray-900 text-gray-600 dark:text-gray-400 border-gray-200 dark:border-gray-700'
+                  ]"
+                >
+                  Número de Doc.
+                </button>
+              </div>
+            </div>
+
+            <div>
+              <label class="block text-xs font-bold text-gray-500 dark:text-gray-400 uppercase tracking-wider mb-2">Valor a buscar:</label>
+              <input 
+                type="text" 
+                v-model="filters.search_value" 
+                :placeholder="filters.search_type === 'id' ? 'Ej: 154' : 'Ej: 2984...'"
+                class="w-full rounded-xl border-gray-200 dark:border-gray-700 dark:bg-gray-900 dark:text-white text-sm focus:ring-[#013d7b] transition-all"
+                @keyup.enter="applySearch"
+              />
+            </div>
+          </div>
+
+          <div class="mt-8 grid grid-cols-2 gap-3">
+            <button 
+              @click="clearSearch"
+              class="py-2.5 rounded-xl text-sm font-bold text-gray-600 dark:text-gray-400 hover:bg-gray-100 dark:hover:bg-gray-700 transition-all"
+            >
+              Limpiar búsqueda
+            </button>
+            <button 
+              @click="applySearch"
+              class="py-2.5 rounded-xl text-sm font-bold bg-[#013d7b] hover:bg-[#012a52] text-white shadow-lg transition-all"
+            >
+              Buscar ahora
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
   </div>
 </template>
 
@@ -187,8 +274,12 @@ const totalPages = ref(1);
 const filters = ref({
   tipo_reporte: 'todas',
   fecha_inicio: '',
-  fecha_fin: ''
+  fecha_fin: '',
+  search_type: 'id',
+  search_value: ''
 });
+
+const showSearchModal = ref(false);
 
 const pagination = ref({
   current_page: 1,
@@ -214,9 +305,24 @@ const fetchData = async () => {
 };
 
 const resetFilters = () => {
-  filters.value = { tipo_reporte: 'todas', fecha_inicio: '', fecha_fin: '' };
+  filters.value = { tipo_reporte: 'todas', fecha_inicio: '', fecha_fin: '', search_type: 'id', search_value: '' };
   pagination.value.current_page = 1;
   fetchData();
+};
+
+const openSearchModal = () => {
+  showSearchModal.value = true;
+};
+
+const applySearch = () => {
+  showSearchModal.value = false;
+  pagination.value.current_page = 1;
+  fetchData();
+};
+
+const clearSearch = () => {
+  filters.value.search_value = '';
+  applySearch();
 };
 
 const changePage = (page) => {
