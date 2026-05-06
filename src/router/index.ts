@@ -32,7 +32,7 @@ const routes: RouteRecordRaw[] = [
         component: AdminLayout,
         meta: {
             requiresAuth: true,
-            permission: 'nombre_del_permiso'
+            permission: 'app_buro_interno'
         },
         children: [
             {
@@ -48,7 +48,8 @@ const routes: RouteRecordRaw[] = [
                 name: 'listas-mp',
                 component: () => import('@/views/listas-mp/Index.vue'),
                 meta: {
-                    title: 'Lista Mp'
+                    title: 'Lista Mp',
+                    permission: 'lista_mp'
                 }
             },
             {
@@ -56,7 +57,8 @@ const routes: RouteRecordRaw[] = [
                 name: 'fiscalias',
                 component: () => import('@/views/listas-mp/FiscaliasListView.vue'),
                 meta: {
-                    title: 'Administrar Fiscalías'
+                    title: 'Administrar Fiscalías',
+                    permission: 'lista_mp'
                 }
             },
             {
@@ -72,7 +74,8 @@ const routes: RouteRecordRaw[] = [
                 name: 'reportes-lista-mp',
                 component: () => import('@/views/reportes/ListaMP.vue'),
                 meta: {
-                    title: 'Validación Lista MP'
+                    title: 'Validación Lista MP',
+                    permission: 'lista_mp'
                 }
             },
             {
@@ -80,7 +83,8 @@ const routes: RouteRecordRaw[] = [
                 name: 'reportes-lista-consolidada',
                 component: () => import('@/views/reportes/ListaCreditos.vue'),
                 meta: {
-                    title: 'Validación MP y Créditos'
+                    title: 'Validación MP y Créditos',
+                    permission: 'lista_mp'
                 }
             },
             {
@@ -104,7 +108,8 @@ const routes: RouteRecordRaw[] = [
                 name: 'consultas-sin-resultado',
                 component: () => import('@/views/solicitudes/ConsultasSinCoincidencias.vue'),
                 meta: {
-                    title: 'Historial de Consultas Limpias'
+                    title: 'Historial de Consultas Limpias',
+                    permission: 'lista_mp'
                 }
             }
         ]
@@ -155,7 +160,7 @@ router.beforeEach(async (to, _from, next) => {
         if (to.meta.permission && !authStore.hasPermission(to.meta.permission as string)) {
             const motherAppUrl = import.meta.env.VITE_MOTHER_APP_URL || 'http://localhost:5173'
             console.warn(`⛔ Acceso denegado: Falta permiso '${to.meta.permission}'.`)
-            window.location.href = `${motherAppUrl}/apps`
+            //window.location.href = `${motherAppUrl}/apps`
             return next(false)
         }
     }
