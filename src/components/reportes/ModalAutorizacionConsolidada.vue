@@ -4,12 +4,27 @@
       <div class="bg-white dark:bg-slate-900 w-full max-w-3xl max-h-[90vh] flex flex-col rounded-2xl shadow-2xl border border-slate-200 dark:border-slate-800 overflow-hidden">
         
         <!-- Header -->
-        <div class="bg-amber-600 px-6 py-4 flex items-center gap-3 text-white">
-          <i class="pi pi-exclamation-triangle text-2xl"></i>
-          <div>
-            <h3 class="font-black uppercase tracking-wider text-sm">Alerta de Coincidencia Crítica</h3>
-            <p class="text-[10px] opacity-80">Se requiere revisión de cumplimiento/jefatura para continuar</p>
+        <div class="bg-amber-600 px-6 py-4 flex items-center justify-between text-white relative overflow-hidden shrink-0">
+          <!-- Background Glow para el header del modal -->
+          <div class="absolute -top-10 -right-10 w-24 h-24 bg-white/10 blur-2xl rounded-full"></div>
+          
+          <div class="flex items-center gap-3 relative z-10">
+            <div class="p-2 bg-white/20 rounded-lg">
+              <ShieldAlert class="w-6 h-6" />
+            </div>
+            <div>
+              <h3 class="font-black uppercase tracking-wider text-sm leading-tight">Alerta de Coincidencia Crítica</h3>
+              <p class="text-[10px] opacity-90 font-bold uppercase tracking-widest mt-0.5">Nivel de Riesgo: Alto</p>
+            </div>
           </div>
+
+          <button 
+            @click="handleClose" 
+            class="relative z-10 p-2 hover:bg-white/20 rounded-xl transition-all duration-300 active:scale-90 flex items-center justify-center border border-transparent hover:border-white/30"
+            title="Cerrar ventana"
+          >
+            <X class="w-5 h-5" />
+          </button>
         </div>
 
         <div class="p-8 overflow-y-auto custom-scrollbar flex-1">
@@ -49,7 +64,7 @@
                   </tr>
                 </thead>
                 <tbody class="divide-y divide-slate-100 dark:divide-slate-800">
-                  <tr v-for="(item, idx) in data.coincidencias_mp" :key="'mp-'+idx" class="bg-white dark:bg-slate-900">
+                  <tr v-for="(item, idx) in data?.coincidencias_mp" :key="'mp-'+idx" class="bg-white dark:bg-slate-900">
                     <td class="px-4 py-3 font-bold text-slate-700 dark:text-slate-300">{{ item.nombre }}</td>
                     <td class="px-4 py-3 font-mono text-slate-500">{{ item.documento || item.cui || 'N/A' }}</td>
                   </tr>
@@ -73,7 +88,7 @@
                   </tr>
                 </thead>
                 <tbody class="divide-y divide-slate-100 dark:divide-slate-800">
-                  <tr v-for="(item, idx) in data.coincidencias_creditos" :key="'cred-'+idx" class="bg-white dark:bg-slate-900">
+                  <tr v-for="(item, idx) in data?.coincidencias_creditos" :key="'cred-'+idx" class="bg-white dark:bg-slate-900">
                     <td class="px-4 py-3 font-bold text-slate-700 dark:text-slate-300">{{ item.nombre }}</td>
                     <td class="px-4 py-3 font-mono text-slate-500">{{ item.motivo || 'N/A' }}</td>
                   </tr>
@@ -148,6 +163,7 @@
 
 <script setup lang="ts">
 import { ref, watch, computed } from 'vue';
+import { X, ShieldAlert } from 'lucide-vue-next';
 
 const props = defineProps({
   isOpen: Boolean,
