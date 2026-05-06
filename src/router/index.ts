@@ -1,6 +1,14 @@
 import { createRouter, createWebHistory, type RouteRecordRaw } from 'vue-router'
 import { useAuthStore } from '@/stores/auth'
 
+declare module 'vue-router' {
+    interface RouteMeta {
+        title?: string
+        permission?: string | string[]
+        requiresAuth?: boolean
+    }
+}
+
 // Layouts
 import AdminLayout from '@/layouts/AdminLayout.vue'
 
@@ -66,7 +74,8 @@ const routes: RouteRecordRaw[] = [
                 name: 'lista-creditos',
                 component: () => import('@/views/lista-creditos/ListaCreditoView.vue'),
                 meta: {
-                    title: 'Lista Negra Créditos'
+                    title: 'Lista Negra Créditos',
+                    permission: 'lista_credito'
                 }
             },
             {
@@ -75,7 +84,7 @@ const routes: RouteRecordRaw[] = [
                 component: () => import('@/views/reportes/ListaMP.vue'),
                 meta: {
                     title: 'Validación Lista MP',
-                    permission: 'lista_mp'
+                    permission: 'validacion_mp'
                 }
             },
             {
@@ -84,7 +93,7 @@ const routes: RouteRecordRaw[] = [
                 component: () => import('@/views/reportes/ListaCreditos.vue'),
                 meta: {
                     title: 'Validación MP y Créditos',
-                    permission: 'lista_mp'
+                    permission: 'validacion_mp_credito'
                 }
             },
             {
@@ -109,7 +118,7 @@ const routes: RouteRecordRaw[] = [
                 component: () => import('@/views/solicitudes/ConsultasSinCoincidencias.vue'),
                 meta: {
                     title: 'Historial de Consultas Limpias',
-                    permission: 'lista_mp'
+                    permission: ['consultas_ver_todo', 'consultas_ver_agencia', 'consultas_ver_propias']
                 }
             }
         ]
@@ -156,12 +165,24 @@ router.beforeEach(async (to, _from, next) => {
             }
         }
 
-        // Verificar permiso
-        if (to.meta.permission && !authStore.hasPermission(to.meta.permission as string)) {
-            const motherAppUrl = import.meta.env.VITE_MOTHER_APP_URL || 'http://localhost:5173'
-            console.warn(`⛔ Acceso denegado: Falta permiso '${to.meta.permission}'.`)
-            //window.location.href = `${motherAppUrl}/apps`
-            return next(false)
+        // Verificar permiso (Soporta String, Array de Strings y Bypass de Super Admin)
+        const permission = to.meta.permission;
+        if (permission) {
+            const isAdmin = authStore.user?.roles_list?.includes('Super Admin');
+            
+            if (!isAdmin) {
+                let hasAccess = false;
+                if (Array.isArray(permission)) {
+                    hasAccess = permission.some(p => authStore.hasPermission(p));
+                } else {
+                    hasAccess = authStore.hasPermission(permission as string);
+                }
+
+                if (!hasAccess) {
+                    console.warn(`⛔ Acceso denegado: Falta permiso(s) para la ruta ${to.path}.`);
+                    return next(false);
+                }
+            }
         }
     }
 

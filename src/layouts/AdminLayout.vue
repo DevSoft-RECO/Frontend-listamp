@@ -87,11 +87,11 @@ interface MenuItem {
   label: string;
   route?: string;
   iconSvg: string;
-  permission?: string;
+  permission?: string | string[];
   children?: {
     label: string;
     route: string;
-    permission?: string;
+    permission?: string | string[];
   }[];
 }
 
@@ -139,6 +139,7 @@ const menuItems: MenuItem[] = [
   {
     id: 'modulo-lista-creditos',
     label: 'Lista Negra',
+    permission: 'lista_credito',
     iconSvg: '<path stroke-linecap="round" stroke-linejoin="round" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" />',
     children: [
       { label: 'Control de Créditos', route: '/admin/lista-creditos' }
@@ -149,9 +150,9 @@ const menuItems: MenuItem[] = [
     label: 'Validaciones',
     iconSvg: '<path stroke-linecap="round" stroke-linejoin="round" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />',
     children: [
-      { label: 'Validar Lista MP', route: '/admin/reportes/lista-mp', permission: 'lista_mp' },
-      { label: 'Validar Consolidado', route: '/admin/reportes/lista-consolidada', permission: 'lista_mp' },
-      { label: 'Consultas Limpias', route: '/admin/consultas-sin-resultado', permission: 'lista_mp' }
+      { label: 'Validar Lista MP', route: '/admin/reportes/lista-mp', permission: 'validacion_mp' },
+      { label: 'Validar Consolidado', route: '/admin/reportes/lista-consolidada', permission: 'validacion_mp_credito' },
+      { label: 'Consultas Limpias', route: '/admin/consultas-sin-resultado', permission: ['consultas_ver_todo', 'consultas_ver_agencia', 'consultas_ver_propias'] }
     ]
   },
   {
@@ -162,32 +163,29 @@ const menuItems: MenuItem[] = [
   },
 ]
 
+const hasMenuPermission = (permission?: string | string[]) => {
+  if (!permission) return true
+  const isAdmin = authStore.user?.roles_list?.includes('Super Admin')
+  if (isAdmin) return true
+
+  if (Array.isArray(permission)) {
+    return permission.some(p => authStore.hasPermission(p))
+  }
+  return authStore.hasPermission(permission)
+}
+
 const filteredMenuItems = computed(() => {
   return menuItems
     .map(item => {
-      // Si el item tiene hijos, filtrarlos primero
       if (item.children) {
-        const filteredChildren = item.children.filter(child => {
-          if (child.permission && !authStore.hasPermission(child.permission)) {
-            return false
-          }
-          return true
-        })
+        const filteredChildren = item.children.filter(child => hasMenuPermission(child.permission))
         return { ...item, children: filteredChildren }
       }
       return { ...item }
     })
     .filter(item => {
-      // 1. Verificar permiso del item principal
-      if (item.permission && !authStore.hasPermission(item.permission)) {
-        return false
-      }
-
-      // 2. Si es un grupo (tiene hijos), verificar que le queden hijos visibles
-      if (item.children && item.children.length === 0 && !item.route) {
-        return false
-      }
-
+      if (!hasMenuPermission(item.permission)) return false
+      if (item.children && item.children.length === 0 && !item.route) return false
       return true
     })
 })
