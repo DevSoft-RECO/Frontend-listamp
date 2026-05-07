@@ -1,16 +1,14 @@
 <template>
   <header
-    class="sticky top-0 z-50 w-full bg-[#013d7b] dark:bg-[#05070a] border-b border-white/10 dark:border-gray-800 transition-all duration-500 font-mono shadow-2xl"
+    class="sticky top-0 z-50 w-full bg-[#013d7b]/90 dark:bg-slate-950/80 backdrop-blur-xl border-b border-white/10 dark:border-white/5 transition-all duration-500 shadow-lg"
   >
-    <!-- Scanner Line Animation -->
-    <div class="absolute bottom-0 left-0 w-full h-[1px] bg-gradient-to-r from-transparent via-cyan-400 to-transparent opacity-30 dark:opacity-50 animate-[scan_3s_linear_infinite]"></div>
 
-    <div class="w-full px-6 h-16 flex items-center justify-between relative overflow-hidden">
+    <div class="w-full px-8 h-16 flex items-center justify-between relative">
       
-      <!-- Decoración de Terminal de Seguridad -->
-      <div class="absolute left-0 top-0 h-full w-1 bg-verde-cope"></div>
+      <!-- Decoración de Marca -->
+      <div class="absolute left-0 top-0 h-full w-1 bg-verde-cope/50"></div>
       <!-- Background Glow -->
-      <div class="absolute -top-24 -left-24 w-48 h-48 bg-cyan-500/10 blur-[60px] rounded-full pointer-events-none"></div>
+      <div class="absolute -top-24 -left-24 w-48 h-48 bg-azul-cope/5 blur-[60px] rounded-full pointer-events-none"></div>
 
       <!-- Left: Mobile Menu Toggle -->
       <div class="flex items-center xl:hidden">
@@ -24,60 +22,57 @@
       </div>
 
       <!-- Center (Mobile) / Left (Desktop): Logo & Branding -->
-      <div class="flex items-center gap-4 absolute left-1/2 -translate-x-1/2 xl:relative xl:left-0 xl:translate-x-0 shrink-0 transition-all duration-300">
+      <div class="flex items-center gap-6 absolute left-1/2 -translate-x-1/2 xl:relative xl:left-0 xl:translate-x-0 shrink-0 transition-all duration-300">
         <div class="relative group cursor-pointer" @click="$router.push('/admin/dashboard')">
-          <div class="absolute -inset-1 bg-cyan-400 rounded-lg blur opacity-10 group-hover:opacity-30 transition duration-1000 group-hover:duration-200"></div>
-          <img src="@/assets/logoyk1.svg" alt="YK" class="relative h-8 xl:h-9 w-auto" />
+          <img src="@/assets/logoyk1.svg" alt="YK" class="relative h-7 xl:h-8 w-auto hover:scale-105 transition-transform" />
         </div>
         
-        <div class="hidden lg:flex flex-col border-l border-white/20 dark:border-gray-800 pl-4">
+        <div class="hidden lg:flex flex-col border-l border-white/20 dark:border-white/10 pl-6">
           <div class="flex items-center gap-2">
-            <ShieldCheck class="w-3 h-3 text-cyan-400" />
-            <span class="text-[11px] font-black text-white uppercase tracking-tighter leading-none">Búro de Seguridad Interna</span>
+            <ShieldCheck class="w-3.5 h-3.5 text-verde-cope" />
+            <span class="text-[10px] font-black text-white uppercase tracking-[0.1em] leading-none">LISTA MP + CRÉDITO</span>
           </div>
-          <span class="text-[9px] font-bold text-emerald-400 dark:text-verde-cope uppercase tracking-[0.2em] mt-1">Protocolo de Listas V.3</span>
+          <span class="text-[8px] font-bold text-white/50 uppercase tracking-[0.3em] mt-1.5">BÚRO INTERNO v.3.0</span>
         </div>
       </div>
 
-      <!-- Right: Actions & User -->
-      <div class="flex items-center gap-3 shrink-0">
+      <!-- Right: Actions & User (Minimalist Style) -->
+      <div class="flex items-center gap-6 shrink-0 pr-2">
         
-        <!-- Theme Toggle -->
+        <!-- Theme Toggle (Minimalist) -->
         <button
           @click="layoutStore.toggleTheme"
-          class="p-2.5 rounded-xl text-white/70 dark:text-gray-400 bg-white/10 dark:bg-gray-900 border border-white/10 dark:border-gray-800 hover:bg-white/20 dark:hover:bg-gray-800 transition-all focus:outline-none"
+          class="p-2 text-white/60 hover:text-white transition-colors focus:outline-none"
         >
           <Sun v-if="layoutStore.isDark" class="w-5 h-5 text-amber-400" />
           <Moon v-else class="w-5 h-5" />
         </button>
 
-        <!-- User Info Badge -->
-        <div class="group relative flex items-center gap-3 pl-3 py-1 pr-1 bg-white/5 dark:bg-gray-900 border border-white/10 dark:border-gray-800 rounded-2xl transition-all hover:border-cyan-400/50">
+        <!-- User Info (Minimalist) -->
+        <div 
+          @click="showProfilePreview = true"
+          class="flex items-center gap-4 cursor-pointer group"
+        >
           <div class="hidden sm:flex flex-col items-end">
-            <span class="text-[11px] font-black text-white leading-none uppercase tracking-tight">{{ userName }}</span>
-            <div class="flex items-center gap-1 mt-1">
-              <div class="w-1 h-1 rounded-full bg-emerald-400"></div>
-              <span class="text-[8px] font-bold text-white/50 dark:text-gray-500 uppercase tracking-widest">{{ userAgencia }}</span>
-            </div>
+            <span class="text-[10px] font-black text-white leading-none uppercase tracking-widest group-hover:text-verde-cope transition-colors">{{ userName }}</span>
+            <span class="text-[8px] font-bold text-white/40 uppercase tracking-widest mt-1">{{ userAgencia }}</span>
           </div>
           
-          <div class="h-9 w-9 rounded-xl overflow-hidden border-2 border-white/20 dark:border-gray-800 shadow-sm shrink-0 relative">
+          <div class="h-9 w-9 rounded-full overflow-hidden border border-white/20 shadow-sm shrink-0 relative transition-transform group-hover:scale-110">
             <img v-if="userPhoto" :src="userPhoto" class="h-full w-full object-cover" alt="Avatar">
-            <div v-else class="h-full w-full bg-cyan-500 text-white flex items-center justify-center font-black text-xs uppercase">
+            <div v-else class="h-full w-full bg-verde-cope text-white flex items-center justify-center font-black text-[10px] uppercase">
                 {{ userInitials }}
             </div>
-            <!-- Overlay Scanner -->
-            <div class="absolute inset-0 bg-cyan-400/10 opacity-0 group-hover:opacity-100 transition-opacity"></div>
           </div>
         </div>
 
-        <!-- Logout / Return (Terminal Style) -->
+        <!-- Logout (Minimalist) -->
         <button
           @click="handleReturnToMother"
-          class="group flex items-center justify-center h-10 w-10 rounded-xl bg-rose-500/10 hover:bg-rose-500 text-rose-400 hover:text-white border border-rose-500/20 transition-all duration-300 shadow-lg hover:shadow-rose-500/40"
-          title="Finalizar Sesión_Segura"
+          class="p-2 text-white/40 hover:text-rose-400 transition-colors"
+          title="Finalizar Sesión"
         >
-          <LogOut class="w-5 h-5 group-hover:translate-x-0.5 transition-transform" />
+          <LogOut class="w-5 h-5" />
         </button>
       </div>
     </div>
@@ -126,6 +121,47 @@
         </div>
       </div>
     </Transition>
+
+    <!-- Profile Photo Preview Modal (Apple Style - Teleported to Body) -->
+    <Teleport to="body">
+      <Transition
+        enter-active-class="transition-all duration-300 ease-out"
+        enter-from-class="opacity-0 scale-95"
+        enter-to-class="opacity-100 scale-100"
+        leave-active-class="transition-all duration-200 ease-in"
+        leave-from-class="opacity-100 scale-100"
+        leave-to-class="opacity-0 scale-95"
+      >
+        <div v-if="showProfilePreview" class="fixed inset-0 z-[999] flex items-center justify-center p-6" @click="showProfilePreview = false">
+          <div class="relative max-w-sm w-full bg-white dark:bg-slate-900 rounded-[2.5rem] shadow-[0_32px_64px_-12px_rgba(0,0,0,0.6)] border border-slate-200 dark:border-white/10 overflow-hidden" @click.stop>
+            
+            <!-- Close Button -->
+            <button @click="showProfilePreview = false" class="absolute top-6 right-6 z-10 p-2 bg-black/10 hover:bg-black/20 dark:bg-white/10 dark:hover:bg-white/20 rounded-full text-gray-800 dark:text-white transition-all">
+              <X class="w-5 h-5" />
+            </button>
+
+            <!-- Large Photo Container -->
+            <div class="aspect-square w-full bg-slate-100 dark:bg-slate-800 flex items-center justify-center overflow-hidden">
+              <img v-if="userPhoto" :src="userPhoto" class="h-full w-full object-cover" alt="Large Avatar">
+              <div v-else class="h-full w-full bg-verde-cope text-white flex items-center justify-center font-black text-6xl uppercase">
+                  {{ userInitials }}
+              </div>
+            </div>
+
+            <!-- User Details Area -->
+            <div class="p-8 text-center bg-white dark:bg-slate-900">
+              <h4 class="text-xl font-black text-slate-800 dark:text-white uppercase tracking-wider mb-1">{{ userName }}</h4>
+              <p class="text-xs font-bold text-verde-cope uppercase tracking-[0.2em] mb-6">{{ userAgencia }}</p>
+              
+              <div class="flex items-center justify-center gap-2 px-4 py-2 bg-slate-100 dark:bg-white/5 rounded-2xl border border-slate-200 dark:border-white/5">
+                <ShieldCheck class="w-4 h-4 text-azul-cope dark:text-verde-cope" />
+                <span class="text-[10px] font-black text-slate-500 dark:text-gray-400 uppercase tracking-widest">Identidad Verificada_YK</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </Transition>
+    </Teleport>
   </header>
 </template>
 
@@ -150,6 +186,7 @@ const authStore = useAuthStore()
 const route = useRoute()
 
 const isMobileMenuOpen = ref(false)
+const showProfilePreview = ref(false)
 
 // Navegación
 const menuItems = [
