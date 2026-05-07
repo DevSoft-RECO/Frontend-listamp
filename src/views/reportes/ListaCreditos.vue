@@ -1,56 +1,69 @@
 <template>
   <div>
 
-    <div class="max-w-6xl mx-auto px-6 pb-12">
-      
-      <!-- Integrated Header & Stepper -->
-      <div class="mb-12 text-center">
-        <div class="inline-flex items-center justify-center w-12 h-12 bg-verde-cope/10 rounded-2xl text-verde-cope mb-4">
-          <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z" /></svg>
-        </div>
-        <h1 class="text-2xl font-black text-slate-800 dark:text-white tracking-tight leading-none">Validación Consolidada</h1>
-        <div class="flex items-center justify-center gap-3 mt-2">
-          <p class="text-[9px] uppercase font-black text-verde-cope tracking-[0.2em]">Lista MP + Créditos</p>
-          <span class="w-1 h-1 bg-slate-300 dark:bg-slate-700 rounded-full"></span>
-          <p class="text-[9px] uppercase font-bold text-slate-400 tracking-widest">Módulo de Riesgo v2.0</p>
-        </div>
-      </div>
+    <div class="max-w-[1600px] mx-auto px-6 pt-2 pb-8">
+      <!-- 5x5 Grid Layout System -->
+      <div class="grid grid-cols-1 lg:grid-cols-5 lg:grid-rows-[auto_1fr] gap-4 items-start">
+        
+        <!-- DIV 1: Full-Width Header (grid-area: 1 / 1 / 2 / 6) -->
+        <header class="lg:col-span-5 bg-white/50 dark:bg-slate-900/50 p-6 rounded-3xl border border-slate-200 dark:border-white/5 backdrop-blur-md shadow-sm flex flex-col md:flex-row items-center justify-between gap-4">
+          <div class="flex items-center gap-4">
+            <div class="w-12 h-12 bg-verde-cope/10 rounded-2xl flex items-center justify-center text-verde-cope shadow-inner">
+              <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z" /></svg>
+            </div>
+            <div>
+              <h1 class="text-2xl font-black text-slate-800 dark:text-white tracking-tight leading-none">Validación Consolidada</h1>
+              <div class="flex items-center gap-2 mt-2">
+                <p class="text-[10px] uppercase font-black text-verde-cope tracking-[0.2em]">Lista MP + Créditos</p>
+                <span class="w-1 h-1 bg-slate-300 dark:bg-slate-700 rounded-full"></span>
+                <p class="text-[10px] uppercase font-bold text-slate-400 tracking-widest">v2.0 - Riesgos</p>
+              </div>
+            </div>
+          </div>
+          <div class="hidden md:flex items-center gap-4 bg-verde-cope/5 border border-verde-cope/10 px-4 py-2 rounded-xl">
+            <span class="text-[9px] font-black text-verde-cope uppercase tracking-widest">Estado: Operativo</span>
+            <div class="w-2 h-2 bg-verde-cope rounded-full animate-pulse"></div>
+          </div>
+        </header>
 
-      <!-- Timeline Stepper -->
-      <div class="mb-12 max-w-2xl mx-auto px-4">
-        <div class="flex items-center justify-between relative">
-          <div v-for="(step, idx) in ['Búsqueda Global', 'Análisis', 'Verificación']" :key="idx" class="flex flex-col items-center flex-1 relative z-10">
-            <div class="flex items-center w-full">
-              <!-- Line Connector -->
-              <div class="flex-1 h-1 transition-all duration-500" :class="idx === 0 ? 'bg-transparent' : (currentStep > idx ? 'bg-verde-cope' : 'bg-slate-200 dark:bg-slate-800')"></div>
-              
+        <!-- DIV 2: Sidebar Timeline (grid-area: 2 / 1 / 6 / 2) -->
+        <aside class="lg:col-span-1 bg-white/30 dark:bg-slate-900/30 rounded-3xl border border-slate-200/50 dark:border-white/5 backdrop-blur-sm p-8 h-full">
+          <div class="relative space-y-24">
+            <!-- Vertical Line Path -->
+            <div class="absolute left-[18px] top-[20px] h-[calc(100%-40px)] w-1 bg-slate-200 dark:bg-slate-800 rounded-full z-0 overflow-hidden">
+              <div class="w-full bg-verde-cope transition-all duration-700 ease-in-out" :style="{ height: ((currentStep - 1) * 50) + '%' }"></div>
+            </div>
+
+            <div v-for="(step, idx) in ['Búsqueda', 'Análisis', 'Verificación']" :key="idx" class="relative z-10 flex items-center gap-6 group">
               <!-- Step Circle -->
               <div 
                 :class="[
-                  'w-10 h-10 rounded-xl border-2 flex items-center justify-center text-xs font-black transition-all duration-500 shadow-lg',
-                  currentStep === idx + 1 ? 'border-verde-cope bg-verde-cope text-white shadow-verde-cope/20' : 
-                  currentStep > idx + 1 ? 'border-verde-cope bg-white dark:bg-slate-900 text-verde-cope shadow-verde-cope/5' : 
-                  'border-slate-200 dark:border-slate-800 bg-slate-100 dark:bg-slate-800 text-slate-400'
+                  'w-10 h-10 rounded-2xl border-2 flex items-center justify-center text-xs font-black transition-all duration-500 shadow-lg shrink-0',
+                  currentStep === idx + 1 ? 'border-verde-cope bg-verde-cope text-white shadow-verde-cope/30' : 
+                  currentStep > idx + 1 ? 'border-verde-cope bg-white dark:bg-slate-900 text-verde-cope shadow-verde-cope/10' : 
+                  'border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900 text-slate-400'
                 ]"
               >
                 <svg v-if="currentStep > idx + 1" class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M5 13l4 4L19 7" /></svg>
                 <span v-else>{{ idx + 1 }}</span>
               </div>
-
-              <!-- Line Connector -->
-              <div class="flex-1 h-1 transition-all duration-500" :class="idx === 2 ? 'bg-transparent' : (currentStep > idx + 1 ? 'bg-verde-cope' : 'bg-slate-200 dark:bg-slate-800')"></div>
+              <!-- Step Info -->
+              <div class="flex flex-col">
+                <span :class="['text-[10px] font-black uppercase tracking-widest transition-colors', currentStep === idx + 1 ? 'text-verde-cope' : 'text-slate-400']">{{ step }}</span>
+                <span v-if="currentStep === idx + 1" class="text-[8px] text-slate-400 font-bold uppercase tracking-tighter mt-1 animate-pulse">En proceso...</span>
+              </div>
             </div>
-            <span :class="['mt-3 text-[9px] font-black uppercase tracking-widest transition-colors', currentStep === idx + 1 ? 'text-verde-cope' : 'text-slate-400']">{{ step }}</span>
           </div>
-        </div>
-      </div>
+        </aside>
 
-      <!-- Content Area -->
-      <div class="relative max-w-5xl mx-auto">
-        
-        <!-- STEP 1: BUSQUEDA -->
-        <transition name="fade-slide">
-          <div v-if="currentStep === 1" class="bg-white dark:bg-slate-900 rounded-xl shadow-sm border border-slate-200 dark:border-slate-800 p-10">
+        <!-- DIV 3: Main Operations Area (grid-area: 2 / 2 / 6 / 6) -->
+        <main class="lg:col-span-4 min-w-0">
+          <div class="relative">
+            <!-- STEP 1: BUSQUEDA -->
+            <transition name="fade-slide">
+              <div v-if="currentStep === 1" class="bg-white dark:bg-slate-900 rounded-3xl shadow-2xl border border-slate-200 dark:border-white/5 p-12 backdrop-blur-xl bg-opacity-80">
+                <!-- ... step content ... -->
+                <!-- ... existing content for step 1 ... -->
             <div class="max-w-xl mx-auto text-center">
               <h2 class="text-2xl font-bold text-slate-800 dark:text-white mb-3">Filtro 1. Consulta Centralizada</h2>
               <p class="text-slate-500 dark:text-slate-400 text-sm mb-8 leading-relaxed">
@@ -209,7 +222,8 @@
             </div>
           </div>
         </transition>
-
+          </div>
+        </main>
       </div>
     </div>
 
