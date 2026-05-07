@@ -72,6 +72,16 @@
       </select>
 
       <button 
+        @click="exportToCSV"
+        class="px-4 py-2 bg-verde-cope hover:bg-verde-cope/90 text-white rounded-lg transition-colors text-sm font-semibold flex items-center gap-2 border border-verde-cope shadow-sm"
+      >
+        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+        </svg>
+        Exportar CSV
+      </button>
+
+      <button 
         @click="fetchData(1)"
         class="px-4 py-2 text-azul-cope dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-800 rounded-lg transition-colors text-sm font-semibold flex items-center gap-2 border border-gray-200 dark:border-gray-700"
       >
@@ -132,7 +142,7 @@
                   <button @click="openEditModal(item)" class="p-2 text-gray-400 hover:text-azul-cope transition-colors" title="Editar">
                     <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z" stroke-width="2"/></svg>
                   </button>
-                  <button v-if="item.estado === '1'" @click="openDeactivateModal(item)" class="p-2 text-gray-400 hover:text-red-600 transition-colors" title="Desactivar">
+                  <button v-if="item.estado === '1' && authStore.hasRole('Super Admin')" @click="openDeactivateModal(item)" class="p-2 text-gray-400 hover:text-red-600 transition-colors" title="Desactivar">
                     <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M18.364 18.364A9 9 0 005.636 5.636m12.728 12.728A9 9 0 015.636 5.636" stroke-width="2"/></svg>
                   </button>
                   <button v-else @click="showReason(item)" class="p-2 text-gray-400 hover:text-gray-600 transition-colors" title="Ver Motivo">
@@ -205,6 +215,9 @@ import { ref, computed, onMounted } from 'vue'
 import api from '@/api/axios'
 import Swal from 'sweetalert2'
 import ListaMpFormModal from './components/ListaMpFormModal.vue'
+import { useAuthStore } from '@/stores/auth'
+
+const authStore = useAuthStore()
 
 interface RecordMP {
   iddatos?: number; nombre: string; tipo_identificacion?: string; registro?: string; cui?: string; pasaporte?: string; lugar_origen?: string; fecha_respuesta: string; nit?: string; fecha_of?: string; oficio?: string; tipo_p?: string; fiscalia?: string; fecha_cooperativa?: string; fecha_cumplimiento?: string; estado: string; observacion_baja?: string;
@@ -275,6 +288,38 @@ const deactivateRecord = async () => {
     await fetchData(pagination.value.current_page)
     closeDeactivateModal()
   } catch (error) { console.error('Error deactivating record:', error) } finally { submitting.value = false }
+}
+
+const exportToCSV = async () => {
+    try {
+        loading.value = true
+        const response = await api.get('/listas-mp/export', { responseType: 'blob' })
+        
+        // Crear un link temporal para la descarga
+        const url = window.URL.createObjectURL(new Blob([response.data]))
+        const link = document.createElement('a')
+        link.href = url
+        
+        // Generar nombre de archivo con fecha
+        const date = new Date().toISOString().split('T')[0]
+        link.setAttribute('download', `reporte_lista_mp_${date}.csv`)
+        
+        document.body.appendChild(link)
+        link.click()
+        
+        // Limpiar
+        document.body.removeChild(link)
+        window.URL.revokeObjectURL(url)
+    } catch (error) {
+        console.error('Error al exportar CSV:', error)
+        Swal.fire({
+            icon: 'error',
+            title: 'Error de exportación',
+            text: 'No se pudo generar el reporte. Verifique su sesión.'
+        })
+    } finally {
+        loading.value = false
+    }
 }
 
 const showReason = (item: RecordMP) => { Swal.fire({ title: 'Motivo de Baja', text: item.observacion_baja || 'N/A', icon: 'info' }) }
