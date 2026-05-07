@@ -45,11 +45,11 @@
     </div>
 
     <!-- Filtros -->
-    <div class="bg-white dark:bg-gray-800 rounded-2xl shadow-sm border border-gray-200 dark:border-gray-700 p-4 mb-4 shrink-0">
+    <div class="bg-white/40 dark:bg-slate-900/40 backdrop-blur-xl rounded-2xl shadow-sm border border-gray-200/50 dark:border-white/5 p-4 mb-4 shrink-0">
       <div class="grid grid-cols-1 md:grid-cols-4 gap-4 items-end">
         <div>
           <label class="block text-xs font-bold text-gray-500 dark:text-gray-400 uppercase tracking-wider mb-2">Destinatario</label>
-          <select v-model="filters.destinatario" class="w-full rounded-xl border-gray-200 dark:border-gray-700 dark:bg-gray-900 dark:text-white text-sm focus:ring-[#013d7b] transition-all">
+          <select v-model="filters.destinatario" class="w-full rounded-xl border-gray-200 dark:border-gray-700 dark:bg-slate-950 dark:text-white text-sm focus:ring-[#013d7b] transition-all">
             <option value="todos">Todos los destinatarios</option>
             <option value="cumplimiento">Cumplimiento</option>
             <option value="jefatura">Jefe de Agencia</option>
@@ -58,11 +58,11 @@
         </div>
         <div>
           <label class="block text-xs font-bold text-gray-500 dark:text-gray-400 uppercase tracking-wider mb-2">Fecha Inicio</label>
-          <input type="date" v-model="filters.fecha_inicio" class="w-full rounded-xl border-gray-200 dark:border-gray-700 dark:bg-gray-900 dark:text-white text-sm focus:ring-[#013d7b] transition-all" />
+          <input type="date" v-model="filters.fecha_inicio" class="w-full rounded-xl border-gray-200 dark:border-gray-700 dark:bg-slate-950 dark:text-white text-sm focus:ring-[#013d7b] transition-all" />
         </div>
         <div>
           <label class="block text-xs font-bold text-gray-500 dark:text-gray-400 uppercase tracking-wider mb-2">Fecha Fin</label>
-          <input type="date" v-model="filters.fecha_fin" class="w-full rounded-xl border-gray-200 dark:border-gray-700 dark:bg-gray-900 dark:text-white text-sm focus:ring-[#013d7b] transition-all" />
+          <input type="date" v-model="filters.fecha_fin" class="w-full rounded-xl border-gray-200 dark:border-gray-700 dark:bg-slate-950 dark:text-white text-sm focus:ring-[#013d7b] transition-all" />
         </div>
         <div class="flex gap-2">
           <button @click="fetchData" class="flex-1 bg-[#013d7b] hover:bg-[#012a52] text-white px-4 py-2.5 rounded-xl text-sm font-bold shadow-md transition-all flex items-center justify-center gap-2">
@@ -71,7 +71,7 @@
             </svg>
             Filtrar
           </button>
-          <button @click="resetFilters" class="p-2.5 text-gray-500 hover:bg-gray-100 dark:hover:bg-gray-700 rounded-xl transition-all border border-gray-200 dark:border-gray-700">
+          <button @click="resetFilters" class="p-2.5 text-gray-500 hover:bg-gray-100 dark:hover:bg-gray-800 rounded-xl transition-all border border-gray-200/50 dark:border-white/5">
             <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
               <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15" />
             </svg>
@@ -81,7 +81,7 @@
     </div>
 
     <!-- Tabla de Resultados -->
-    <div class="bg-white dark:bg-gray-800 rounded-2xl shadow-xl border border-gray-200 dark:border-gray-700 overflow-hidden flex-1 flex flex-col min-h-0">
+    <div class="bg-white/40 dark:bg-slate-900/40 backdrop-blur-xl rounded-2xl shadow-xl border border-gray-200/50 dark:border-white/5 overflow-hidden flex-1 flex flex-col min-h-0">
       <div v-if="loading" class="p-12 flex-1 flex flex-col items-center justify-center bg-gray-50/50 dark:bg-gray-900/20 backdrop-blur-sm">
         <div class="relative w-16 h-16 mb-4">
           <div class="absolute inset-0 border-4 border-[#013d7b]/20 dark:border-[#5aba03]/20 rounded-full"></div>
