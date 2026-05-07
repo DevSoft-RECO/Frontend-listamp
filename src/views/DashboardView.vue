@@ -1,5 +1,5 @@
 <template>
-  <div class="min-h-screen bg-gray-50 dark:bg-[#05070a] text-gray-800 dark:text-gray-200 p-4 lg:p-8 font-mono transition-colors duration-500">
+  <div class="transition-colors duration-500">
     <!-- Fondos Especiales (Solo Dark Mode) -->
     <div class="fixed inset-0 pointer-events-none opacity-[0.03] dark:opacity-[0.03] bg-[url('https://www.transparenttextures.com/patterns/carbon-fibre.png')]"></div>
     <div class="fixed inset-0 pointer-events-none bg-[radial-gradient(circle_at_50%_-20%,#00cf8d10,transparent_50%)] dark:bg-[radial-gradient(circle_at_50%_-20%,#00cf8d15,transparent_50%)]"></div>

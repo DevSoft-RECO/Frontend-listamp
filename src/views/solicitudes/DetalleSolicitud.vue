@@ -1,5 +1,5 @@
 <template>
-  <div class="w-full px-6 lg:px-10 py-8 bg-slate-50 dark:bg-[#020617] min-h-screen transition-colors duration-300">
+  <div class="w-full transition-colors duration-300">
     
     <!-- Loader Corporativo -->
     <div v-if="loading" class="flex flex-col items-center justify-center min-h-[60vh]">
