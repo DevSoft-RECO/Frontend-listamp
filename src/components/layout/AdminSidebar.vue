@@ -15,9 +15,10 @@
   </Transition>
 
   <aside
-    class="fixed inset-y-0 left-0 z-50 flex flex-col transition-all duration-300 shadow-2xl
-           bg-azul-cope dark:bg-gray-900
-           border-r border-transparent dark:border-gray-800"
+    class="fixed inset-y-0 left-0 z-50 flex flex-col transition-all duration-300
+           bg-[#012a4a] dark:bg-white/95 dark:backdrop-blur-2xl
+           border-r border-white/10 dark:border-slate-200
+           shadow-[20px_0_50px_-20px_rgba(0,0,0,0.3)]"
     :class="[
       layoutStore.isSidebarOpen ? 'translate-x-0' : '-translate-x-full md:translate-x-0',
       layoutStore.isCollapsed ? 'w-20' : 'w-64'
@@ -48,8 +49,8 @@
             class="flex items-center px-3 py-3 rounded-lg transition-all duration-200 group border-l-4"
             :class="[
                 isActive(item.route)
-                ? 'bg-white/10 dark:bg-gray-800 border-verde-cope text-white dark:text-verde-cope shadow-lg'
-                : 'border-transparent text-gray-300 dark:text-gray-400 hover:bg-white/5 dark:hover:bg-gray-800 hover:text-white dark:hover:text-gray-100',
+                ? 'bg-white/10 dark:bg-slate-100 border-verde-cope text-white dark:text-azul-cope shadow-lg'
+                : 'border-transparent text-slate-300 dark:text-slate-500 hover:bg-white/5 dark:hover:bg-slate-50 hover:text-white dark:hover:text-azul-cope',
                 layoutStore.isCollapsed ? 'justify-center pl-0 border-l-0' : ''
             ]"
             >
@@ -79,8 +80,8 @@
                 class="w-full flex items-center px-3 py-3 rounded-lg transition-all duration-200 group border-l-4 border-transparent"
                 :class="[
                     openGroups.includes(item.id) && !layoutStore.isCollapsed
-                    ? 'bg-black/20 dark:bg-black/40 text-white dark:text-gray-100'
-                    : 'text-gray-300 dark:text-gray-400 hover:bg-white/5 dark:hover:bg-gray-800 hover:text-white',
+                    ? 'bg-black/20 dark:bg-slate-100 text-white dark:text-azul-cope'
+                    : 'text-slate-300 dark:text-slate-500 hover:bg-white/5 dark:hover:bg-slate-50 hover:text-white dark:hover:text-azul-cope',
                     layoutStore.isCollapsed ? 'justify-center pl-0' : 'justify-between'
                 ]"
             >
@@ -166,7 +167,7 @@
                         class="relative group/child flex items-center gap-3 px-3 py-2 rounded-r-lg rounded-bl-lg ml-2 text-sm transition-all duration-200"
                         :class="isActive(child.route)
                             ? 'bg-verde-cope/10 text-verde-cope font-bold translate-x-1'
-                            : 'text-gray-400 hover:text-white hover:bg-white/5 hover:translate-x-1'"
+                            : 'text-slate-400 dark:text-slate-500 hover:text-white dark:hover:text-azul-cope hover:bg-white/5 dark:hover:bg-slate-50 hover:translate-x-1'"
                     >
                          <!-- Indicador circular animado -->
                          <span
@@ -186,8 +187,8 @@
 
     <div class="p-4 mt-auto border-t border-white/10 dark:border-gray-800 shrink-0">
         <div v-if="!layoutStore.isCollapsed" class="fade-in text-center">
-            <p class="text-xs font-medium text-gray-400 dark:text-gray-500 mb-1">Desarrollado por</p>
-            <p class="text-xs font-bold text-white dark:text-gray-300 tracking-wide">
+            <p class="text-xs font-medium text-slate-400 dark:text-slate-400 mb-1">Desarrollado por</p>
+            <p class="text-xs font-bold text-white dark:text-slate-800 tracking-wide">
                 Área de Informática <span class="text-verde-cope">2025</span>
             </p>
         </div>
