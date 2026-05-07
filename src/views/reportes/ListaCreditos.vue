@@ -1,45 +1,46 @@
 <template>
   <div>
-    <!-- Top Bar / Navigation -->
-    <nav class="bg-white dark:bg-slate-900 border-b border-slate-200 dark:border-slate-800 px-6 py-4 mb-8">
-      <div class="max-w-6xl mx-auto flex justify-between items-center">
-        <div class="flex items-center gap-3">
-          <div class="w-10 h-10 bg-[#013d7b] rounded-lg flex items-center justify-center text-white">
-            <i class="pi pi-shield text-xl"></i>
-          </div>
-          <div>
-            <h1 class="text-xl font-bold tracking-tight">Sistema de Validación Consolidada</h1>
-            <p class="text-[10px] uppercase font-black text-slate-400 tracking-widest">Lista MP + Créditos</p>
-          </div>
-        </div>
-        <div class="flex items-center gap-4">
-          <span class="text-xs font-medium text-slate-500">Módulo de Riesgo v2.0</span>
-        </div>
-      </div>
-    </nav>
 
     <div class="max-w-6xl mx-auto px-6 pb-12">
       
-      <!-- Corporate Stepper -->
-      <div class="mb-10 max-w-4xl mx-auto">
-        <div class="flex items-center justify-between">
-          <div v-for="(step, idx) in ['Búsqueda Global', 'Análisis de Resultados', 'Verificación Final']" :key="idx" class="flex flex-col items-center flex-1">
+      <!-- Integrated Header & Stepper -->
+      <div class="mb-12 text-center">
+        <div class="inline-flex items-center justify-center w-12 h-12 bg-verde-cope/10 rounded-2xl text-verde-cope mb-4">
+          <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z" /></svg>
+        </div>
+        <h1 class="text-2xl font-black text-slate-800 dark:text-white tracking-tight leading-none">Validación Consolidada</h1>
+        <div class="flex items-center justify-center gap-3 mt-2">
+          <p class="text-[9px] uppercase font-black text-verde-cope tracking-[0.2em]">Lista MP + Créditos</p>
+          <span class="w-1 h-1 bg-slate-300 dark:bg-slate-700 rounded-full"></span>
+          <p class="text-[9px] uppercase font-bold text-slate-400 tracking-widest">Módulo de Riesgo v2.0</p>
+        </div>
+      </div>
+
+      <!-- Timeline Stepper -->
+      <div class="mb-12 max-w-2xl mx-auto px-4">
+        <div class="flex items-center justify-between relative">
+          <div v-for="(step, idx) in ['Búsqueda Global', 'Análisis', 'Verificación']" :key="idx" class="flex flex-col items-center flex-1 relative z-10">
             <div class="flex items-center w-full">
-              <div class="flex-1 h-[2px]" :class="idx === 0 ? 'bg-transparent' : (currentStep > idx ? 'bg-[#013d7b]' : 'bg-slate-200 dark:bg-slate-800')"></div>
+              <!-- Line Connector -->
+              <div class="flex-1 h-1 transition-all duration-500" :class="idx === 0 ? 'bg-transparent' : (currentStep > idx ? 'bg-verde-cope' : 'bg-slate-200 dark:bg-slate-800')"></div>
+              
+              <!-- Step Circle -->
               <div 
                 :class="[
-                  'w-10 h-10 rounded-full border-2 flex items-center justify-center text-sm font-bold transition-all duration-300',
-                  currentStep === idx + 1 ? 'border-[#013d7b] bg-[#013d7b] text-white' : 
-                  currentStep > idx + 1 ? 'border-[#013d7b] bg-white dark:bg-slate-900 text-[#013d7b]' : 
+                  'w-10 h-10 rounded-xl border-2 flex items-center justify-center text-xs font-black transition-all duration-500 shadow-lg',
+                  currentStep === idx + 1 ? 'border-verde-cope bg-verde-cope text-white shadow-verde-cope/20' : 
+                  currentStep > idx + 1 ? 'border-verde-cope bg-white dark:bg-slate-900 text-verde-cope shadow-verde-cope/5' : 
                   'border-slate-200 dark:border-slate-800 bg-slate-100 dark:bg-slate-800 text-slate-400'
                 ]"
               >
-                <i v-if="currentStep > idx + 1" class="pi pi-check text-xs"></i>
+                <svg v-if="currentStep > idx + 1" class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M5 13l4 4L19 7" /></svg>
                 <span v-else>{{ idx + 1 }}</span>
               </div>
-              <div class="flex-1 h-[2px]" :class="idx === 2 ? 'bg-transparent' : (currentStep > idx + 1 ? 'bg-[#013d7b]' : 'bg-slate-200 dark:bg-slate-800')"></div>
+
+              <!-- Line Connector -->
+              <div class="flex-1 h-1 transition-all duration-500" :class="idx === 2 ? 'bg-transparent' : (currentStep > idx + 1 ? 'bg-verde-cope' : 'bg-slate-200 dark:bg-slate-800')"></div>
             </div>
-            <span :class="['mt-3 text-[10px] font-black uppercase tracking-wider', currentStep === idx + 1 ? 'text-[#013d7b] dark:text-blue-400' : 'text-slate-400']">{{ step }}</span>
+            <span :class="['mt-3 text-[9px] font-black uppercase tracking-widest transition-colors', currentStep === idx + 1 ? 'text-verde-cope' : 'text-slate-400']">{{ step }}</span>
           </div>
         </div>
       </div>
@@ -65,14 +66,14 @@
                     v-model="searchName"
                     type="text" 
                     placeholder="Nombre completo (mín. 10 caracteres)..."
-                    class="w-full bg-slate-50 dark:bg-slate-950 border border-slate-200 dark:border-slate-800 rounded-lg pl-12 pr-4 py-4 focus:ring-2 focus:ring-[#013d7b] focus:border-[#013d7b] outline-none transition-all text-slate-800 dark:text-white font-medium"
+                    class="w-full bg-slate-50 dark:bg-slate-950 border border-slate-200 dark:border-slate-800 rounded-lg pl-12 pr-4 py-4 focus:ring-2 focus:ring-azul-cope focus:border-azul-cope outline-none transition-all text-slate-800 dark:text-white font-medium"
                     @keyup.enter="handleInitialSearch"
                   />
                 </div>
                 <button 
                   @click="handleInitialSearch"
                   :disabled="isSearching || !searchName"
-                  class="w-full py-4 bg-[#013d7b] hover:bg-[#002d5a] text-white rounded-lg font-bold transition-all flex items-center justify-center gap-2 disabled:opacity-50"
+                  class="w-full py-4 bg-azul-cope hover:bg-azul-cope/90 text-white rounded-lg font-bold transition-all flex items-center justify-center gap-2 disabled:opacity-50 shadow-lg shadow-azul-cope/20"
                 >
                   <i v-if="isSearching" class="pi pi-spin pi-spinner"></i>
                   <span>Siguiente: Analizar Resultados</span>
@@ -95,7 +96,7 @@
                 <button @click="currentStep = 1" class="px-4 py-2 border border-slate-200 dark:border-slate-700 rounded-lg text-xs font-bold hover:bg-slate-50 dark:hover:bg-slate-800 transition-all">
                   Regresar
                 </button>
-                <button @click="currentStep = 3" class="px-6 py-2 bg-[#013d7b] text-white rounded-lg text-xs font-bold hover:bg-[#002d5a] transition-all">
+                <button @click="currentStep = 3" class="px-6 py-2 bg-azul-cope text-white rounded-lg text-xs font-bold hover:bg-azul-cope/90 transition-all shadow-lg shadow-azul-cope/20">
                   Confirmar y Continuar
                 </button>
               </div>
@@ -165,7 +166,7 @@
                     :class="[
                       'px-4 py-3 rounded-lg text-sm font-bold text-left transition-all border',
                       idType === type 
-                        ? 'bg-[#013d7b] border-[#013d7b] text-white' 
+                        ? 'bg-azul-cope border-azul-cope text-white shadow-lg shadow-azul-cope/20' 
                         : 'bg-white dark:bg-slate-800 border-slate-200 dark:border-slate-700 text-slate-500'
                     ]"
                   >
@@ -180,7 +181,7 @@
                     v-model="idNumber"
                     type="text" 
                     :placeholder="'Ingrese número de ' + idType + '...'"
-                    class="w-full bg-slate-50 dark:bg-slate-950 border border-slate-200 dark:border-slate-800 rounded-lg px-6 py-5 outline-none focus:ring-2 focus:ring-[#013d7b] text-xl font-mono"
+                    class="w-full bg-slate-50 dark:bg-slate-950 border border-slate-200 dark:border-slate-800 rounded-lg px-6 py-5 outline-none focus:ring-2 focus:ring-azul-cope text-xl font-mono"
                     @keyup.enter="handleFinalVerify"
                   />
                 </div>
@@ -193,7 +194,7 @@
                   <button 
                     @click="handleFinalVerify"
                     :disabled="isGenerating || !idNumber"
-                    class="flex-[2] py-4 bg-[#013d7b] hover:bg-[#002d5a] text-white rounded-lg font-bold shadow-md transition-all flex items-center justify-center gap-2 disabled:opacity-50"
+                    class="flex-[2] py-4 bg-azul-cope hover:bg-azul-cope/90 text-white rounded-lg font-bold shadow-lg shadow-azul-cope/20 transition-all flex items-center justify-center gap-2 disabled:opacity-50"
                   >
                     <i v-if="isGenerating" class="pi pi-spin pi-spinner"></i>
                     <i v-else class="pi pi-verified"></i>
