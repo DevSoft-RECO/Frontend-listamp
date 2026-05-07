@@ -1,7 +1,7 @@
 <template>
   <transition name="modal-fade">
     <div v-if="isOpen" class="fixed inset-0 z-[100] flex items-center justify-center p-4 bg-slate-900/60 backdrop-blur-sm">
-      <div class="bg-white dark:bg-slate-900 w-full max-w-2xl max-h-[90vh] flex flex-col rounded-2xl shadow-2xl border border-slate-200 dark:border-slate-800 overflow-hidden">
+      <div class="bg-white dark:bg-slate-900 w-full max-w-2xl max-h-[80vh] mb-20 flex flex-col rounded-2xl shadow-2xl border border-slate-200 dark:border-slate-800 overflow-hidden animate-in zoom-in-95 duration-300">
         
         <!-- Header -->
         <div class="bg-amber-600 px-6 py-4 flex items-center justify-between text-white relative overflow-hidden shrink-0">
