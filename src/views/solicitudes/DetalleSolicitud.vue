@@ -37,7 +37,7 @@
               <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18" /></svg>
               Regresar
             </button>
-            <button v-if="solicitud.autorizacion_completa" @click="triggerDownload"
+            <button v-if="solicitud.autorizacion_completa && canDownload" @click="triggerDownload"
               class="flex-1 md:flex-none px-5 py-2.5 bg-azul-cope text-white rounded-lg hover:bg-azul-cope/90 transition-all text-sm font-semibold shadow-sm flex items-center justify-center gap-2">
               <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4" /></svg>
               Descargar PDF
@@ -227,7 +227,7 @@
                   <p class="text-xs text-emerald-600 dark:text-emerald-500 font-medium">El proceso ha concluido satisfactoriamente.</p>
                 </div>
               </div>
-              <button @click="triggerDownload" class="px-5 py-2.5 bg-emerald-600 hover:bg-emerald-700 text-white rounded-lg text-xs font-bold transition-all shadow-sm uppercase">Descargar</button>
+              <button v-if="canDownload" @click="triggerDownload" class="px-5 py-2.5 bg-emerald-600 hover:bg-emerald-700 text-white rounded-lg text-xs font-bold transition-all shadow-sm uppercase">Descargar</button>
             </div>
 
             <div v-else class="p-6 bg-red-50 dark:bg-red-900/10 border border-red-200 dark:border-red-800 rounded-xl flex items-center gap-4">
@@ -318,14 +318,19 @@ const getStatusHeaderClass = computed(() => {
 
 const userCanCumplimiento = computed(() => {
   const roles = authStore.user?.roles_list || [];
-  return (roles.includes('Super Admin') || roles.includes('Cumplimiento')) && 
+  return (roles.includes('Super Admin') || authStore.hasPermission('solicitudes_autorizar_cumplimiento')) && 
          (!solicitud.value?.estado_cumplimiento || solicitud.value?.estado_cumplimiento === 'pendiente');
 });
 
 const userCanJefatura = computed(() => {
   const roles = authStore.user?.roles_list || [];
-  return (roles.includes('Super Admin') || roles.includes('Jefe de Agencia')) && 
+  return (roles.includes('Super Admin') || authStore.hasPermission('solicitudes_autorizar_jefatura')) && 
          (!solicitud.value?.estado_jefatura || solicitud.value?.estado_jefatura === 'pendiente');
+});
+
+const canDownload = computed(() => {
+  const roles = authStore.user?.roles_list || [];
+  return roles.includes('Super Admin') || authStore.hasPermission('solicitudes_descargar_pdf');
 });
 
 const canDecide = computed(() => userCanCumplimiento.value || userCanJefatura.value);

@@ -19,7 +19,7 @@
     <div class="mb-6 border-b border-gray-200 dark:border-gray-700">
       <nav class="-mb-px flex space-x-8" aria-label="Tabs">
         <button 
-          v-for="tab in tabs" 
+          v-for="tab in availableTabs" 
           :key="tab.id"
           @click="currentTab = tab.id"
           :class="[
@@ -30,6 +30,7 @@
           ]"
         >
           <svg v-if="tab.id === 'pendientes'" xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" /></svg>
+          <svg v-else-if="tab.id === 'agencia'" xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4" /></svg>
           <svg v-else-if="tab.id === 'autorizadas'" xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" /></svg>
           <svg v-else-if="tab.id === 'rechazadas'" xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 14l2-2m0 0l2-2m-2 2l-2-2m2 2l2 2m7-2a9 9 0 11-18 0 9 9 0 0118 0z" /></svg>
           {{ tab.name }}
@@ -138,7 +139,7 @@
                       <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" />
                     </svg>
                   </router-link>
-                  <button v-if="s.autorizacion_completa" @click="downloadPDF(s.id)" class="p-2 text-green-600 hover:bg-green-50 dark:hover:bg-green-900/30 rounded-lg transition-all" title="Descargar PDF">
+                  <button v-if="s.autorizacion_completa && canDownload" @click="downloadPDF(s.id)" class="p-2 text-green-600 hover:bg-green-50 dark:hover:bg-green-900/30 rounded-lg transition-all" title="Descargar PDF">
                     <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                       <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
                     </svg>
@@ -171,15 +172,30 @@
 </template>
 
 <script setup>
-import { ref, onMounted, watch } from 'vue';
+import { ref, onMounted, watch, computed } from 'vue';
 import api from '@/api/axios';
+import { useAuthStore } from '@/stores/auth';
 import Swal from 'sweetalert2';
 
-const tabs = [
-  { id: 'pendientes', name: 'Pendientes', count: 0 },
-  { id: 'autorizadas', name: 'Autorizadas', count: 0 },
-  { id: 'rechazadas', name: 'Rechazadas', count: 0 }
-];
+const authStore = useAuthStore();
+
+const canDownload = computed(() => {
+  return authStore.user?.roles_list?.includes('Super Admin') || authStore.hasPermission('solicitudes_descargar_pdf');
+});
+
+const availableTabs = computed(() => {
+  const baseTabs = [
+    { id: 'pendientes', name: 'Pendientes', count: 0 },
+    { id: 'autorizadas', name: 'Autorizadas', count: 0 },
+    { id: 'rechazadas', name: 'Rechazadas', count: 0 }
+  ];
+
+  if (authStore.user?.roles_list?.includes('Super Admin') || authStore.hasPermission('solicitudes_ver_agencia')) {
+    baseTabs.splice(1, 0, { id: 'agencia', name: 'Mi Agencia', count: 0 });
+  }
+
+  return baseTabs;
+});
 
 const currentTab = ref('pendientes');
 const solicitudes = ref([]);
@@ -213,8 +229,8 @@ const fetchData = async () => {
     solicitudes.value = response.data.data;
     totalPages.value = response.data.last_page;
     
-    // Actualizar conteo de la tab actual si es necesario (opcional)
-    const activeTab = tabs.find(t => t.id === currentTab.value);
+    // Actualizar conteo de la tab actual si es necesario
+    const activeTab = availableTabs.value.find(t => t.id === currentTab.value);
     if (activeTab) activeTab.count = response.data.total;
 
   } catch (error) {
