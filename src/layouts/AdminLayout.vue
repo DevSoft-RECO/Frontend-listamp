@@ -2,18 +2,20 @@
   <div class="flex flex-col h-screen bg-gray-50 dark:bg-[#020617] text-gray-800 dark:text-gray-100 font-sans overflow-hidden transition-colors duration-300 relative">
     
     <!-- Background Decorations -->
-    <div class="absolute top-[-10%] left-[-10%] w-[40%] h-[40%] bg-verde-cope/5 blur-[120px] rounded-full pointer-events-none"></div>
-    <div class="absolute bottom-[-10%] right-[-10%] w-[30%] h-[30%] bg-azul-cope/10 blur-[100px] rounded-full pointer-events-none"></div>
+    <div class="absolute top-[-10%] left-[-10%] w-[40%] h-[40%] bg-azul-cope/15 blur-[120px] rounded-full pointer-events-none"></div>
+    <div class="absolute bottom-[-10%] right-[-10%] w-[30%] h-[30%] bg-verde-cope/20 blur-[100px] rounded-full pointer-events-none"></div>
 
     <AdminHeader />
 
-    <main class="flex-1 overflow-x-hidden overflow-y-auto p-6 pb-24 relative custom-scrollbar">
-      <div class="w-full">
-        <RouterView v-slot="{ Component }">
-          <Transition name="page" mode="out-in">
-            <component :is="Component" />
-          </Transition>
-        </RouterView>
+    <main class="flex-1 overflow-x-hidden overflow-y-auto relative custom-scrollbar">
+      <div class="w-full px-[5%] py-8 pb-32">
+        <div class="max-w-[1800px] mx-auto">
+          <RouterView v-slot="{ Component }">
+            <Transition name="page" mode="out-in">
+              <component :is="Component" />
+            </Transition>
+          </RouterView>
+        </div>
       </div>
     </main>
 

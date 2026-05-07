@@ -1,152 +1,186 @@
 <template>
   <div>
     <!-- Header Section -->
-    <div class="mb-6 flex flex-col md:flex-row md:items-center justify-between gap-4 border-b border-gray-200 dark:border-gray-800 pb-6">
+    <div class="mb-4 flex flex-col md:flex-row md:items-end justify-between gap-4 border-b border-gray-200 dark:border-gray-800/50 pb-4">
       <div>
-        <nav class="flex text-gray-500 text-[11px] font-bold uppercase tracking-wider mb-1 items-center gap-2">
-          <span>Inicio</span>
-          <svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M9 5l7 7-7 7" stroke-width="2"/></svg>
-          <span class="text-azul-cope dark:text-verde-cope">Lista MP</span>
+        <nav class="flex text-azul-cope/60 dark:text-verde-cope/60 text-[9px] font-black uppercase tracking-[0.2em] mb-1 items-center gap-2">
+          <span>Portal</span>
+          <span class="w-1 h-1 bg-gray-300 dark:bg-gray-700 rounded-full"></span>
+          <span>Lista MP</span>
         </nav>
-        <h1 class="text-2xl font-bold text-gray-900 dark:text-white tracking-tight">
-          Control de Registros MP
+        <h1 class="text-3xl font-black text-gray-900 dark:text-white tracking-tight">
+          Registros <span class="text-transparent bg-clip-text bg-gradient-to-r from-azul-cope via-blue-500 to-indigo-600 dark:from-verde-cope dark:via-emerald-400 dark:to-teal-400">MP</span>
         </h1>
-        <p class="text-gray-500 dark:text-gray-400 text-sm">Administración de expedientes y registros históricos.</p>
       </div>
       
       <button 
         @click="openCreateModal"
-        class="inline-flex items-center justify-center gap-2 px-5 py-2.5 bg-azul-cope hover:bg-azul-cope/90 text-white font-semibold rounded-lg transition-all shadow-sm active:scale-95 text-sm"
+        class="inline-flex items-center justify-center gap-2 px-5 py-2.5 bg-azul-cope hover:bg-azul-cope/90 text-white font-bold rounded-xl transition-all shadow-lg shadow-blue-500/20 active:scale-95 text-xs group"
       >
-        <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M12 4v16m8-8H4" />
+        <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M12 4v16m8-8H4" />
         </svg>
-        Registrar Nuevo
+        Nuevo Expediente
       </button>
     </div>
 
-    <!-- Stats Bar -->
-    <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-6">
-      <div class="bg-white dark:bg-gray-900 border border-gray-200 dark:border-gray-800 p-5 rounded-xl shadow-sm flex items-center gap-4">
-        <div class="w-12 h-12 bg-azul-cope/5 dark:bg-azul-cope/20 rounded-lg flex items-center justify-center text-azul-cope dark:text-azul-cope">
-          <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10" /></svg>
+
+    <!-- Unified Command Center -->
+    <div class="bg-white dark:bg-slate-900 border-2 border-azul-cope/10 dark:border-white/5 p-2 rounded-xl shadow-xl shadow-azul-cope/5 mb-6 flex flex-wrap lg:flex-nowrap items-center gap-6">
+      
+      <!-- 2. Compact Stats (Centered) -->
+      <div class="flex-1 flex flex-wrap justify-center items-center gap-3 min-w-fit">
+        <div class="flex items-center gap-3 px-4 py-1.5 bg-azul-cope rounded-xl shadow-lg shadow-azul-cope/20 border border-white/5 group hover:scale-105 transition-transform">
+          <div class="p-1.5 bg-white/10 rounded-lg">
+            <svg class="w-3.5 h-3.5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z" /></svg>
+          </div>
+          <div class="flex flex-col">
+            <span class="text-[8px] font-black text-white/60 uppercase tracking-widest leading-none">Total</span>
+            <span class="text-sm font-black text-white tabular-nums leading-none mt-1">{{ stats.total || 0 }}</span>
+          </div>
         </div>
-        <div>
-          <p class="text-[11px] font-bold text-gray-500 uppercase tracking-wider mb-0.5">Total de Registros</p>
-          <p class="text-2xl font-bold text-gray-900 dark:text-white">{{ stats.total || 0 }}</p>
+        <div class="flex items-center gap-3 px-4 py-1.5 bg-verde-cope rounded-xl shadow-lg shadow-verde-cope/20 border border-white/5 group hover:scale-105 transition-transform">
+          <div class="p-1.5 bg-white/10 rounded-lg">
+            <svg class="w-3.5 h-3.5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" /></svg>
+          </div>
+          <div class="flex flex-col">
+            <span class="text-[8px] font-black text-white/60 uppercase tracking-widest leading-none">Activos</span>
+            <span class="text-sm font-black text-white tabular-nums leading-none mt-1">{{ (stats.total || 0) - (stats.inactive || 0) }}</span>
+          </div>
+        </div>
+        <div class="flex items-center gap-3 px-4 py-1.5 bg-red-600 rounded-xl shadow-lg shadow-red-600/20 border border-white/5 group hover:scale-105 transition-transform">
+          <div class="p-1.5 bg-white/10 rounded-lg">
+            <svg class="w-3.5 h-3.5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M13 7h8m0 0v8m0-8l-8 8-4-4-6 6" /></svg>
+          </div>
+          <div class="flex flex-col">
+            <span class="text-[8px] font-black text-white/60 uppercase tracking-widest leading-none">Bajas</span>
+            <span class="text-sm font-black text-white tabular-nums leading-none mt-1">{{ stats.inactive || 0 }}</span>
+          </div>
         </div>
       </div>
 
-      <div class="bg-white dark:bg-gray-900 border border-gray-200 dark:border-gray-800 p-5 rounded-xl shadow-sm flex items-center gap-4">
-        <div class="w-12 h-12 bg-red-50 dark:bg-red-900/20 rounded-lg flex items-center justify-center text-red-600">
-          <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" /></svg>
-        </div>
-        <div>
-          <p class="text-[11px] font-bold text-gray-500 uppercase tracking-wider mb-0.5">Registros Inactivos</p>
-          <p class="text-2xl font-bold text-gray-900 dark:text-white">{{ stats.inactive || 0 }}</p>
-        </div>
-      </div>
-    </div>
+      <!-- Divider -->
+      <div class="hidden lg:block h-8 w-px bg-gray-200 dark:bg-gray-800 mx-1 shrink-0"></div>
 
-    <!-- Filters Section -->
-    <div class="bg-white dark:bg-gray-900 border border-gray-200 dark:border-gray-800 p-4 rounded-xl shadow-sm mb-6 flex flex-col md:flex-row gap-4">
-      <div class="flex-1 relative">
+      <!-- 1. Search Input (Left) -->
+      <div class="w-full lg:w-80 relative group shrink-0 order-first">
         <input 
           v-model="searchQuery"
           @input="handleSearch"
           type="text" 
-          placeholder="Buscar por nombre, CUI o NIT..."
-          class="w-full pl-10 pr-4 py-2 bg-gray-50 dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-lg text-sm text-gray-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-azul-cope/20 transition-all"
+          placeholder="Buscar sujeto..."
+          class="w-full pl-9 pr-4 py-2.5 bg-gray-50 dark:bg-slate-950 border border-azul-cope/20 dark:border-white/10 rounded-lg text-sm text-gray-900 dark:text-white focus:outline-none focus:border-azul-cope focus:ring-4 focus:ring-azul-cope/10 transition-all shadow-inner"
         />
-        <svg class="w-4 h-4 absolute left-3.5 top-3 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" /></svg>
+        <svg class="w-4 h-4 absolute left-3 top-3 text-azul-cope" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" /></svg>
       </div>
-      
-      <select 
-        v-model="statusFilter"
-        @change="fetchData(1)"
-        class="px-4 py-2 bg-gray-50 dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-lg text-sm text-gray-700 dark:text-gray-300 focus:outline-none focus:ring-2 focus:ring-azul-cope/20"
-      >
-        <option value="all">Todos los estados</option>
-        <option value="1">Activos</option>
-        <option value="0">Inactivos (Bajas)</option>
-      </select>
 
-      <button 
-        @click="exportToCSV"
-        class="px-4 py-2 bg-verde-cope hover:bg-verde-cope/90 text-white rounded-lg transition-colors text-sm font-semibold flex items-center gap-2 border border-verde-cope shadow-sm"
-      >
-        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
-        </svg>
-        Exportar CSV
-      </button>
+      <!-- Divider -->
+      <div class="hidden lg:block h-8 w-px bg-gray-200 dark:bg-gray-800 mx-1"></div>
 
-      <button 
-        @click="fetchData(1)"
-        class="px-4 py-2 text-azul-cope dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-800 rounded-lg transition-colors text-sm font-semibold flex items-center gap-2 border border-gray-200 dark:border-gray-700"
-      >
-        <svg class="w-4 h-4" :class="{ 'animate-spin': loading }" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15" stroke-width="2"/></svg>
-        Actualizar
-      </button>
+      <!-- Quick Actions & Filter -->
+      <div class="flex items-center gap-2 ml-auto">
+        <div class="relative">
+          <select 
+            v-model="statusFilter"
+            @change="fetchData(1)"
+            class="pl-3 pr-8 py-2 bg-gray-50 dark:bg-slate-800 border border-gray-200 dark:border-white/10 rounded-lg text-[11px] font-black text-gray-700 dark:text-gray-300 focus:outline-none appearance-none cursor-pointer transition-all hover:bg-gray-100"
+          >
+            <option value="all">TODOS</option>
+            <option value="1">ACTIVOS</option>
+            <option value="0">BAJAS</option>
+          </select>
+          <svg class="w-3 h-3 absolute right-2.5 top-1/2 -translate-y-1/2 pointer-events-none text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M19 9l-7 7-7-7" /></svg>
+        </div>
+
+        <button 
+          @click="exportToCSV"
+          class="p-2.5 bg-verde-cope/10 text-verde-cope rounded-lg transition-all hover:bg-verde-cope hover:text-white active:scale-95"
+          title="Descargar Reporte CSV"
+        >
+          <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M4 16v1a2 2 0 002 2h12a2 2 0 002-2v-1m-4-4l-4 4m0 0l-4-4m4 4V4" />
+          </svg>
+        </button>
+
+        <button 
+          @click="fetchData(1)"
+          class="p-2.5 text-azul-cope dark:text-blue-400 hover:bg-azul-cope/10 rounded-lg transition-all active:rotate-180"
+          title="Refrescar Tabla"
+        >
+          <svg class="w-5 h-5" :class="{ 'animate-spin': loading }" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </button>
+      </div>
     </div>
 
     <!-- Table Container -->
-    <div class="bg-white dark:bg-gray-900 border border-gray-200 dark:border-gray-800 rounded-xl shadow-sm overflow-hidden">
+    <div class="bg-white dark:bg-slate-900/40 backdrop-blur-xl border border-gray-200 dark:border-white/5 rounded-xl shadow-xl overflow-hidden mb-12">
       <div class="overflow-x-auto">
         <table class="w-full text-left text-sm border-collapse">
           <thead>
-            <tr class="bg-gray-50 dark:bg-gray-800/50 border-b border-gray-200 dark:border-gray-800">
-              <th class="px-6 py-4 font-bold text-gray-700 dark:text-gray-300">Identificación</th>
-              <th class="px-6 py-4 font-bold text-gray-700 dark:text-gray-300">Documentación</th>
-              <th class="px-6 py-4 font-bold text-gray-700 dark:text-gray-300">Fechas</th>
-              <th class="px-6 py-4 font-bold text-gray-700 dark:text-gray-300 text-center">Estado</th>
-              <th class="px-6 py-4 font-bold text-gray-700 dark:text-gray-300 text-right">Acciones</th>
+            <tr class="bg-azul-cope text-white border-b border-azul-cope">
+              <th class="px-8 py-5 font-black text-[10px] uppercase tracking-widest text-white/80">Identificación del Sujeto</th>
+              <th class="px-8 py-5 font-black text-[10px] uppercase tracking-widest text-white/80">Documentación Legal</th>
+              <th class="px-8 py-5 font-black text-[10px] uppercase tracking-widest text-white/80">Historial de Oficios</th>
+              <th class="px-8 py-5 font-black text-[10px] uppercase tracking-widest text-white/80 text-center">Estatus Operativo</th>
+              <th class="px-8 py-5 font-black text-[10px] uppercase tracking-widest text-white/80 text-right">Gestión</th>
             </tr>
           </thead>
-          <tbody class="divide-y divide-gray-100 dark:divide-gray-800">
+          <tbody class="divide-y divide-gray-100 dark:divide-white/5">
             <tr v-if="loading" class="animate-pulse">
-              <td colspan="5" class="px-6 py-12 text-center text-gray-400 font-medium italic">
-                Cargando información...
+              <td colspan="5" class="px-8 py-16 text-center text-gray-400 font-bold italic tracking-wide">
+                Sincronizando con el servidor central...
               </td>
             </tr>
             <tr v-else-if="list.length === 0">
-              <td colspan="5" class="px-6 py-12 text-center text-gray-400 font-medium italic">
-                No se encontraron registros.
+              <td colspan="5" class="px-8 py-16 text-center text-gray-400 font-bold italic tracking-wide">
+                No se han encontrado registros que coincidan con la búsqueda.
               </td>
             </tr>
-            <tr v-for="item in list" :key="item.iddatos" class="hover:bg-gray-50 dark:hover:bg-gray-800/30 transition-colors">
-              <td class="px-6 py-4">
-                <div class="font-bold text-gray-900 dark:text-white">{{ item.nombre }}</div>
-                <div class="text-[11px] text-gray-500 uppercase mt-0.5">{{ item.tipo_p }} | {{ item.tipo_identificacion }}</div>
+            <tr v-for="item in list" :key="item.iddatos" class="group hover:bg-azul-cope/[0.02] dark:hover:bg-blue-400/[0.02] transition-all duration-300">
+              <td class="px-8 py-3">
+                <div class="font-black text-gray-900 dark:text-white text-sm mb-0.5 group-hover:text-azul-cope transition-colors">{{ item.nombre }}</div>
+                <div class="flex items-center gap-2">
+                  <span class="px-1.5 py-0.5 bg-gray-100 dark:bg-white/5 rounded text-[8px] font-black uppercase text-gray-400 dark:text-slate-500 tracking-wider">{{ item.tipo_p }}</span>
+                  <span class="text-[9px] font-bold text-gray-300">/</span>
+                  <span class="text-[9px] font-bold text-gray-400 uppercase tracking-tight">{{ item.tipo_identificacion }}</span>
+                </div>
               </td>
-              <td class="px-6 py-4">
-                <div v-if="item.cui" class="text-xs text-gray-600 dark:text-gray-400"><span class="font-bold">CUI:</span> {{ item.cui }}</div>
-                <div v-if="item.nit" class="text-xs text-gray-600 dark:text-gray-400"><span class="font-bold">NIT:</span> {{ item.nit }}</div>
+              <td class="px-8 py-3">
+                <div v-if="item.cui" class="flex items-center gap-2 mb-0.5">
+                  <span class="text-[9px] font-black text-azul-cope/40 uppercase w-7">CUI</span>
+                  <span class="text-xs font-bold text-gray-700 dark:text-slate-300 tabular-nums">{{ item.cui }}</span>
+                </div>
+                <div v-if="item.nit" class="flex items-center gap-2">
+                  <span class="text-[9px] font-black text-azul-cope/40 uppercase w-7">NIT</span>
+                  <span class="text-xs font-bold text-gray-700 dark:text-slate-300 tabular-nums">{{ item.nit }}</span>
+                </div>
               </td>
-              <td class="px-6 py-4">
-                <div class="text-xs font-bold text-gray-700 dark:text-gray-300">{{ formatDate(item.fecha_respuesta) }}</div>
-                <div v-if="item.oficio" class="text-[10px] text-gray-500 uppercase mt-0.5">Oficio: {{ item.oficio }}</div>
+              <td class="px-8 py-3">
+                <div class="flex items-center gap-2 mb-0.5">
+                  <svg class="w-3 h-3 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" /></svg>
+                  <span class="text-[10px] font-black text-gray-700 dark:text-slate-200 uppercase tracking-tight">{{ formatDate(item.fecha_respuesta) }}</span>
+                </div>
+                <div v-if="item.oficio" class="text-[9px] font-bold text-gray-400 uppercase tracking-wider pl-5">Nº {{ item.oficio }}</div>
               </td>
-              <td class="px-6 py-4 text-center">
+              <td class="px-8 py-3 text-center">
                 <span 
-                  class="px-3 py-1 rounded-full text-[10px] font-bold uppercase tracking-wide inline-block border"
+                  class="px-3 py-1 rounded-lg text-[9px] font-black uppercase tracking-widest inline-flex items-center gap-1.5 transition-all duration-300 shadow-sm"
                   :class="item.estado === '1' 
-                    ? 'bg-green-50 text-green-700 border-green-100 dark:bg-green-900/10 dark:text-green-500 dark:border-green-900/30' 
-                    : 'bg-red-50 text-red-700 border-red-100 dark:bg-red-900/10 dark:text-red-500 dark:border-red-900/30'"
+                    ? 'bg-verde-cope/10 text-verde-cope border border-verde-cope/20' 
+                    : 'bg-red-500/10 text-red-600 border border-red-500/20'"
                 >
-                  {{ item.estado === '1' ? 'Activo' : 'Inactivo' }}
+                  <svg v-if="item.estado === '1'" class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M5 13l4 4L19 7" /></svg>
+                  <svg v-else class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M6 18L18 6M6 6l12 12" /></svg>
+                  {{ item.estado === '1' ? 'Vigente' : 'Inactivo' }}
                 </span>
               </td>
-              <td class="px-6 py-4 text-right">
-                <div class="flex items-center justify-end gap-2">
-                  <button @click="openEditModal(item)" class="p-2 text-gray-400 hover:text-azul-cope transition-colors" title="Editar">
-                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z" stroke-width="2"/></svg>
+              <td class="px-8 py-3 text-right">
+                <div class="flex items-center justify-end gap-1">
+                  <button @click="openEditModal(item)" class="p-1.5 text-gray-400 hover:text-azul-cope hover:bg-azul-cope/10 rounded-lg transition-all">
+                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z" stroke-width="2.5"/></svg>
                   </button>
-                  <button v-if="item.estado === '1' && authStore.hasRole('Super Admin')" @click="openDeactivateModal(item)" class="p-2 text-gray-400 hover:text-red-600 transition-colors" title="Desactivar">
-                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M18.364 18.364A9 9 0 005.636 5.636m12.728 12.728A9 9 0 015.636 5.636" stroke-width="2"/></svg>
-                  </button>
-                  <button v-else @click="showReason(item)" class="p-2 text-gray-400 hover:text-gray-600 transition-colors" title="Ver Motivo">
-                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" stroke-width="2"/></svg>
+                  <button v-if="item.estado === '1' && authStore.hasRole('Super Admin')" @click="openDeactivateModal(item)" class="p-1.5 text-gray-400 hover:text-red-600 hover:bg-red-600/10 rounded-lg transition-all">
+                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M18.364 18.364A9 9 0 005.636 5.636m12.728 12.728A9 9 0 015.636 5.636" stroke-width="2.5"/></svg>
                   </button>
                 </div>
               </td>
