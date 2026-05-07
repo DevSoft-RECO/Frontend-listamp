@@ -138,10 +138,10 @@
         </div>
 
         <!-- Actions -->
-        <div class="px-8 py-6 bg-slate-50 dark:bg-slate-800/50 border-t border-slate-200 dark:border-slate-800 flex justify-end gap-3">
+        <div class="px-8 py-6 bg-slate-50 dark:bg-slate-800/50 border-t border-slate-200 dark:border-slate-800 flex justify-between gap-3">
           <button 
             @click="handleClose"
-            class="px-6 py-3 rounded-xl text-sm font-bold text-slate-500 hover:bg-slate-200 dark:hover:bg-slate-700 transition-all"
+            class="px-6 py-3 rounded-xl text-sm font-bold text-slate-500 hover:bg-slate-200 dark:hover:bg-slate-700 transition-all border border-slate-200 dark:border-slate-700"
           >
             Terminar Proceso
           </button>
@@ -153,7 +153,7 @@
           >
             <i v-if="isSubmitting" class="pi pi-spin pi-spinner"></i>
             <i v-else class="pi pi-send"></i>
-            <span>Enviar Solicitud de Autorización</span>
+            <span>Enviar Solicitud</span>
           </button>
         </div>
       </div>
