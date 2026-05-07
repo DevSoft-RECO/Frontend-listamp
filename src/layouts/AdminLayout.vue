@@ -20,7 +20,12 @@
     </main>
 
     <!-- Apple-Style Navigation Dock (Solo Desktop XL) -->
-    <div class="fixed bottom-7 left-1/2 -translate-x-1/2 z-[100] hidden xl:block">
+    <div 
+      class="fixed bottom-7 left-1/2 -translate-x-1/2 z-[100] hidden xl:block transition-all duration-700 ease-in-out"
+      :class="isDockVisible ? 'translate-y-0 opacity-100' : 'translate-y-32 opacity-0 pointer-events-none'"
+      @mouseenter="handleDockMouseEnter"
+      @mouseleave="handleDockMouseLeave"
+    >
       <nav class="flex items-center gap-6 px-5 py-3 bg-white/40 dark:bg-slate-900/40 backdrop-blur-3xl border border-white/20 dark:border-white/5 rounded-3xl shadow-[0_25px_50px_-12px_rgba(0,0,0,0.5)] transition-all duration-500 hover:scale-[1.02]">
         
         <template v-for="item in filteredMenuItems" :key="item.id">
@@ -79,6 +84,18 @@
         </template>
       </nav>
     </div>
+
+    <!-- Dock Trigger (Flecha Pro) -->
+    <div 
+      v-if="!isDockVisible"
+      class="fixed bottom-4 left-1/2 -translate-x-1/2 z-[101] hidden xl:flex flex-col items-center gap-1 cursor-pointer group animate-bounce-slow"
+      @click="showDock"
+    >
+      <div class="w-10 h-1.5 bg-azul-cope/40 dark:bg-white/20 rounded-full group-hover:bg-azul-cope dark:group-hover:bg-verde-cope transition-all"></div>
+      <svg class="w-6 h-6 text-azul-cope/60 dark:text-white/40 group-hover:text-azul-cope dark:group-hover:text-verde-cope transition-all" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M5 15l7-7 7 7" />
+      </svg>
+    </div>
   </div>
 </template>
 
@@ -108,6 +125,33 @@ const authStore = useAuthStore()
 const route = useRoute()
 const router = useRouter()
 const activeGroup = ref<string | null>(null)
+
+// --- Lógica del Dock Auto-Hide ---
+const isDockVisible = ref(true)
+let hideTimeout: any = null
+
+const startHideTimer = () => {
+  clearTimeout(hideTimeout)
+  hideTimeout = setTimeout(() => {
+    if (activeGroup.value === null) { // No ocultar si hay un submenú abierto
+      isDockVisible.value = false
+    }
+  }, 1000)
+}
+
+const showDock = () => {
+  isDockVisible.value = true
+  startHideTimer()
+}
+
+const handleDockMouseEnter = () => {
+  clearTimeout(hideTimeout)
+  isDockVisible.value = true
+}
+
+const handleDockMouseLeave = () => {
+  startHideTimer()
+}
 
 const isActive = (path: string) => route.path === path
 const isGroupActive = (item: MenuItem) => item.children?.some((child) => route.path === child.route)
@@ -206,6 +250,7 @@ const filteredMenuItems = computed(() => {
 onMounted(() => {
   layoutStore.initTheme()
   window.addEventListener('resize', layoutStore.handleResize)
+  startHideTimer() // Iniciar timer al cargar
 })
 
 onUnmounted(() => {
@@ -242,5 +287,13 @@ onUnmounted(() => {
 .page-leave-to {
   opacity: 0;
   transform: translateY(-20px);
+}
+
+@keyframes bounce-slow {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-5px); }
+}
+.animate-bounce-slow {
+  animation: bounce-slow 2s infinite ease-in-out;
 }
 </style>
