@@ -21,7 +21,7 @@
 
     <!-- Apple-Style Navigation Dock (Solo Desktop XL) -->
     <div class="fixed bottom-7 left-1/2 -translate-x-1/2 z-[100] hidden xl:block">
-      <nav class="flex items-center gap-4 px-4 py-2.5 bg-white/40 dark:bg-slate-900/40 backdrop-blur-3xl border border-white/20 dark:border-white/5 rounded-[2.5rem] shadow-[0_25px_50px_-12px_rgba(0,0,0,0.5)] transition-all duration-500 hover:scale-[1.02] hover:bg-white/50 dark:hover:bg-slate-900/50">
+      <nav class="flex items-center gap-6 px-5 py-3 bg-white/40 dark:bg-slate-900/40 backdrop-blur-3xl border border-white/20 dark:border-white/5 rounded-3xl shadow-[0_25px_50px_-12px_rgba(0,0,0,0.5)] transition-all duration-500 hover:scale-[1.02]">
         
         <template v-for="item in filteredMenuItems" :key="item.id">
           <!-- Item del Dock -->
@@ -36,7 +36,7 @@
             <!-- Botón / Icono (Estilo Apple Sólido Premium) -->
             <div 
               @click="handleDockClick(item)"
-              class="relative flex items-center justify-center w-14 h-14 rounded-2xl transition-all duration-500 cursor-pointer group-hover:scale-110 group-hover:-translate-y-4 active:scale-90 origin-bottom shadow-lg"
+              class="relative flex items-center justify-center w-14 h-14 rounded-xl transition-all duration-500 cursor-pointer group-hover:scale-110 group-hover:-translate-y-4 active:scale-90 origin-bottom shadow-lg"
               :class="[
                 (item.route && isActive(item.route)) || isGroupActive(item) 
                   ? 'ring-4 ring-white dark:ring-azul-cope/50 ring-offset-4 dark:ring-offset-slate-900' 
@@ -52,12 +52,12 @@
               <div v-if="(item.route && isActive(item.route)) || isGroupActive(item)" class="absolute -bottom-1 left-1/2 -translate-x-1/2 w-1.5 h-1.5 bg-verde-cope rounded-full shadow-[0_0_8px_rgba(90,186,3,0.8)]"></div>
             </div>
 
-            <!-- Submenú Flotante (Si tiene hijos) -->
+            <!-- Submenú Flotante (Estilo Brand Azul/Verde) -->
             <div 
               v-if="item.children && activeGroup === item.id" 
-              class="absolute bottom-full left-1/2 -translate-x-1/2 mb-6 w-64 bg-white/95 dark:bg-slate-900/95 backdrop-blur-xl border border-white/20 dark:border-white/5 rounded-3xl shadow-2xl p-2 animate-in fade-in slide-in-from-bottom-4 duration-300"
+              class="absolute bottom-full left-1/2 -translate-x-1/2 mb-6 w-64 bg-[#013d7b] backdrop-blur-xl border border-white/10 rounded-2xl shadow-[0_20px_50px_rgba(0,0,0,0.4)] p-2 space-y-1.5 animate-in fade-in slide-in-from-bottom-4 duration-300"
             >
-              <div class="px-4 py-2 text-[10px] font-black text-slate-400 uppercase tracking-widest border-b border-slate-100 dark:border-slate-800 mb-2">
+              <div class="px-4 py-2 text-[10px] font-black text-white/40 uppercase tracking-widest border-b border-white/10 mb-1">
                 {{ item.label }}
               </div>
               <RouterLink
@@ -65,15 +65,15 @@
                 :key="child.route"
                 :to="child.route"
                 @click="activeGroup = null"
-                class="flex items-center gap-3 px-4 py-3 rounded-2xl text-sm font-bold transition-all"
+                class="flex items-center gap-3 px-4 py-3 rounded-xl text-sm font-bold transition-all"
                 :class="isActive(child.route)
-                  ? 'bg-azul-cope text-white shadow-lg'
-                  : 'text-slate-600 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-white/5 hover:text-azul-cope dark:hover:text-white'"
+                  ? 'bg-verde-cope text-white shadow-lg'
+                  : 'text-white/80 hover:bg-verde-cope hover:text-white'"
               >
-                <div class="w-2 h-2 rounded-full" :class="isActive(child.route) ? 'bg-verde-cope' : 'bg-slate-300 dark:bg-slate-700'"></div>
+                <div class="w-2 h-2 rounded-full" :class="isActive(child.route) ? 'bg-white' : 'bg-white/20 group-hover:bg-white/50'"></div>
                 {{ child.label }}
               </RouterLink>
-              <div class="absolute top-full left-1/2 -translate-x-1/2 w-4 h-4 bg-white/95 dark:bg-slate-900/95 rotate-45 -mt-2 border-r border-b border-white/20 dark:border-white/5"></div>
+              <div class="absolute top-full left-1/2 -translate-x-1/2 w-4 h-4 bg-[#013d7b] rotate-45 -mt-2 border-r border-b border-white/10"></div>
             </div>
           </div>
         </template>
