@@ -1,7 +1,7 @@
 <template>
-  <div>
+  <div class="flex flex-col h-[calc(100vh-110px)] overflow-hidden">
     <!-- Encabezado -->
-    <div class="mb-8">
+    <div class="mb-6 shrink-0">
       <h1 class="text-3xl font-extrabold text-[#013d7b] dark:text-[#5aba03] flex items-center gap-3">
         <span class="p-2 bg-blue-100 dark:bg-blue-900/30 rounded-xl">
           <svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8 text-[#013d7b] dark:text-[#5aba03]" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -14,7 +14,7 @@
     </div>
 
     <!-- Filtros -->
-    <div class="bg-white dark:bg-gray-800 rounded-2xl shadow-sm border border-gray-200 dark:border-gray-700 p-4 mb-6">
+    <div class="bg-white dark:bg-gray-800 rounded-2xl shadow-sm border border-gray-200 dark:border-gray-700 p-4 mb-4 shrink-0">
       <div class="grid grid-cols-1 md:grid-cols-4 gap-4 items-end">
         <div>
           <label class="block text-xs font-bold text-gray-500 dark:text-gray-400 uppercase tracking-wider mb-2">Tipo de Reporte</label>
@@ -57,17 +57,21 @@
     </div>
 
     <!-- Tabla -->
-    <div class="bg-white dark:bg-gray-800 rounded-2xl shadow-xl border border-gray-200 dark:border-gray-700 overflow-hidden">
-      <div v-if="loading" class="p-12 flex flex-col items-center justify-center">
-        <div class="animate-spin rounded-full h-12 w-12 border-b-2 border-[#013d7b] mb-4"></div>
-        <p class="text-gray-500">Cargando registros...</p>
+    <div class="bg-white dark:bg-gray-800 rounded-2xl shadow-xl border border-gray-200 dark:border-gray-700 overflow-hidden flex-1 flex flex-col min-h-0">
+      <div v-if="loading" class="p-12 flex-1 flex flex-col items-center justify-center bg-gray-50/50 dark:bg-gray-900/20 backdrop-blur-sm">
+        <div class="relative w-16 h-16 mb-4">
+          <div class="absolute inset-0 border-4 border-[#013d7b]/20 dark:border-[#5aba03]/20 rounded-full"></div>
+          <div class="absolute inset-0 border-4 border-t-[#013d7b] dark:border-t-[#5aba03] rounded-full animate-spin"></div>
+        </div>
+        <p class="text-sm font-bold text-gray-500 animate-pulse uppercase tracking-widest">Sincronizando Datos...</p>
       </div>
 
-      <div v-else-if="consultas.length === 0" class="p-12 text-center text-gray-500 font-bold">
+      <div v-else-if="consultas.length === 0" class="p-12 flex-1 flex flex-col items-center justify-center text-gray-500 font-bold">
+        <svg class="w-16 h-16 text-gray-200 dark:text-gray-700 mb-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M9.172 9.172a4 4 0 015.656 0M9 10h.01M15 10h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" /></svg>
         No se encontraron registros que coincidan con los filtros.
       </div>
 
-      <div v-else class="overflow-x-auto">
+      <div v-else class="overflow-x-auto overflow-y-auto flex-1 custom-scrollbar">
         <table class="w-full text-left border-collapse">
           <thead>
             <tr class="bg-gray-50 dark:bg-gray-900/50 text-gray-500 dark:text-gray-400">
@@ -167,12 +171,69 @@
         </table>
       </div>
 
-      <!-- Paginación -->
-      <div v-if="totalPages > 1" class="px-6 py-4 bg-gray-50 dark:bg-gray-900/50 border-t border-gray-100 dark:border-gray-700 flex items-center justify-between">
-        <span class="text-sm text-gray-500">Página {{ pagination.current_page }} de {{ totalPages }}</span>
-        <div class="flex gap-2">
-          <button @click="changePage(pagination.current_page - 1)" :disabled="pagination.current_page === 1" class="px-4 py-1.5 bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-lg text-sm font-medium disabled:opacity-50"> Anterior </button>
-          <button @click="changePage(pagination.current_page + 1)" :disabled="pagination.current_page === totalPages" class="px-4 py-1.5 bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-lg text-sm font-medium disabled:opacity-50"> Siguiente </button>
+      <!-- Paginación Avanzada Numerada -->
+      <div v-if="totalPages > 1" class="px-6 py-4 bg-gray-50 dark:bg-gray-900/50 border-t border-gray-100 dark:border-gray-700 flex items-center justify-between shrink-0">
+        <div class="flex items-center gap-4">
+          <span class="text-sm text-gray-500 font-medium">
+            Página <span class="text-[#013d7b] dark:text-[#5aba03] font-bold">{{ pagination.current_page }}</span> de <span class="font-bold">{{ totalPages }}</span>
+          </span>
+        </div>
+
+        <div class="flex items-center gap-1">
+          <!-- Ir al Inicio -->
+          <button 
+            @click="changePage(1)" 
+            :disabled="pagination.current_page === 1"
+            class="p-2 bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-lg text-gray-400 hover:text-[#013d7b] disabled:opacity-30 transition-all"
+            title="Primera página"
+          >
+            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M11 19l-7-7 7-7m8 14l-7-7 7-7" /></svg>
+          </button>
+
+          <!-- Anterior -->
+          <button 
+            @click="changePage(pagination.current_page - 1)" 
+            :disabled="pagination.current_page === 1"
+            class="p-2 bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-lg text-gray-400 hover:text-[#013d7b] disabled:opacity-30 transition-all mr-2"
+          >
+            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M15 19l-7-7 7-7" /></svg>
+          </button>
+
+          <!-- Números de Página -->
+          <template v-for="page in visiblePages" :key="page">
+            <button 
+              v-if="page !== '...'"
+              @click="changePage(page)"
+              :class="[
+                'min-w-[36px] h-9 rounded-lg text-sm font-bold transition-all border',
+                pagination.current_page === page 
+                  ? 'bg-[#013d7b] border-[#013d7b] text-white shadow-md shadow-blue-900/20' 
+                  : 'bg-white dark:bg-gray-800 border-gray-200 dark:border-gray-700 text-gray-600 dark:text-gray-400 hover:border-[#013d7b] hover:text-[#013d7b]'
+              ]"
+            >
+              {{ page }}
+            </button>
+            <span v-else class="px-2 text-gray-400 font-bold">...</span>
+          </template>
+
+          <!-- Siguiente -->
+          <button 
+            @click="changePage(pagination.current_page + 1)" 
+            :disabled="pagination.current_page === totalPages"
+            class="p-2 bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-lg text-gray-400 hover:text-[#013d7b] disabled:opacity-30 transition-all ml-2"
+          >
+            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M9 5l7 7-7 7" /></svg>
+          </button>
+
+          <!-- Ir al Final -->
+          <button 
+            @click="changePage(totalPages)" 
+            :disabled="pagination.current_page === totalPages"
+            class="p-2 bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-lg text-gray-400 hover:text-[#013d7b] disabled:opacity-30 transition-all"
+            title="Última página"
+          >
+            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M13 5l7 7-7 7M5 5l7 7-7 7" /></svg>
+          </button>
         </div>
       </div>
     </div>
@@ -283,7 +344,42 @@ const showSearchModal = ref(false);
 
 const pagination = ref({
   current_page: 1,
-  per_page: 15
+  per_page: 10
+});
+
+// --- Lógica de Paginación Inteligente ---
+const visiblePages = computed(() => {
+  const current = pagination.value.current_page;
+  const total = totalPages.value;
+  const pages = [];
+
+  if (total <= 7) {
+    for (let i = 1; i <= total; i++) pages.push(i);
+  } else {
+    // Siempre mostrar las primeras 5 si estamos al inicio
+    if (current <= 4) {
+      for (let i = 1; i <= 5; i++) pages.push(i);
+      pages.push('...');
+      pages.push(total);
+    } 
+    // Mostrar el final si estamos cerca del final
+    else if (current >= total - 3) {
+      pages.push(1);
+      pages.push('...');
+      for (let i = total - 4; i <= total; i++) pages.push(i);
+    } 
+    // Mostrar rango intermedio
+    else {
+      pages.push(1);
+      pages.push('...');
+      pages.push(current - 1);
+      pages.push(current);
+      pages.push(current + 1);
+      pages.push('...');
+      pages.push(total);
+    }
+  }
+  return pages;
 });
 
 const fetchData = async () => {
