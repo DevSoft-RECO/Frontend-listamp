@@ -1,11 +1,11 @@
 <template>
-  <div>
+  <div class="flex flex-col h-[calc(100vh-110px)] overflow-hidden">
     <!-- Encabezado -->
-    <div class="mb-8 flex flex-col md:flex-row md:items-center md:justify-between gap-4">
+    <div class="mb-6 flex flex-col md:flex-row md:items-center md:justify-between gap-4 shrink-0">
       <div>
-        <h1 class="text-3xl font-extrabold text-gray-900 dark:text-white flex items-center gap-3">
-          <span class="p-2 bg-amber-100 dark:bg-amber-900/30 rounded-xl">
-            <svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8 text-amber-600 dark:text-amber-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+        <h1 class="text-3xl font-extrabold text-[#013d7b] dark:text-[#5aba03] flex items-center gap-3">
+          <span class="p-2 bg-blue-100 dark:bg-blue-900/30 rounded-xl">
+            <svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8 text-[#013d7b] dark:text-[#5aba03]" fill="none" viewBox="0 0 24 24" stroke="currentColor">
               <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
             </svg>
           </span>
@@ -16,7 +16,7 @@
     </div>
 
     <!-- Tabs de Navegación -->
-    <div class="mb-6 border-b border-gray-200 dark:border-gray-700">
+    <div class="mb-4 border-b border-gray-200 dark:border-gray-700 shrink-0">
       <nav class="-mb-px flex space-x-8" aria-label="Tabs">
         <button 
           v-for="tab in availableTabs" 
@@ -24,7 +24,7 @@
           @click="currentTab = tab.id"
           :class="[
             currentTab === tab.id
-              ? 'border-amber-500 text-amber-600 dark:text-amber-400'
+              ? 'border-[#013d7b] dark:border-[#5aba03] text-[#013d7b] dark:text-[#5aba03]'
               : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300 dark:text-gray-400 dark:hover:text-gray-300',
             'whitespace-nowrap py-4 px-1 border-b-2 font-bold text-sm transition-colors duration-200 flex items-center gap-2'
           ]"
@@ -36,7 +36,7 @@
           {{ tab.name }}
           <span 
             v-if="tab.count > 0"
-            class="ml-2 bg-gray-100 dark:bg-gray-800 text-gray-600 dark:text-gray-400 py-0.5 px-2.5 rounded-full text-xs font-medium"
+            class="ml-2 bg-gray-100 dark:bg-gray-800 text-gray-600 dark:text-gray-400 py-0.5 px-2.5 rounded-full text-xs font-bold"
           >
             {{ tab.count }}
           </span>
@@ -45,11 +45,11 @@
     </div>
 
     <!-- Filtros -->
-    <div class="bg-white dark:bg-gray-800 rounded-2xl shadow-sm border border-gray-200 dark:border-gray-700 p-4 mb-6">
+    <div class="bg-white dark:bg-gray-800 rounded-2xl shadow-sm border border-gray-200 dark:border-gray-700 p-4 mb-4 shrink-0">
       <div class="grid grid-cols-1 md:grid-cols-4 gap-4 items-end">
         <div>
           <label class="block text-xs font-bold text-gray-500 dark:text-gray-400 uppercase tracking-wider mb-2">Destinatario</label>
-          <select v-model="filters.destinatario" class="w-full rounded-xl border-gray-200 dark:border-gray-700 dark:bg-gray-900 dark:text-white text-sm focus:ring-amber-500 focus:border-amber-500 transition-all">
+          <select v-model="filters.destinatario" class="w-full rounded-xl border-gray-200 dark:border-gray-700 dark:bg-gray-900 dark:text-white text-sm focus:ring-[#013d7b] transition-all">
             <option value="todos">Todos los destinatarios</option>
             <option value="cumplimiento">Cumplimiento</option>
             <option value="jefatura">Jefe de Agencia</option>
@@ -58,20 +58,20 @@
         </div>
         <div>
           <label class="block text-xs font-bold text-gray-500 dark:text-gray-400 uppercase tracking-wider mb-2">Fecha Inicio</label>
-          <input type="date" v-model="filters.fecha_inicio" class="w-full rounded-xl border-gray-200 dark:border-gray-700 dark:bg-gray-900 dark:text-white text-sm focus:ring-amber-500 focus:border-amber-500 transition-all" />
+          <input type="date" v-model="filters.fecha_inicio" class="w-full rounded-xl border-gray-200 dark:border-gray-700 dark:bg-gray-900 dark:text-white text-sm focus:ring-[#013d7b] transition-all" />
         </div>
         <div>
           <label class="block text-xs font-bold text-gray-500 dark:text-gray-400 uppercase tracking-wider mb-2">Fecha Fin</label>
-          <input type="date" v-model="filters.fecha_fin" class="w-full rounded-xl border-gray-200 dark:border-gray-700 dark:bg-gray-900 dark:text-white text-sm focus:ring-amber-500 focus:border-amber-500 transition-all" />
+          <input type="date" v-model="filters.fecha_fin" class="w-full rounded-xl border-gray-200 dark:border-gray-700 dark:bg-gray-900 dark:text-white text-sm focus:ring-[#013d7b] transition-all" />
         </div>
         <div class="flex gap-2">
-          <button @click="fetchData" class="flex-1 bg-amber-600 hover:bg-amber-700 text-white px-4 py-2.5 rounded-xl text-sm font-bold shadow-sm transition-all flex items-center justify-center gap-2">
+          <button @click="fetchData" class="flex-1 bg-[#013d7b] hover:bg-[#012a52] text-white px-4 py-2.5 rounded-xl text-sm font-bold shadow-md transition-all flex items-center justify-center gap-2">
             <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
               <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
             </svg>
             Filtrar
           </button>
-          <button @click="resetFilters" class="p-2.5 text-gray-500 hover:bg-gray-100 dark:hover:bg-gray-700 rounded-xl transition-all">
+          <button @click="resetFilters" class="p-2.5 text-gray-500 hover:bg-gray-100 dark:hover:bg-gray-700 rounded-xl transition-all border border-gray-200 dark:border-gray-700">
             <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
               <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15" />
             </svg>
@@ -81,21 +81,24 @@
     </div>
 
     <!-- Tabla de Resultados -->
-    <div class="bg-white dark:bg-gray-800 rounded-2xl shadow-xl border border-gray-200 dark:border-gray-700 overflow-hidden">
-      <div v-if="loading" class="p-12 flex flex-col items-center justify-center text-gray-500">
-        <div class="animate-spin rounded-full h-12 w-12 border-b-2 border-amber-600 mb-4"></div>
-        <p class="font-medium">Cargando solicitudes...</p>
+    <div class="bg-white dark:bg-gray-800 rounded-2xl shadow-xl border border-gray-200 dark:border-gray-700 overflow-hidden flex-1 flex flex-col min-h-0">
+      <div v-if="loading" class="p-12 flex-1 flex flex-col items-center justify-center bg-gray-50/50 dark:bg-gray-900/20 backdrop-blur-sm">
+        <div class="relative w-16 h-16 mb-4">
+          <div class="absolute inset-0 border-4 border-[#013d7b]/20 dark:border-[#5aba03]/20 rounded-full"></div>
+          <div class="absolute inset-0 border-4 border-t-[#013d7b] dark:border-t-[#5aba03] rounded-full animate-spin"></div>
+        </div>
+        <p class="text-sm font-bold text-gray-500 animate-pulse uppercase tracking-widest">Sincronizando Solicitudes...</p>
       </div>
-
-      <div v-else-if="solicitudes.length === 0" class="p-12 flex flex-col items-center justify-center text-gray-500">
-        <svg xmlns="http://www.w3.org/2000/svg" class="h-16 w-16 mb-4 text-gray-300 dark:text-gray-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+ 
+      <div v-else-if="solicitudes.length === 0" class="p-12 flex-1 flex flex-col items-center justify-center text-gray-500">
+        <svg xmlns="http://www.w3.org/2000/svg" class="h-16 w-16 mb-4 text-gray-200 dark:text-gray-700" fill="none" viewBox="0 0 24 24" stroke="currentColor">
           <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M20 13V6a2 2 0 00-2-2H6a2 2 0 00-2 2v7m16 0v5a2 2 0 01-2 2H6a2 2 0 01-2-2v-5m16 0h-2.586a1 1 0 00-.707.293l-2.414 2.414a1 1 0 01-.707.293h-3.172a1 1 0 01-.707-.293l-2.414-2.414A1 1 0 006.586 13H4" />
         </svg>
-        <p class="text-xl font-bold text-gray-400">No se encontraron solicitudes</p>
-        <p class="text-sm">Intenta ajustar los filtros de búsqueda.</p>
+        <p class="text-xl font-bold text-gray-400">Bandeja Vacía</p>
+        <p class="text-xs uppercase tracking-widest font-bold text-gray-400 mt-2">No se encontraron registros activos</p>
       </div>
 
-      <div v-else class="overflow-x-auto">
+      <div v-else class="overflow-x-auto overflow-y-auto flex-1 custom-scrollbar">
         <table class="w-full text-left border-collapse">
           <thead>
             <tr class="bg-gray-50 dark:bg-gray-900/50 text-gray-500 dark:text-gray-400">
@@ -117,19 +120,34 @@
                 </div>
               </td>
               <td class="px-6 py-4">
-                <span class="px-2.5 py-1 rounded-lg text-xs font-bold uppercase tracking-tighter" :class="getDestinatarioClass(s.destinatario)">
-                  {{ s.destinatario }}
-                </span>
+                <div class="flex">
+                  <span class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-[10px] font-black uppercase tracking-wider shadow-sm" :class="getDestinatarioClass(s.destinatario)">
+                    <ShieldCheck v-if="s.destinatario === 'cumplimiento'" class="w-3 h-3" />
+                    <UserCheck v-else-if="s.destinatario === 'jefatura'" class="w-3 h-3" />
+                    <Users v-else class="w-3 h-3" />
+                    {{ s.destinatario }}
+                  </span>
+                </div>
               </td>
               <td class="px-6 py-4">
-                <span class="px-2.5 py-1 rounded-full text-xs font-bold" :class="getStatusClass(s.estado_cumplimiento)">
-                  {{ s.estado_cumplimiento || 'pendiente' }}
-                </span>
+                <div class="flex">
+                  <span class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-[10px] font-black uppercase tracking-wider shadow-sm" :class="getStatusClass(s.estado_cumplimiento)">
+                    <Clock v-if="!s.estado_cumplimiento || s.estado_cumplimiento === 'pendiente'" class="w-3 h-3" />
+                    <CheckCircle2 v-else-if="s.estado_cumplimiento === 'autorizado'" class="w-3 h-3" />
+                    <XCircle v-else class="w-3 h-3" />
+                    {{ s.estado_cumplimiento || 'pendiente' }}
+                  </span>
+                </div>
               </td>
               <td class="px-6 py-4">
-                <span class="px-2.5 py-1 rounded-full text-xs font-bold" :class="getStatusClass(s.estado_jefatura)">
-                  {{ s.estado_jefatura || 'pendiente' }}
-                </span>
+                <div class="flex">
+                  <span class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-[10px] font-black uppercase tracking-wider shadow-sm" :class="getStatusClass(s.estado_jefatura)">
+                    <Clock v-if="!s.estado_jefatura || s.estado_jefatura === 'pendiente'" class="w-3 h-3" />
+                    <CheckCircle2 v-else-if="s.estado_jefatura === 'autorizado'" class="w-3 h-3" />
+                    <XCircle v-else class="w-3 h-3" />
+                    {{ s.estado_jefatura || 'pendiente' }}
+                  </span>
+                </div>
               </td>
               <td class="px-6 py-4 text-right">
                 <div class="flex justify-end items-center gap-2">
@@ -151,19 +169,23 @@
         </table>
       </div>
 
-      <!-- Paginación Simple -->
-      <div v-if="totalPages > 1" class="px-6 py-4 bg-gray-50 dark:bg-gray-900/50 border-t border-gray-100 dark:border-gray-700 flex items-center justify-between">
-        <span class="text-sm text-gray-500">Página {{ pagination.current_page }} de {{ totalPages }}</span>
+      <!-- Paginación Premium -->
+      <div v-if="totalPages > 1" class="px-6 py-4 bg-gray-50 dark:bg-gray-900/50 border-t border-gray-100 dark:border-gray-700 flex items-center justify-between shrink-0">
+        <div class="flex items-center gap-4">
+          <span class="text-sm text-gray-500 font-medium">
+            Página <span class="text-[#013d7b] dark:text-[#5aba03] font-bold">{{ pagination.current_page }}</span> de <span class="font-bold">{{ totalPages }}</span>
+          </span>
+        </div>
         <div class="flex gap-2">
           <button 
             @click="changePage(pagination.current_page - 1)" 
             :disabled="pagination.current_page === 1"
-            class="px-4 py-1.5 bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-lg text-sm font-medium disabled:opacity-50"
+            class="px-4 py-1.5 bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-lg text-sm font-bold text-[#013d7b] dark:text-[#5aba03] disabled:opacity-30 transition-all hover:bg-gray-50"
           > Anterior </button>
           <button 
             @click="changePage(pagination.current_page + 1)" 
             :disabled="pagination.current_page === totalPages"
-            class="px-4 py-1.5 bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-lg text-sm font-medium disabled:opacity-50"
+            class="px-4 py-1.5 bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-lg text-sm font-bold text-[#013d7b] dark:text-[#5aba03] disabled:opacity-30 transition-all hover:bg-gray-50"
           > Siguiente </button>
         </div>
       </div>
@@ -175,6 +197,14 @@
 import { ref, onMounted, watch, computed } from 'vue';
 import api from '@/api/axios';
 import { useAuthStore } from '@/stores/auth';
+import { 
+  ShieldCheck, 
+  UserCheck, 
+  Users, 
+  Clock, 
+  CheckCircle2, 
+  XCircle 
+} from 'lucide-vue-next';
 import Swal from 'sweetalert2';
 
 const authStore = useAuthStore();
@@ -268,17 +298,17 @@ const formatDate = (dateString) => {
 };
 
 const getStatusClass = (status) => {
-  if (!status || status === 'pendiente') return 'bg-yellow-100 text-yellow-700 dark:bg-yellow-900/30 dark:text-yellow-400';
-  if (status === 'autorizado') return 'bg-green-100 text-green-700 dark:bg-green-900/30 dark:text-green-400';
-  if (status === 'rechazado') return 'bg-red-100 text-red-700 dark:bg-red-900/30 dark:text-red-400';
-  return 'bg-gray-100 text-gray-600';
+  if (!status || status === 'pendiente') return 'bg-amber-500 text-white dark:bg-amber-600/80';
+  if (status === 'autorizado') return 'bg-verde-cope text-white dark:bg-emerald-600/80';
+  if (status === 'rechazado') return 'bg-rose-500 text-white dark:bg-rose-600/80';
+  return 'bg-gray-500 text-white';
 };
 
 const getDestinatarioClass = (dest) => {
-  if (dest === 'cumplimiento') return 'bg-blue-100 text-blue-700 dark:bg-blue-900/30 dark:text-blue-400';
-  if (dest === 'jefatura') return 'bg-purple-100 text-purple-700 dark:bg-purple-900/30 dark:text-purple-400';
-  if (dest === 'ambos') return 'bg-indigo-100 text-indigo-700 dark:bg-indigo-900/30 dark:text-indigo-400';
-  return 'bg-gray-100 text-gray-600';
+  if (dest === 'cumplimiento') return 'bg-azul-cope text-white dark:bg-blue-600/80';
+  if (dest === 'jefatura') return 'bg-purple-600 text-white dark:bg-purple-700/80';
+  if (dest === 'ambos') return 'bg-indigo-600 text-white dark:bg-indigo-700/80';
+  return 'bg-gray-500 text-white';
 };
 
 const downloadPDF = async (id) => {
