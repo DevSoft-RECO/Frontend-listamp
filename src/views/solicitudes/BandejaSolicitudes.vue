@@ -218,7 +218,8 @@ const availableTabs = computed(() => {
   
   const canSeeGlobal = authStore.user?.roles_list?.includes('Super Admin') || 
                        authStore.hasPermission('solicitudes_ver_todo') || 
-                       authStore.hasPermission('solicitudes_ver_cumplimiento');
+                       authStore.hasPermission('solicitudes_ver_cumplimiento') ||
+                       authStore.hasPermission('solicitudes_ver_agencia');
 
   if (canSeeGlobal) {
     tabs.push({ id: 'pendientes', name: 'Pendientes', count: 0 });
