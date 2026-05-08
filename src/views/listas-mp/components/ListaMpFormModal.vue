@@ -234,16 +234,8 @@ const handleSubmit = () => {
 }
 </script>
 
-<style scoped>
+<style>
 @reference "@/assets/main.css";
-
-.form-label-custom {
-  @apply block text-[11px] font-bold text-gray-600 dark:text-gray-400 uppercase tracking-wider mb-1.5 ml-0.5;
-}
-
-.form-input-custom {
-  @apply w-full px-4 py-2.5 bg-gray-50 dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-lg text-sm text-gray-900 dark:text-white placeholder-gray-400 dark:placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-azul-cope/10 focus:border-azul-cope dark:focus:border-verde-cope transition-all;
-}
 
 .custom-scrollbar::-webkit-scrollbar {
   width: 5px;
@@ -253,6 +245,18 @@ const handleSubmit = () => {
 }
 .custom-scrollbar::-webkit-scrollbar-thumb {
   @apply bg-gray-300 dark:bg-gray-700 rounded-full;
+}
+</style>
+
+<style scoped>
+@reference "@/assets/main.css";
+
+.form-label-custom {
+  @apply block text-[11px] font-bold text-gray-600 dark:text-gray-400 uppercase tracking-wider mb-1.5 ml-0.5;
+}
+
+.form-input-custom {
+  @apply w-full px-4 py-2.5 bg-gray-50 dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-lg text-sm text-gray-900 dark:text-white placeholder-gray-400 dark:placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-azul-cope/10 focus:border-azul-cope dark:focus:border-verde-cope transition-all;
 }
 
 .animate-fade-in {

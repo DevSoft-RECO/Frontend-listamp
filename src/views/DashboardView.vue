@@ -295,20 +295,10 @@ const formatearFecha = (fechaString: string) => {
 onMounted(obtenerEstadisticas);
 </script>
 
-<style scoped>
-@reference "../assets/main.css";
+<style>
+@reference "@/assets/main.css";
 
-/* Animaciones personalizadas para el look de trading */
-@keyframes glow-pulse {
-  0%, 100% { opacity: 0.5; }
-  50% { opacity: 1; }
-}
-
-.glow-active {
-  animation: glow-pulse 2s infinite ease-in-out;
-}
-
-/* Estilo de barra de desplazamiento para ambos temas */
+/* Estilo de barra de desplazamiento (Global para evitar error de compilación en scoped) */
 ::-webkit-scrollbar {
   width: 6px;
   height: 6px;
@@ -321,5 +311,19 @@ onMounted(obtenerEstadisticas);
 }
 ::-webkit-scrollbar-thumb:hover {
   @apply bg-gray-300 dark:bg-gray-700;
+}
+</style>
+
+<style scoped>
+@reference "@/assets/main.css";
+
+/* Animaciones personalizadas para el look de trading */
+@keyframes glow-pulse {
+  0%, 100% { opacity: 0.5; }
+  50% { opacity: 1; }
+}
+
+.glow-active {
+  animation: glow-pulse 2s infinite ease-in-out;
 }
 </style>
