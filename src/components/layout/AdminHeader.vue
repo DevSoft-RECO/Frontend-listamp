@@ -173,7 +173,6 @@ import { useAuthStore } from "@/stores/auth"
 import { getAvatarUrl } from "@/utils/imageUtils"
 import { 
   ShieldCheck, 
-  Lock, 
   Menu, 
   X, 
   Moon, 

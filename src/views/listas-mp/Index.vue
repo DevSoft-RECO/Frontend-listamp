@@ -356,7 +356,6 @@ const exportToCSV = async () => {
     }
 }
 
-const showReason = (item: RecordMP) => { Swal.fire({ title: 'Motivo de Baja', text: item.observacion_baja || 'N/A', icon: 'info' }) }
 const formatDate = (dateString?: string) => { if (!dateString) return '---'; const date = new Date(dateString); return date.toLocaleDateString('es-ES', { year: 'numeric', month: 'short', day: 'numeric' }) }
 onMounted(() => fetchData())
 </script>
