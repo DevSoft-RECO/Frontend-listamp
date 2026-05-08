@@ -127,7 +127,8 @@ export const useAuthStore = defineStore('auth', () => {
     function hasPermission(permission: string): boolean {
         if (!user.value) return false
 
-        if (user.value.roles && user.value.roles.includes('Super Admin')) return true
+        const userRoles = user.value.roles || user.value.roles_list || []
+        if (Array.isArray(userRoles) && userRoles.includes('Super Admin')) return true
 
         const userPerms = user.value.permissions || user.value.permisos || []
         if (Array.isArray(userPerms)) {
@@ -139,7 +140,8 @@ export const useAuthStore = defineStore('auth', () => {
 
     function hasRole(role: string): boolean {
         if (!user.value) return false
-        return !!(user.value.roles && user.value.roles.includes(role))
+        const userRoles = user.value.roles || user.value.roles_list || []
+        return Array.isArray(userRoles) && userRoles.includes(role)
     }
 
     async function checkAuth(): Promise<void> {
