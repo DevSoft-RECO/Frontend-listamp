@@ -101,7 +101,8 @@ const routes: RouteRecordRaw[] = [
                 name: 'solicitudes',
                 component: () => import('@/views/solicitudes/BandejaSolicitudes.vue'),
                 meta: {
-                    title: 'Bandeja de Autorizaciones'
+                    title: 'Bandeja de Autorizaciones',
+                    permission: ['solicitudes_ver_todo', 'solicitudes_ver_cumplimiento', 'solicitudes_ver_agencia']
                 }
             },
             {
@@ -109,7 +110,8 @@ const routes: RouteRecordRaw[] = [
                 name: 'detalle-solicitud',
                 component: () => import('@/views/solicitudes/DetalleSolicitud.vue'),
                 meta: {
-                    title: 'Detalle de Solicitud'
+                    title: 'Detalle de Solicitud',
+                    permission: ['solicitudes_ver_todo', 'solicitudes_ver_cumplimiento', 'solicitudes_ver_agencia']
                 }
             },
             {

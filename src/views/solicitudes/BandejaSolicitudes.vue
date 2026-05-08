@@ -51,8 +51,8 @@
           <label class="block text-xs font-bold text-gray-500 dark:text-gray-400 uppercase tracking-wider mb-2">Destinatario</label>
           <select v-model="filters.destinatario" class="w-full rounded-xl border-gray-200 dark:border-gray-700 dark:bg-slate-950 dark:text-white text-sm focus:ring-[#013d7b] transition-all">
             <option value="todos">Todos los destinatarios</option>
-            <option value="cumplimiento">Cumplimiento</option>
-            <option value="jefatura">Jefe de Agencia</option>
+            <option v-if="authStore.user?.roles_list?.includes('Super Admin') || authStore.hasPermission('solicitudes_ver_cumplimiento')" value="cumplimiento">Cumplimiento</option>
+            <option v-if="authStore.user?.roles_list?.includes('Super Admin') || authStore.hasPermission('solicitudes_ver_agencia')" value="jefatura">Jefe de Agencia</option>
             <option value="ambos">Ambos</option>
           </select>
         </div>
@@ -214,17 +214,27 @@ const canDownload = computed(() => {
 });
 
 const availableTabs = computed(() => {
-  const baseTabs = [
-    { id: 'pendientes', name: 'Pendientes', count: 0 },
-    { id: 'autorizadas', name: 'Autorizadas', count: 0 },
-    { id: 'rechazadas', name: 'Rechazadas', count: 0 }
-  ];
+  const tabs = [];
+  
+  const canSeeGlobal = authStore.user?.roles_list?.includes('Super Admin') || 
+                       authStore.hasPermission('solicitudes_ver_todo') || 
+                       authStore.hasPermission('solicitudes_ver_cumplimiento');
 
-  if (authStore.user?.roles_list?.includes('Super Admin') || authStore.hasPermission('solicitudes_ver_agencia')) {
-    baseTabs.splice(1, 0, { id: 'agencia', name: 'Mi Agencia', count: 0 });
+  if (canSeeGlobal) {
+    tabs.push({ id: 'pendientes', name: 'Pendientes', count: 0 });
+    tabs.push({ id: 'autorizadas', name: 'Autorizadas', count: 0 });
+    tabs.push({ id: 'rechazadas', name: 'Rechazadas', count: 0 });
   }
 
-  return baseTabs;
+  if (authStore.user?.roles_list?.includes('Super Admin') || authStore.hasPermission('solicitudes_ver_agencia')) {
+    if (tabs.length > 0) {
+      tabs.splice(1, 0, { id: 'agencia', name: 'Mi Agencia', count: 0 });
+    } else {
+      tabs.push({ id: 'agencia', name: 'Mi Agencia', count: 0 });
+    }
+  }
+
+  return tabs;
 });
 
 const currentTab = ref('pendientes');
@@ -330,5 +340,10 @@ watch(currentTab, () => {
   fetchData();
 });
 
-onMounted(fetchData);
+onMounted(() => {
+  if (availableTabs.value.length > 0) {
+    currentTab.value = availableTabs.value[0].id;
+  }
+  fetchData();
+});
 </script>
