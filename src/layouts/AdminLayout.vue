@@ -21,12 +21,10 @@
 
     <!-- Apple-Style Navigation Dock (Solo Desktop XL) -->
     <div 
-      class="fixed bottom-7 left-1/2 -translate-x-1/2 z-[100] hidden xl:block transition-all duration-700 ease-in-out"
+      class="fixed bottom-7 left-1/2 -translate-x-1/2 z-[100] hidden lg:block transition-all duration-700 ease-in-out"
       :class="isDockVisible ? 'translate-y-0 opacity-100' : 'translate-y-32 opacity-0 pointer-events-none'"
-      @mouseenter="handleDockMouseEnter"
-      @mouseleave="handleDockMouseLeave"
     >
-      <nav class="flex items-center gap-6 px-5 py-3 bg-white/40 dark:bg-slate-900/40 backdrop-blur-3xl border border-white/20 dark:border-white/5 rounded-3xl shadow-[0_25px_50px_-12px_rgba(0,0,0,0.5)] transition-all duration-500 hover:scale-[1.02]">
+      <nav class="flex items-center gap-3 lg:gap-6 px-4 lg:px-5 py-3 bg-white/40 dark:bg-slate-900/40 backdrop-blur-3xl border border-white/20 dark:border-white/5 rounded-3xl shadow-[0_25px_50px_-12px_rgba(0,0,0,0.5)] transition-all duration-500 hover:scale-[1.01] lg:hover:scale-[1.02]">
         
         <template v-for="item in filteredMenuItems" :key="item.id">
           <!-- Item del Dock -->
@@ -41,7 +39,7 @@
             <!-- Botón / Icono (Estilo Apple Sólido Premium) -->
             <div 
               @click="handleDockClick(item)"
-              class="relative flex items-center justify-center w-14 h-14 rounded-xl transition-all duration-500 cursor-pointer group-hover:scale-110 group-hover:-translate-y-4 active:scale-90 origin-bottom shadow-lg"
+              class="relative flex items-center justify-center w-12 h-12 lg:w-14 lg:h-14 rounded-xl transition-all duration-500 cursor-pointer group-hover:scale-110 group-hover:-translate-y-4 active:scale-90 origin-bottom shadow-lg"
               :class="[
                 (item.route && isActive(item.route)) || isGroupActive(item) 
                   ? 'ring-4 ring-white dark:ring-azul-cope/50 ring-offset-4 dark:ring-offset-slate-900' 
@@ -50,7 +48,7 @@
               ]"
             >
               <div class="text-white drop-shadow-md transition-transform duration-300 group-hover:scale-110">
-                <svg v-html="item.iconSvg" class="w-7 h-7" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"></svg>
+                <svg v-html="item.iconSvg" class="w-6 h-6 lg:w-7 lg:h-7" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"></svg>
               </div>
               
               <!-- Punto Indicador Activo -->
@@ -82,13 +80,31 @@
             </div>
           </div>
         </template>
+        
+        <!-- Botón Ocultar Integrado (Sin separador brusco) -->
+        <div class="relative group ml-2">
+          <div class="absolute top-full left-1/2 -translate-x-1/2 mt-2 px-3 py-1 bg-slate-900/90 backdrop-blur-md text-white text-[10px] font-bold rounded-lg opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200 whitespace-nowrap -translate-y-1 group-hover:translate-y-0">
+            Ocultar Menú
+          </div>
+
+          <div 
+            @click="isDockVisible = false"
+            class="relative flex items-center justify-center w-12 h-12 lg:w-14 lg:h-14 rounded-xl bg-slate-500/20 hover:bg-slate-500/40 border border-white/10 transition-all duration-500 cursor-pointer hover:scale-110 hover:-translate-y-4 active:scale-90 origin-bottom"
+          >
+            <div class="text-white/60 group-hover:text-white transition-colors">
+              <svg class="w-6 h-6 lg:w-7 lg:h-7" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M19 13l-7 7-7-7" />
+              </svg>
+            </div>
+          </div>
+        </div>
       </nav>
     </div>
 
     <!-- Dock Trigger (Flecha Pro) -->
     <div 
       v-if="!isDockVisible"
-      class="fixed bottom-4 left-1/2 -translate-x-1/2 z-[101] hidden xl:flex flex-col items-center gap-1 cursor-pointer group animate-bounce-slow"
+      class="fixed bottom-4 left-1/2 -translate-x-1/2 z-[101] hidden lg:flex flex-col items-center gap-1 cursor-pointer group animate-bounce-slow"
       @click="showDock"
     >
       <div class="w-10 h-1.5 bg-azul-cope/40 dark:bg-white/20 rounded-full group-hover:bg-azul-cope dark:group-hover:bg-verde-cope transition-all"></div>
@@ -126,31 +142,11 @@ const route = useRoute()
 const router = useRouter()
 const activeGroup = ref<string | null>(null)
 
-// --- Lógica del Dock Auto-Hide ---
+// --- Lógica del Dock Manual ---
 const isDockVisible = ref(true)
-let hideTimeout: any = null
-
-const startHideTimer = () => {
-  clearTimeout(hideTimeout)
-  hideTimeout = setTimeout(() => {
-    if (activeGroup.value === null) { // No ocultar si hay un submenú abierto
-      isDockVisible.value = false
-    }
-  }, 1000)
-}
 
 const showDock = () => {
   isDockVisible.value = true
-  startHideTimer()
-}
-
-const handleDockMouseEnter = () => {
-  clearTimeout(hideTimeout)
-  isDockVisible.value = true
-}
-
-const handleDockMouseLeave = () => {
-  startHideTimer()
 }
 
 const isActive = (path: string) => route.path === path
@@ -251,7 +247,6 @@ const filteredMenuItems = computed(() => {
 onMounted(() => {
   layoutStore.initTheme()
   window.addEventListener('resize', layoutStore.handleResize)
-  startHideTimer() // Iniciar timer al cargar
 })
 
 onUnmounted(() => {
