@@ -6,4 +6,5 @@ declare module '*.vue' {
 }
 declare interface Window {
   pdfjsLib: any;
+  Pusher: any;
 }
