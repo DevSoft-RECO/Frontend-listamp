@@ -79,6 +79,7 @@
               <th class="px-6 py-4 text-xs font-bold uppercase tracking-wider">Nombre Consultado</th>
               <th class="px-6 py-4 text-xs font-bold uppercase tracking-wider">Identificación</th>
               <th class="px-6 py-4 text-xs font-bold uppercase tracking-wider">Tipo Reporte</th>
+              <th class="px-6 py-4 text-xs font-bold uppercase tracking-wider">Consulta / Verificación</th>
               <th class="px-6 py-4 text-xs font-bold uppercase tracking-wider">Usuario / Agencia</th>
               <th class="px-6 py-4 text-xs font-bold uppercase tracking-wider">Verificación</th>
               <th class="px-6 py-4 text-xs font-bold uppercase tracking-wider text-right">Acciones</th>
@@ -102,6 +103,23 @@
                 <span class="px-2 py-1 bg-gray-100 dark:bg-gray-700 rounded text-[10px] font-bold uppercase tracking-tighter">
                   {{ c.tipo_reporte }}
                 </span>
+              </td>
+              <td class="px-6 py-4 text-xs">
+                <div class="flex flex-col gap-0.5">
+                  <div class="flex flex-col">
+                    <span class="text-gray-400 dark:text-gray-500 font-bold uppercase tracking-wider text-[9px]">Consulta</span>
+                    <span class="text-gray-800 dark:text-gray-200 font-semibold">{{ formatDate(c.fecha_consulta) }}</span>
+                  </div>
+                  <div class="flex flex-col mt-1">
+                    <span class="text-gray-400 dark:text-gray-500 font-bold uppercase tracking-wider text-[9px]">Verificación</span>
+                    <span v-if="c.verificacion === 'verificado'" class="text-green-600 dark:text-green-400 font-semibold">
+                      {{ formatDate(c.updated_at) }}
+                    </span>
+                    <span v-else class="text-amber-600 dark:text-amber-500 font-bold text-[11px] uppercase tracking-wider">
+                      Pendiente
+                    </span>
+                  </div>
+                </div>
               </td>
               <td class="px-6 py-4 text-xs">
                 <div class="flex flex-col">
@@ -331,6 +349,17 @@ const canVerify = computed(() => isAdmin.value || authStore.hasPermission('consu
 const consultas = ref([]);
 const loading = ref(false);
 const totalPages = ref(1);
+
+const formatDate = (dateString) => {
+  if (!dateString) return 'N/A';
+  return new Date(dateString).toLocaleString('es-GT', {
+    day: '2-digit',
+    month: '2-digit',
+    year: 'numeric',
+    hour: '2-digit',
+    minute: '2-digit'
+  });
+};
 
 const filters = ref({
   tipo_reporte: 'todas',
