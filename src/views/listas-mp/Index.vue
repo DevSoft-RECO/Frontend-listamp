@@ -154,6 +154,12 @@
                   <span class="text-[9px] font-black text-azul-cope/40 uppercase w-7">NIT</span>
                   <span class="text-xs font-bold text-gray-700 dark:text-slate-300 tabular-nums">{{ item.nit }}</span>
                 </div>
+                <div v-if="item.estado === '0'" class="mt-1.5 pt-1.5 border-t border-gray-100 dark:border-white/5">
+                  <button @click="showBajaDetails(item)" class="inline-flex items-center gap-1 px-2.5 py-1 bg-amber-500/10 hover:bg-amber-500/20 text-amber-600 dark:text-amber-400 text-[10px] font-black uppercase tracking-wider rounded-lg transition-all border border-amber-500/20 active:scale-95">
+                    <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" /></svg>
+                    Ver Detalles
+                  </button>
+                </div>
               </td>
               <td class="px-8 py-3">
                 <div class="flex items-center gap-2 mb-0.5">
@@ -233,7 +239,32 @@
         <div class="relative w-full max-w-md bg-white dark:bg-gray-900 rounded-xl shadow-xl p-8">
           <h3 class="text-xl font-bold text-gray-900 dark:text-white mb-2">Confirmar Baja</h3>
           <p class="text-gray-500 dark:text-gray-400 text-sm mb-6">Por favor, indique el motivo de la baja para <span class="font-bold">{{ selectedItem?.nombre }}</span>.</p>
-          <textarea v-model="deactivateReason" required rows="3" class="w-full px-4 py-3 bg-gray-50 dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-lg text-sm mb-6 focus:ring-2 focus:ring-red-500/20 focus:outline-none transition-all" placeholder="Motivo de la baja..."></textarea>
+          
+          <textarea v-model="deactivateReason" required rows="3" class="w-full px-4 py-3 bg-gray-50 dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-lg text-sm mb-4 focus:ring-2 focus:ring-red-500/20 focus:outline-none transition-all" placeholder="Motivo de la baja..."></textarea>
+          
+          <!-- File Input for PDF -->
+          <div class="mb-6">
+            <label class="block text-[10px] font-black text-gray-400 dark:text-gray-500 uppercase tracking-widest mb-2">
+              Documento de Respaldo (PDF)
+            </label>
+            <div class="relative flex items-center justify-center w-full">
+              <label class="flex flex-col items-center justify-center w-full h-28 border-2 border-dashed border-gray-300 dark:border-gray-700 rounded-xl cursor-pointer hover:bg-gray-50 dark:hover:bg-gray-800/30 transition-all">
+                <div class="flex flex-col items-center justify-center pt-4 pb-4 px-4 text-center">
+                  <svg class="w-7 h-7 text-gray-400 mb-1" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M15 13l-3-3m0 0l-3 3m3-3v12" /></svg>
+                  <p class="text-xs text-gray-500 dark:text-gray-400 font-bold mb-0.5 truncate max-w-[300px]">
+                    {{ selectedFile ? selectedFile.name : 'Seleccionar PDF de respaldo' }}
+                  </p>
+                  <p class="text-[9px] text-gray-400">PDF hasta 10MB</p>
+                </div>
+                <input type="file" ref="fileInput" class="hidden" accept="application/pdf" @change="handleFileChange" />
+              </label>
+            </div>
+            <button v-if="selectedFile" @click="clearFile" type="button" class="mt-2 text-xs text-red-500 hover:text-red-700 font-bold flex items-center gap-1">
+              <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" /></svg>
+              Quitar archivo
+            </button>
+          </div>
+
           <div class="flex gap-3">
             <button @click="deactivateRecord" :disabled="!deactivateReason || submitting" class="flex-1 py-2.5 bg-red-600 hover:bg-red-700 text-white font-bold rounded-lg transition-all disabled:opacity-30 text-sm">Confirmar Baja</button>
             <button @click="closeDeactivateModal" class="flex-1 py-2.5 bg-gray-100 dark:bg-gray-800 text-gray-600 dark:text-gray-400 font-bold rounded-lg hover:bg-gray-200 dark:hover:bg-gray-700 transition-all text-sm">Cancelar</button>
@@ -254,7 +285,7 @@ import { useAuthStore } from '@/stores/auth'
 const authStore = useAuthStore()
 
 interface RecordMP {
-  iddatos?: number; nombre: string; tipo_identificacion?: string; registro?: string; cui?: string; pasaporte?: string; lugar_origen?: string; fecha_respuesta: string; nit?: string; fecha_of?: string; oficio?: string; tipo_p?: string; fiscalia?: string; fecha_cooperativa?: string; fecha_cumplimiento?: string; estado: string; observacion_baja?: string;
+  iddatos?: number; nombre: string; tipo_identificacion?: string; registro?: string; cui?: string; pasaporte?: string; lugar_origen?: string; fecha_respuesta: string; nit?: string; fecha_of?: string; oficio?: string; tipo_p?: string; fiscalia?: string; fecha_cooperativa?: string; fecha_cumplimiento?: string; estado: string; observacion_baja?: string; documento_baja?: string;
 }
 
 const list = ref<RecordMP[]>([])
@@ -270,6 +301,8 @@ const form = ref<RecordMP>({ nombre: '', fecha_respuesta: '', estado: '1' })
 const showDeactivateModal = ref(false)
 const selectedItem = ref<RecordMP | null>(null)
 const deactivateReason = ref('')
+const fileInput = ref<HTMLInputElement | null>(null)
+const selectedFile = ref<File | null>(null)
 
 let searchTimeout: any = null
 const handleSearch = () => {
@@ -312,16 +345,94 @@ const saveRecord = async (formData: RecordMP) => {
   } catch (error) { console.error('Error saving record:', error) } finally { submitting.value = false }
 }
 
-const openDeactivateModal = (item: RecordMP) => { selectedItem.value = item; deactivateReason.value = ''; showDeactivateModal.value = true }
-const closeDeactivateModal = () => { showDeactivateModal.value = false; selectedItem.value = null }
+const openDeactivateModal = (item: RecordMP) => { selectedItem.value = item; deactivateReason.value = ''; selectedFile.value = null; showDeactivateModal.value = true }
+const closeDeactivateModal = () => { showDeactivateModal.value = false; selectedItem.value = null; selectedFile.value = null }
 const deactivateRecord = async () => {
   if (!selectedItem.value || !deactivateReason.value) return
   submitting.value = true
   try {
-    await api.delete(`/listas-mp/${selectedItem.value.iddatos}`, { data: { observacion_baja: deactivateReason.value } })
+    const formData = new FormData()
+    formData.append('observacion_baja', deactivateReason.value)
+    if (selectedFile.value) {
+      formData.append('documento_baja', selectedFile.value)
+    }
+
+    await api.post(`/listas-mp/${selectedItem.value.iddatos}/baja`, formData, {
+      headers: {
+        'Content-Type': 'multipart/form-data'
+      }
+    })
+    
     await fetchData(pagination.value.current_page)
     closeDeactivateModal()
-  } catch (error) { console.error('Error deactivating record:', error) } finally { submitting.value = false }
+    Swal.fire({ icon: 'success', title: 'Baja Registrada', text: 'El registro se ha dado de baja exitosamente.', timer: 1500, showConfirmButton: false })
+  } catch (error: any) { 
+    console.error('Error deactivating record:', error)
+    const errorMsg = error.response?.data?.errors?.documento_baja?.[0] || 'No se pudo completar la baja.'
+    Swal.fire({ icon: 'error', title: 'Error', text: errorMsg })
+  } finally { submitting.value = false }
+}
+
+const handleFileChange = (e: Event) => {
+  const target = e.target as HTMLInputElement
+  if (target.files && target.files.length > 0) {
+    const file = target.files[0]
+    if (file.type !== 'application/pdf') {
+      Swal.fire({
+        icon: 'error',
+        title: 'Error de archivo',
+        text: 'Solo se permiten archivos en formato PDF.'
+      })
+      if (fileInput.value) fileInput.value.value = ''
+      return
+    }
+    selectedFile.value = file
+  }
+}
+
+const clearFile = () => {
+  selectedFile.value = null
+  if (fileInput.value) fileInput.value.value = ''
+}
+
+const getDocUrl = (path: string) => {
+  return `${import.meta.env.VITE_API_URL}/${path}`
+}
+
+const showBajaDetails = (item: RecordMP) => {
+  let htmlContent = `
+    <div style="text-align: left; display: flex; flex-direction: column; gap: 16px;">
+      <div>
+        <h4 style="font-size: 11px; font-weight: 900; text-transform: uppercase; letter-spacing: 0.1em; color: #d97706; margin-bottom: 6px;">Motivo de la Baja:</h4>
+        <p style="font-size: 14px; background-color: #f9fafb; padding: 12px; border-radius: 8px; border: 1px solid #e5e7eb; color: #1f2937; line-height: 1.5; font-weight: 600; white-space: pre-wrap; margin: 0;">${item.observacion_baja || 'No se especificó motivo.'}</p>
+      </div>
+  `;
+  
+  if (item.documento_baja) {
+    const url = getDocUrl(item.documento_baja);
+    htmlContent += `
+      <div style="padding-top: 8px;">
+        <h4 style="font-size: 11px; font-weight: 900; text-transform: uppercase; letter-spacing: 0.1em; color: #dc2626; margin-bottom: 8px;">Documento de Respaldo:</h4>
+        <a href="${url}" target="_blank" style="display: inline-flex; align-items: center; gap: 8px; px: 16px; padding: 10px 16px; background-color: #dc2626; color: #ffffff; font-weight: bold; border-radius: 12px; font-size: 12px; text-decoration: none; box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1); transition: all 0.2s;">
+          <svg style="width: 16px; height: 16px;" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M7 21h10a2 2 0 002-2V9.414a1 1 0 00-.293-.707l-5.414-5.414A1 1 0 0012.586 3H7a2 2 0 00-2 2v14a2 2 0 002 2z"></path></svg>
+          Abrir documento PDF (Ver)
+        </a>
+      </div>
+    `;
+  }
+  
+  htmlContent += `</div>`;
+
+  Swal.fire({
+    title: `Detalles de Baja: ${item.nombre}`,
+    html: htmlContent,
+    showConfirmButton: true,
+    confirmButtonText: 'Cerrar',
+    confirmButtonColor: '#013d7b',
+    customClass: {
+      popup: 'dark:bg-slate-900 border dark:border-white/10 rounded-2xl'
+    }
+  });
 }
 
 const exportToCSV = async () => {
