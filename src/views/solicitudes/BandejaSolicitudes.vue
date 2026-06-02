@@ -162,6 +162,11 @@
                       <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
                     </svg>
                   </button>
+                  <button v-if="currentTab === 'pendientes'" @click="cancelSolicitud(s.id)" class="p-2 text-red-600 hover:bg-red-50 dark:hover:bg-red-900/30 rounded-lg transition-all" title="Cancelar Solicitud">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
+                    </svg>
+                  </button>
                 </div>
               </td>
             </tr>
@@ -333,6 +338,46 @@ const downloadPDF = async (id) => {
     link.click();
   } catch (error) {
     Swal.fire('Error', 'No se pudo descargar el archivo', 'error');
+  }
+};
+
+const cancelSolicitud = async (id) => {
+  const { value: confirmText } = await Swal.fire({
+    title: '¿Está seguro de cancelar esta solicitud?',
+    text: 'Esta acción no se puede deshacer y eliminará permanentemente la solicitud y su archivo PDF de respaldo del servidor. Para proceder, escriba la palabra "confirmar":',
+    input: 'text',
+    inputPlaceholder: 'Escriba "confirmar" aquí',
+    icon: 'warning',
+    showCancelButton: true,
+    confirmButtonColor: '#dc2626',
+    cancelButtonColor: '#374151',
+    confirmButtonText: 'Sí, cancelar y eliminar',
+    cancelButtonText: 'Volver',
+    inputValidator: (value) => {
+      if (value !== 'confirmar') {
+        return 'Debe escribir exactamente la palabra "confirmar" para eliminar.';
+      }
+    }
+  });
+
+  if (confirmText === 'confirmar') {
+    loading.value = true;
+    try {
+      await api.delete(`/solicitudes/${id}`);
+      Swal.fire({
+        icon: 'success',
+        title: 'Solicitud Cancelada',
+        text: 'La solicitud ha sido eliminada correctamente.',
+        timer: 1500,
+        showConfirmButton: false
+      });
+      fetchData();
+    } catch (error) {
+      console.error(error);
+      Swal.fire('Error', 'No se pudo eliminar la solicitud.', 'error');
+    } finally {
+      loading.value = false;
+    }
   }
 };
 
