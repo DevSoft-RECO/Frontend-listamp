@@ -277,28 +277,39 @@
           <div class="space-y-4">
             <div>
               <label class="block text-xs font-bold text-gray-500 dark:text-gray-400 uppercase tracking-wider mb-2">Buscar por:</label>
-              <div class="grid grid-cols-2 gap-2">
+              <div class="grid grid-cols-3 gap-2">
                 <button 
                   @click="filters.search_type = 'id'"
                   :class="[
-                    'py-2.5 rounded-xl text-sm font-bold transition-all border',
+                    'py-2.5 rounded-xl text-xs font-bold transition-all border text-center px-1',
                     filters.search_type === 'id' 
                       ? 'bg-[#013d7b] text-white border-[#013d7b]' 
                       : 'bg-gray-50 dark:bg-gray-900 text-gray-600 dark:text-gray-400 border-gray-200 dark:border-gray-700'
                   ]"
                 >
-                  ID de Consulta
+                  ID Consulta
                 </button>
                 <button 
                   @click="filters.search_type = 'documento'"
                   :class="[
-                    'py-2.5 rounded-xl text-sm font-bold transition-all border',
+                    'py-2.5 rounded-xl text-xs font-bold transition-all border text-center px-1',
                     filters.search_type === 'documento' 
                       ? 'bg-[#013d7b] text-white border-[#013d7b]' 
                       : 'bg-gray-50 dark:bg-gray-900 text-gray-600 dark:text-gray-400 border-gray-200 dark:border-gray-700'
                   ]"
                 >
-                  Número de Doc.
+                  Num. Doc.
+                </button>
+                <button 
+                  @click="filters.search_type = 'nombre'"
+                  :class="[
+                    'py-2.5 rounded-xl text-xs font-bold transition-all border text-center px-1',
+                    filters.search_type === 'nombre' 
+                      ? 'bg-[#013d7b] text-white border-[#013d7b]' 
+                      : 'bg-gray-50 dark:bg-gray-900 text-gray-600 dark:text-gray-400 border-gray-200 dark:border-gray-700'
+                  ]"
+                >
+                  Nombre
                 </button>
               </div>
             </div>
@@ -308,7 +319,7 @@
               <input 
                 type="text" 
                 v-model="filters.search_value" 
-                :placeholder="filters.search_type === 'id' ? 'Ej: 154' : 'Ej: 2984...'"
+                :placeholder="filters.search_type === 'id' ? 'Ej: 154' : (filters.search_type === 'nombre' ? 'Ej: Juan Pérez' : 'Ej: 2984...')"
                 class="w-full rounded-xl border-gray-200 dark:border-gray-700 dark:bg-gray-900 dark:text-white text-sm focus:ring-[#013d7b] transition-all"
                 @keyup.enter="applySearch"
               />
