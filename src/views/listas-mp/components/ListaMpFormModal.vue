@@ -73,6 +73,53 @@
                 <label class="form-label-custom">Lugar de Origen / Residencia</label>
                 <input v-model="form.lugar_origen" type="text" class="form-input-custom" placeholder="Ciudad / Departamento">
               </div>
+
+              <div class="col-span-2 p-4 bg-gray-50 dark:bg-gray-800/30 rounded-xl border border-gray-100 dark:border-gray-800">
+                <div class="flex items-center justify-between mb-3">
+                  <div>
+                    <span class="block text-xs font-bold text-gray-700 dark:text-gray-300 uppercase tracking-wider">¿Es Asociado?</span>
+                    <span class="text-[10px] text-gray-500 dark:text-gray-400">Indique si el sujeto es asociado de la cooperativa</span>
+                  </div>
+                </div>
+                <div class="grid grid-cols-3 gap-2">
+                  <button 
+                    type="button"
+                    @click="form.es_asociado = 'SI'"
+                    :class="[
+                      'py-2.5 rounded-lg text-xs font-bold transition-all border text-center cursor-pointer',
+                      form.es_asociado === 'SI' 
+                        ? 'bg-verde-cope text-white border-verde-cope shadow-sm' 
+                        : 'bg-white dark:bg-gray-900 text-gray-600 dark:text-gray-400 border-gray-200 dark:border-gray-700 hover:border-verde-cope/50'
+                    ]"
+                  >
+                    SÍ
+                  </button>
+                  <button 
+                    type="button"
+                    @click="form.es_asociado = 'NO'"
+                    :class="[
+                      'py-2.5 rounded-lg text-xs font-bold transition-all border text-center cursor-pointer',
+                      form.es_asociado === 'NO' 
+                        ? 'bg-red-600 text-white border-red-600 shadow-sm' 
+                        : 'bg-white dark:bg-gray-900 text-gray-600 dark:text-gray-400 border-gray-200 dark:border-gray-700 hover:border-red-500/50'
+                    ]"
+                  >
+                    NO
+                  </button>
+                  <button 
+                    type="button"
+                    @click="form.es_asociado = 'Pendiente'"
+                    :class="[
+                      'py-2.5 rounded-lg text-xs font-bold transition-all border text-center cursor-pointer',
+                      form.es_asociado === 'Pendiente' || !form.es_asociado
+                        ? 'bg-amber-500 text-white border-amber-500 shadow-sm' 
+                        : 'bg-white dark:bg-gray-900 text-gray-600 dark:text-gray-400 border-gray-200 dark:border-gray-700 hover:border-amber-500/50'
+                    ]"
+                  >
+                    PENDIENTE
+                  </button>
+                </div>
+              </div>
             </div>
 
             <!-- Step 2: Datos Administrativos -->
@@ -208,7 +255,7 @@ const fetchFiscalias = async () => {
 watch(() => props.show, (newVal) => {
   if (newVal) {
     currentStep.value = 1
-    form.value = { ...props.initialData }
+    form.value = { es_asociado: 'Pendiente', ...props.initialData }
     const dateFields = ['fecha_respuesta', 'fecha_of', 'fecha_cooperativa', 'fecha_cumplimiento']
     dateFields.forEach(field => {
       if (form.value[field]) {

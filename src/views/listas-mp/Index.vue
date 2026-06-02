@@ -143,6 +143,17 @@
                   <span class="px-1.5 py-0.5 bg-gray-100 dark:bg-white/5 rounded text-[8px] font-black uppercase text-gray-400 dark:text-slate-500 tracking-wider">{{ item.tipo_p }}</span>
                   <span class="text-[9px] font-bold text-gray-300">/</span>
                   <span class="text-[9px] font-bold text-gray-400 uppercase tracking-tight">{{ item.tipo_identificacion }}</span>
+                  <span class="text-[9px] font-bold text-gray-300">/</span>
+                  <span 
+                    class="px-1.5 py-0.5 rounded text-[8px] font-black uppercase tracking-wider"
+                    :class="{
+                      'bg-green-100 text-green-700 dark:bg-green-900/30 dark:text-green-400': item.es_asociado === 'SI',
+                      'bg-red-100 text-red-700 dark:bg-red-900/30 dark:text-red-400': item.es_asociado === 'NO',
+                      'bg-amber-100 text-amber-700 dark:bg-amber-950/40 dark:text-amber-400': item.es_asociado === 'Pendiente' || !item.es_asociado
+                    }"
+                  >
+                    Asociado: {{ item.es_asociado || 'Pendiente' }}
+                  </span>
                 </div>
               </td>
               <td class="px-8 py-3">
@@ -285,7 +296,7 @@ import { useAuthStore } from '@/stores/auth'
 const authStore = useAuthStore()
 
 interface RecordMP {
-  iddatos?: number; nombre: string; tipo_identificacion?: string; registro?: string; cui?: string; pasaporte?: string; lugar_origen?: string; fecha_respuesta: string; nit?: string; fecha_of?: string; oficio?: string; tipo_p?: string; fiscalia?: string; fecha_cooperativa?: string; fecha_cumplimiento?: string; estado: string; observacion_baja?: string; documento_baja?: string;
+  iddatos?: number; nombre: string; tipo_identificacion?: string; registro?: string; cui?: string; pasaporte?: string; lugar_origen?: string; fecha_respuesta: string; nit?: string; fecha_of?: string; oficio?: string; tipo_p?: string; fiscalia?: string; fecha_cooperativa?: string; fecha_cumplimiento?: string; estado: string; observacion_baja?: string; documento_baja?: string; es_asociado?: string;
 }
 
 const list = ref<RecordMP[]>([])
@@ -297,7 +308,7 @@ const pagination = ref({ current_page: 1, last_page: 1, total: 0, per_page: 10 }
 const stats = ref({ total: 0, inactive: 0 })
 const showModal = ref(false)
 const isEditing = ref(false)
-const form = ref<RecordMP>({ nombre: '', fecha_respuesta: '', estado: '1' })
+const form = ref<RecordMP>({ nombre: '', fecha_respuesta: '', estado: '1', es_asociado: 'Pendiente' })
 const showDeactivateModal = ref(false)
 const selectedItem = ref<RecordMP | null>(null)
 const deactivateReason = ref('')
@@ -332,7 +343,7 @@ const paginationPages = computed(() => {
     return pages
 })
 
-const openCreateModal = () => { isEditing.value = false; form.value = { nombre: '', tipo_identificacion: '', tipo_p: '', fecha_respuesta: new Date().toISOString().split('T')[0], estado: '1' }; showModal.value = true }
+const openCreateModal = () => { isEditing.value = false; form.value = { nombre: '', tipo_identificacion: '', tipo_p: '', fecha_respuesta: new Date().toISOString().split('T')[0], estado: '1', es_asociado: 'NO' }; showModal.value = true }
 const openEditModal = (item: RecordMP) => { isEditing.value = true; form.value = { ...item }; showModal.value = true }
 const saveRecord = async (formData: RecordMP) => {
   submitting.value = true
