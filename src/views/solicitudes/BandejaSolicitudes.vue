@@ -102,6 +102,7 @@
         <table class="w-full text-left border-collapse">
           <thead>
             <tr class="bg-gray-50 dark:bg-gray-900/50 text-gray-500 dark:text-gray-400">
+              <th class="px-6 py-4 text-xs font-bold uppercase tracking-wider">ID</th>
               <th class="px-6 py-4 text-xs font-bold uppercase tracking-wider">Solicitante / Agencia</th>
               <th class="px-6 py-4 text-xs font-bold uppercase tracking-wider">Destinatario</th>
               <th class="px-6 py-4 text-xs font-bold uppercase tracking-wider">Estado Cumplimiento</th>
@@ -111,6 +112,9 @@
           </thead>
           <tbody class="divide-y divide-gray-100 dark:divide-gray-700">
             <tr v-for="s in solicitudes" :key="s.id" class="hover:bg-gray-50 dark:hover:bg-gray-700/30 transition-colors group">
+              <td class="px-6 py-4 font-bold text-gray-800 dark:text-gray-200">
+                #{{ s.id }}
+              </td>
               <td class="px-6 py-4">
                 <div class="flex flex-col">
                   <span class="font-bold text-gray-900 dark:text-white">{{ s.usuario?.name || 'N/A' }}</span>
