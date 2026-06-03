@@ -438,10 +438,19 @@ const submitDecision = async (estado) => {
 
 const triggerDownload = async () => {
   if (!solicitud.value.autorizacion_completa) return;
-  const link = document.createElement('a');
-  link.href = pdfBlobUrl.value;
-  link.download = `SOLICITUD_${solicitud.value.id}.pdf`;
-  link.click();
+  try {
+    const response = await api.get(`/solicitudes/${solicitud.value.id}/descargar-pdf`, { responseType: 'blob' });
+    const url = window.URL.createObjectURL(new Blob([response.data]));
+    const link = document.createElement('a');
+    link.href = url;
+    link.download = `SOLICITUD_${solicitud.value.id}.pdf`;
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+    window.URL.revokeObjectURL(url);
+  } catch (error) {
+    Swal.fire('Error', 'No se pudo descargar el archivo actualizado', 'error');
+  }
 };
 
 const formatDate = (dateString) => {
