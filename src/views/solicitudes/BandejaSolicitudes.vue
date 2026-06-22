@@ -71,7 +71,13 @@
             </svg>
             Filtrar
           </button>
-          <button @click="resetFilters" class="p-2.5 text-gray-500 hover:bg-gray-100 dark:hover:bg-gray-800 rounded-xl transition-all border border-gray-200/50 dark:border-white/5">
+          <button v-if="canExport" @click="exportCSV" class="bg-emerald-600 hover:bg-emerald-700 text-white px-4 py-2.5 rounded-xl text-sm font-bold shadow-md transition-all flex items-center justify-center gap-2" title="Exportar CSV">
+            <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4" />
+            </svg>
+            Exportar
+          </button>
+          <button @click="resetFilters" class="p-2.5 text-gray-500 hover:bg-gray-100 dark:hover:bg-gray-800 rounded-xl transition-all border border-gray-200/50 dark:border-white/5" title="Limpiar Filtros">
             <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
               <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15" />
             </svg>
@@ -222,6 +228,10 @@ const canDownload = computed(() => {
   return authStore.user?.roles_list?.includes('Super Admin') || authStore.hasPermission('solicitudes_descargar_pdf');
 });
 
+const canExport = computed(() => {
+  return authStore.user?.roles_list?.includes('Super Admin') || authStore.hasPermission('reporte_solicitudes');
+});
+
 const availableTabs = computed(() => {
   const tabs = [];
   
@@ -340,8 +350,47 @@ const downloadPDF = async (id) => {
     link.setAttribute('download', `Autorizacion_${id}.pdf`);
     document.body.appendChild(link);
     link.click();
+    document.body.removeChild(link);
   } catch (error) {
     Swal.fire('Error', 'No se pudo descargar el archivo', 'error');
+  }
+};
+
+const exportCSV = async () => {
+  try {
+    Swal.fire({
+      title: 'Generando Reporte',
+      text: 'Por favor, espere...',
+      allowOutsideClick: false,
+      didOpen: () => {
+        Swal.showLoading();
+      }
+    });
+
+    const params = {
+      tipo: currentTab.value,
+      destinatario: filters.value.destinatario,
+      fecha_inicio: filters.value.fecha_inicio,
+      fecha_fin: filters.value.fecha_fin
+    };
+
+    const response = await api.get('/solicitudes/exportar', { 
+      params,
+      responseType: 'blob' 
+    });
+
+    const url = window.URL.createObjectURL(new Blob([response.data], { type: 'text/csv;charset=utf-8;' }));
+    const link = document.createElement('a');
+    link.href = url;
+    link.setAttribute('download', `reporte_solicitudes_${currentTab.value}.csv`);
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+    
+    Swal.close();
+  } catch (error) {
+    console.error(error);
+    Swal.fire('Error', 'No se pudo exportar el reporte a CSV', 'error');
   }
 };
 
